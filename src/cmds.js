@@ -167,6 +167,11 @@ module.exports = function (Huebot) {
       description: "Ask Wolfram something",
       public: true,
       exec: function(ox) {Huebot.ask_wolfram(ox)}
+    },
+    "shitpost": {
+      description: "Random board post",
+      public: false,
+      exec: function(ox) {Huebot.get_random_4chan_post(ox.ctx)}
     }
   }
 
