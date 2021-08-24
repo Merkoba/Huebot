@@ -60,11 +60,12 @@ The character to trigger/identify commands.
 
 >speak_modes
 
-1 to 3. Different kinds of responses.
+1 to 4. Different kinds of responses.
 
 1 = Shower Thought
 2 = Random Sentence
 3 = Random Weird Sentence
+4 = Random Post
 
 >wolfram_id
 
