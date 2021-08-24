@@ -9,6 +9,7 @@
 		"sentencer": "~0.2.1",
 		"random-sentence": "~1.0.4",
 		"imgur": "~0.3.2",
-		"express": "~4.17.1"
+		"express": "~4.17.1",
+		"cheerio": "1.0.0-rc.10"
 	}
 }

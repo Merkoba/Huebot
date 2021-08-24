@@ -1,6 +1,7 @@
 const MathJS = require("mathjs")
 const fetch = require("node-fetch")
 const imgur = require("imgur")
+const cheerio = require('cheerio')
 
 module.exports = function (Huebot) {
   let math_config = {
@@ -534,6 +535,62 @@ module.exports = function (Huebot) {
     .catch(err => { 
       console.error(err.message)
     })
+  }
+
+  Huebot.get_random_4chan_post = function (ctx) {
+    let query = `https://a.4cdn.org/g/threads.json`
+  
+    fetch(query)
+  
+    .then(res => {
+      return res.json()
+    })
+
+    .then(json => {
+      let threads = json["0"]["threads"]
+      let id = threads[Huebot.get_random_int(0, threads.length - 1)]["no"]
+      let query = `https://a.4cdn.org/g/thread/${id}.json`
+  
+      fetch(query)
+    
+      .then(res => {
+        return res.json()
+      })
+  
+      .then(json => {
+        let posts = json["posts"]
+        let post = posts[Huebot.get_random_int(0, posts.length - 1)]
+        let html = post["com"]
+        
+        if (!html) {
+          return
+        }
+
+        let $ = cheerio.load(html)
+
+        $(".quotelink").each(function (i, elem) {
+          $(elem).remove()
+        })
+
+        $("br").replaceWith("\n")
+
+        let text = $.text()
+
+        if (!text) {
+          return
+        }
+
+        Huebot.send_message(ctx, text)
+      })
+  
+      .catch(err => { 
+        console.error(err.message)
+      })
+    })
+
+    .catch(err => { 
+      console.error(err.message)
+    })    
   }
 
   Huebot.decide_something = function (ox) {

@@ -9,7 +9,7 @@
     "protected_admins": ["mad"],
     "command_prefix": ".",
     "speak_chance_percentage": 1,
-    "speak_modes": [1, 2, 3],
+    "speak_modes": [1, 2, 3, 4],
     "wolfram_id": "xxx",
     "wolfram_enabled": true,
     "use_webserver": false,

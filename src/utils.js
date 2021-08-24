@@ -759,6 +759,8 @@ module.exports = function (Huebot) {
           Huebot.send_message(ctx, Huebot.get_random_sentence(ctx))
         } else if (mode === 3) {
           Huebot.send_message(ctx, Huebot.get_random_weird_sentence())
+        } else if (mode === 4) {
+          Huebot.get_random_4chan_post(ctx)
         }
       }, 1000)
     }
