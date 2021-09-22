@@ -15,5 +15,5 @@
     "use_webserver": false,
     "webserver_port": 1845,
     "check_slashdot": false,
-    "check_slashdot_delay": 30    
+    "check_slashdot_delay": 30
 }

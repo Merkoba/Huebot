@@ -1089,8 +1089,6 @@ module.exports = function (Huebot) {
       Huebot.db.state.last_slashdot_url = "none"
     }
 
-    console.log(Huebot.db.state.last_slashdot_url)
-
     console.info("Fetching Slashdot HTML...")
     fetch("https://slashdot.org/")
   
