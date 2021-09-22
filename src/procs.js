@@ -1085,9 +1085,11 @@ module.exports = function (Huebot) {
   // Get latest news url in Slashdot
   // If not seen yet, send it to chat
   Huebot.check_slashdot = function () {
-    if (!Huebot.db.state.last_slashdot_url_url) {
+    if (!Huebot.db.state.last_slashdot_url) {
       Huebot.db.state.last_slashdot_url = "none"
     }
+
+    console.log(Huebot.db.state.last_slashdot_url)
 
     console.info("Fetching Slashdot HTML...")
     fetch("https://slashdot.org/")
