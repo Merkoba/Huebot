@@ -394,6 +394,7 @@ module.exports = function (Huebot) {
   Huebot.get_shower_thought = async function () {
     return new Promise(async (resolve, reject) =>
     {
+        console.info("Fetching Reddit...")
         fetch("https://www.reddit.com/r/Showerthoughts/random.json")
 
         .then(res => {
@@ -783,6 +784,7 @@ module.exports = function (Huebot) {
   }
 
   Huebot.get_youtube_stream = function (ctx) {
+    console.info("Fetching Youtube...")
     fetch(`https://www.googleapis.com/youtube/v3/search?videoEmbeddable=true&maxResults=20&type=video&eventType=live&videoCategoryId=20&fields=items(id(videoId))&part=snippet&key=${Huebot.db.config.youtube_client_id}`)
 
     .then(res => {

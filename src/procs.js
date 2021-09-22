@@ -519,7 +519,7 @@ module.exports = function (Huebot) {
     }
   
     let query = `https://en.wikipedia.org/api/rest_v1/page/summary/${ox.arg}`
-  
+    console.info("Fetching Wikipedia...")
     fetch(query)
   
     .then(res => {
@@ -539,7 +539,7 @@ module.exports = function (Huebot) {
 
   Huebot.get_random_4chan_post = function (ctx) {
     let query = `https://a.4cdn.org/g/threads.json`
-  
+    console.info("Fetching 4chan...")
     fetch(query)
   
     .then(res => {
@@ -551,6 +551,7 @@ module.exports = function (Huebot) {
       let id = threads[Huebot.get_random_int(0, threads.length - 1)]["no"]
       let query = `https://a.4cdn.org/g/thread/${id}.json`
   
+      console.info("Fetching 4chan (2)...")
       fetch(query)
     
       .then(res => {
@@ -1064,6 +1065,7 @@ module.exports = function (Huebot) {
 
     let query = `http://api.wolframalpha.com/v2/query?input=${ox.arg}&appid=${Huebot.db.config.wolfram_id}&output=json&includepodid=Result&units=metric`
 
+    console.info("Fetching Wolfram...")
     fetch(query)
   
     .then(res => {
@@ -1089,7 +1091,7 @@ module.exports = function (Huebot) {
       Huebot.db.state.last_slashdot_url = "none"
     }
 
-    console.info("Fetching Slashdot HTML...")
+    console.info("Fetching Slashdot...")
     fetch("https://slashdot.org/")
   
     .then(res => {
