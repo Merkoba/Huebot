@@ -83,6 +83,18 @@ Whether to check slashdot for news.
 
 Check slashdot every x minutes.
 
+>check_rss
+
+Whether to check rss for news.
+
+>check_rss_delay
+
+Check rss every x minutes.
+
+>rss_urls
+
+The rss urls to check,
+
 # Replacements
 
 Strings in some cases can get replaced to certain things depending on the keyword.

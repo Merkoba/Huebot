@@ -1,7 +1,9 @@
 const MathJS = require("mathjs")
 const fetch = require("node-fetch")
 const imgur = require("imgur")
-const cheerio = require('cheerio')
+const cheerio = require("cheerio")
+const Parser = require("rss-parser")
+const rss_parser = new Parser()
 
 module.exports = function (Huebot) {
   let math_config = {
@@ -1104,20 +1106,49 @@ module.exports = function (Huebot) {
       let title = latest.find(".story-title").eq(0)
       let url = title.find("a").eq(0).attr("href")
       url = url.replace(/^\/\//, "https://")
-  
-      if (Huebot.db.state.last_slashdot_url !== url) {
-        Huebot.db.state.last_slashdot_url = url     
 
-        for (let key in Huebot.connected_rooms) {
-          Huebot.send_message(Huebot.connected_rooms[key].context, url)
-        }	
-
-        Huebot.save_file("state.json", Huebot.db.state)        
+      if (url) {
+        if (Huebot.db.state.last_slashdot_url !== url) {
+          Huebot.db.state.last_slashdot_url = url     
+          Huebot.send_message_all_rooms(url)
+          Huebot.save_file("state.json", Huebot.db.state)
+        }
       }
     })
   
     .catch(err => { 
       console.error(err.message)
     })  
-  }  
+  }
+
+  Huebot.check_rss = function () {
+    for (let url of Huebot.db.config.rss_urls) {
+      console.info(`Fetching RSS: ${url}`)
+      rss_parser.parseURL(url)
+      .then(feed => {
+        let item = feed.items[0]
+        let text = item.contentSnippet.substring(0, 500)
+        let date = item.isoDate
+
+        if (text && date) {
+          if (!Huebot.db.state.last_rss_urls) {
+            Huebot.db.state.last_rss_urls = {}
+          }
+
+          if (!Huebot.db.state.last_rss_urls[url]) {
+            Huebot.db.state.last_rss_urls[url] = "none"
+          }
+
+          if (Huebot.db.state.last_rss_urls[url] !== item.isoDate) {
+            Huebot.db.state.last_rss_urls[url] = date
+            Huebot.send_message_all_rooms(text)
+            Huebot.save_file("state.json", Huebot.db.state)
+          }
+        }
+      })
+      .catch(err => {
+        console.error(err)
+      })  
+    }
+  }
 }

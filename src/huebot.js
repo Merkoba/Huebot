@@ -235,6 +235,7 @@ for (let room_id of Huebot.db.config.room_ids) {
 
 Huebot.start_emit_charge_loop()
 Huebot.start_slashdot_interval()
+Huebot.start_rss_interval()
 
 // Web Server
 
@@ -245,9 +246,7 @@ if (Huebot.db.config.use_webserver) {
 		if (req.query.message) {
 			let text = req.query.message.trim()
 			if (text) {
-				for (let key in Huebot.connected_rooms) {
-					Huebot.send_message(Huebot.connected_rooms[key].context, text)
-				}
+				Huebot.send_message_all_rooms(text)
 			}
 		}
 
