@@ -1041,8 +1041,7 @@ module.exports = function (Huebot) {
 
   Huebot.show_help = function (ox) {
     let items = Huebot.command_list
-
-    let s = `Available Commands[line]`
+    let s = ""
     
     s += Huebot.list_items({
       data: items,
