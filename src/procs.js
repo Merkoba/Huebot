@@ -1139,7 +1139,7 @@ module.exports = function (Huebot) {
             Huebot.db.state.last_rss_urls[url] = "none"
           }
 
-          if (Huebot.db.state.last_rss_urls[url] !== item.isoDate) {
+          if (Huebot.db.state.last_rss_urls[url] !== date) {
             Huebot.db.state.last_rss_urls[url] = date
             Huebot.send_message_all_rooms(text)
             Huebot.save_file("state.json", Huebot.db.state)
