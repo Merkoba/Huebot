@@ -72,6 +72,7 @@ Huebot.db.options = require(`${Huebot.files_path}options.json`)
 Huebot.db.queue = require(`${Huebot.files_path}queue.json`)
 Huebot.db.backgrounds = require(`${Huebot.files_path}backgrounds`)
 Huebot.db.reminders = require(`${Huebot.files_path}reminders`)
+Huebot.db.state = require(`${Huebot.files_path}state`)
 
 Huebot.config.socket_emit_throttle = 10
 Huebot.config.max_text_length = 2000
@@ -233,6 +234,7 @@ for (let room_id of Huebot.db.config.room_ids) {
 }
 
 Huebot.start_emit_charge_loop()
+Huebot.start_slashdot_interval()
 
 // Web Server
 

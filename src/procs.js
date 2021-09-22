@@ -1081,4 +1081,41 @@ module.exports = function (Huebot) {
       console.error(err.message)
     })
   }
+
+  // Get latest news url in Slashdot
+  // If not seen yet, send it to chat
+  Huebot.check_slashdot = function () {
+    if (!Huebot.db.state.last_slashdot_url_url) {
+      Huebot.db.state.last_slashdot_url = "none"
+    }
+
+    console.info("Fetching Slashdot HTML...")
+    fetch("https://slashdot.org/")
+  
+    .then(res => {
+      return res.text()
+    })
+  
+    .then(html => {
+      let $ = cheerio.load(html)
+      let latest = $(".article").first()
+      let title = latest.find(".story-title").eq(0)
+      let url = title.find("a").eq(0).attr("href")
+      url = url.replace(/^\/\//, "https://")
+  
+      if (Huebot.db.state.last_slashdot_url !== url) {
+        Huebot.db.state.last_slashdot_url = url     
+
+        for (let key in Huebot.connected_rooms) {
+          Huebot.send_message(Huebot.connected_rooms[key].context, url)
+        }	
+
+        Huebot.save_file("state.json", Huebot.db.state)        
+      }
+    })
+  
+    .catch(err => { 
+      console.error(err.message)
+    })  
+  }  
 }

@@ -864,4 +864,19 @@ module.exports = function (Huebot) {
 
     return s
   }
+
+  // Check Slasdhot every x minutes
+  Huebot.start_slashdot_interval = function () {
+    setInterval(function () {
+      if (!Huebot.db.config.check_slashdot || !Huebot.db.config.check_slashdot_delay) {
+        return
+      }
+    
+      if (Object.keys(Huebot.connected_rooms).length === 0) {
+        return
+      }
+    
+      Huebot.check_slashdot()
+    }, Huebot.db.config.check_slashdot_delay * 1000 * 60)	
+  }  
 }

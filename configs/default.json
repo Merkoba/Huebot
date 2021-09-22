@@ -13,5 +13,7 @@
     "wolfram_id": "xxx",
     "wolfram_enabled": true,
     "use_webserver": false,
-    "webserver_port": 1845
+    "webserver_port": 1845,
+    "check_slashdot": false,
+    "check_slashdot_delay": 30    
 }

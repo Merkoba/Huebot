@@ -75,6 +75,14 @@ Id to use the Wolfram api
 
 Whether Wolfram features are enabled.
 
+>check_slashdot
+
+Whether to check slashdot for news.
+
+>check_slashdot_delay
+
+Check slashdot every x minutes.
+
 # Replacements
 
 Strings in some cases can get replaced to certain things depending on the keyword.
