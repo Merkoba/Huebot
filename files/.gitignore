@@ -3,4 +3,5 @@
 
 # Except
 !.gitignore
-!*/_template_/*
+!_template_/
+!_template_/*
