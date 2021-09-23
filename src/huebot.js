@@ -74,6 +74,7 @@ Huebot.db.backgrounds = require(`${Huebot.files_path}backgrounds`)
 Huebot.db.reminders = require(`${Huebot.files_path}reminders`)
 Huebot.db.state = require(`${Huebot.files_path}state`)
 
+Huebot.config.emit_limit = 10
 Huebot.config.socket_emit_throttle = 10
 Huebot.config.max_text_length = 2000
 Huebot.config.max_title_length = 250
@@ -82,7 +83,6 @@ Huebot.config.max_user_command_activity = 20
 Huebot.config.max_media_source_length = 800
 Huebot.config.max_list_items = 20
 Huebot.config.num_suggestions = 5
-Huebot.config.emit_limit = 5
 
 Huebot.config.media_types = ["image", "tv"]
 Huebot.prefix = Huebot.db.config.command_prefix

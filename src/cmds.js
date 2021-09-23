@@ -172,7 +172,12 @@ module.exports = function (Huebot) {
       description: "Random board post",
       public: false,
       exec: function(ox) {Huebot.get_random_4chan_post(ox.ctx)}
-    }
+    },
+    "debug": {
+      description: "Used for dev debugging",
+      public: false,
+      exec: function(ox) {Huebot.send_message(ox.ctx, "aa\n\nbb")}
+    }    
   }
 
   Huebot.command_list = []

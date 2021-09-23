@@ -318,6 +318,29 @@ module.exports = function (Huebot) {
     return s.replace(/[\n\r]+/g, '\n').replace(/\s+$/g, '')
   }
 
+	Huebot.remove_multiple_empty_lines = function (s, level = 1) {
+		let ns = []
+		let charge = 0
+		let split = s.split('\n')
+
+		for (let line of split) {
+			if (line.trim() === "") {
+				if (charge < level) {
+					ns.push(line)
+				}
+        
+				charge += 1
+			} else {
+				charge = 0
+				ns.push(line)
+			}
+		}
+
+		let pf = ns.join('\n')
+
+		return pf
+	} 
+
   Huebot.smart_capitalize = function (s) {
     if (s.length > 2) {
       return s[0].toUpperCase() + s.slice(1)
@@ -494,8 +517,9 @@ module.exports = function (Huebot) {
     }
 
     message = Huebot.do_replacements(ctx, message)
-    message = Huebot.clean_string10(message.substring(0, Huebot.config.max_text_length))
-    message = message.trim()
+    message = message.substring(0, Huebot.config.max_text_length)
+    message = Huebot.remove_multiple_empty_lines(message)
+    message = message.trimEnd()
 
     Huebot.socket_emit(ctx, 'sendchat', {
       message: message

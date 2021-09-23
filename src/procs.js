@@ -727,7 +727,7 @@ module.exports = function (Huebot) {
 
     if (Huebot.db.queue[args[0]].length > 0) {
       if (Date.now() - ox.ctx[`q_${args[0]}_cooldown`] < 3000) {
-        console.log("queue cooldown hit")
+        console.info("Queue cooldown hit")
         return false
       }
 
@@ -1121,33 +1121,46 @@ module.exports = function (Huebot) {
   }
 
   Huebot.check_rss = function () {
-    for (let url of Huebot.db.config.rss_urls) {
+    if (!Huebot.db.state.last_rss_urls) {
+      Huebot.db.state.last_rss_urls = {}
+    }
+
+    for (let url of Huebot.db.config.rss_urls) {  
+      if (!Huebot.db.state.last_rss_urls[url]) {
+        Huebot.db.state.last_rss_urls[url] = "none"
+      }
+
       console.info(`Fetching RSS: ${url}`)
       rss_parser.parseURL(url)
       .then(feed => {
-        let item = feed.items[0]
-        let text = item.contentSnippet.substring(0, 500)
-        let date = item.isoDate
+        let date_1 = feed.items[0].isoDate
+        let printed = false
 
-        if (text && date) {
-          if (!Huebot.db.state.last_rss_urls) {
-            Huebot.db.state.last_rss_urls = {}
-          }
+        if (date_1 && Huebot.db.state.last_rss_urls[url] !== date_1) {
+          for (let item of feed.items.slice(0, 10)) {
+            let text = item.contentSnippet.substring(0, 500).replace("\n", " ")
 
-          if (!Huebot.db.state.last_rss_urls[url]) {
-            Huebot.db.state.last_rss_urls[url] = "none"
-          }
+            if (printed) {
+              text = "\n\n" + text
+            }
 
-          if (Huebot.db.state.last_rss_urls[url] !== date) {
-            Huebot.db.state.last_rss_urls[url] = date
-            Huebot.send_message_all_rooms(text)
-            Huebot.save_file("state.json", Huebot.db.state)
+            let date = item.isoDate
+
+            if (text && date) {  
+              if (Huebot.db.state.last_rss_urls[url] !== date) {
+                printed = true
+                Huebot.send_message_all_rooms(text)
+              }
+            }
           }
+          
+          Huebot.db.state.last_rss_urls[url] = date_1
+          Huebot.save_file("state.json", Huebot.db.state)
         }
       })
       .catch(err => {
         console.error(err)
-      })  
+      })
     }
   }
 }
