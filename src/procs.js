@@ -1150,6 +1150,8 @@ module.exports = function (Huebot) {
               if (Huebot.db.state.last_rss_urls[url] !== date) {
                 printed = true
                 Huebot.send_message_all_rooms(text)
+              } else {
+                break
               }
             }
           }
