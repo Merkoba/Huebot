@@ -318,6 +318,19 @@ module.exports = function (Huebot) {
     return s.replace(/[\n\r]+/g, '\n').replace(/\s+$/g, '')
   }
 
+	Huebot.remove_pre_empty_lines = function (s) {
+		let split = s.split("\n")
+		let counter = 0
+
+		for (let line of split) {
+			if (line.trim()) {
+				return split.slice(counter).join("\n")
+			} else {
+				counter += 1
+			}
+		}
+	}  
+
 	Huebot.remove_multiple_empty_lines = function (s, level = 1) {
 		let ns = []
 		let charge = 0
@@ -518,6 +531,7 @@ module.exports = function (Huebot) {
 
     message = Huebot.do_replacements(ctx, message)
     message = message.substring(0, Huebot.config.max_text_length)
+    message = Huebot.remove_pre_empty_lines(message)
     message = Huebot.remove_multiple_empty_lines(message)
     message = message.trimEnd()
 

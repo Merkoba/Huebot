@@ -1134,21 +1134,14 @@ module.exports = function (Huebot) {
       rss_parser.parseURL(url)
       .then(feed => {
         let date_1 = feed.items[0].isoDate
-        let printed = false
 
         if (date_1 && Huebot.db.state.last_rss_urls[url] !== date_1) {
           for (let item of feed.items.slice(0, 10)) {
-            let text = item.contentSnippet.substring(0, 500).replace("\n", " ")
-
-            if (printed) {
-              text = "\n\n" + text
-            }
-
+            let text = "• " + item.contentSnippet.substring(0, 500).replace(/\n/g, " ")
             let date = item.isoDate
 
             if (text && date) {  
               if (Huebot.db.state.last_rss_urls[url] !== date) {
-                printed = true
                 Huebot.send_message_all_rooms(text)
               } else {
                 break
