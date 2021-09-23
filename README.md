@@ -89,6 +89,10 @@ The rss urls to check.
 
 It has a special format where options can be given at the end:
 
+Modes available are "text", "link", and "bullet". They can be combined.
+
+("bullet" simply adds a "• " at the start of the text)
+
 `someurl link` or `someurl text` or `someurl text,link` or `someurl text,bullet`
 
 This specifies what to output.
