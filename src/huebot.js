@@ -234,7 +234,6 @@ for (let room_id of Huebot.db.config.room_ids) {
 }
 
 Huebot.start_emit_charge_loop()
-Huebot.start_slashdot_interval()
 Huebot.start_rss_interval()
 
 // Web Server

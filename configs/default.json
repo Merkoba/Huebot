@@ -14,8 +14,6 @@
     "wolfram_enabled": true,
     "use_webserver": false,
     "webserver_port": 1845,
-    "check_slashdot": false,
-    "check_slashdot_delay": 30,
     "check_rss": false,
     "check_rss_delay": 30,
     "rss_urls": []    

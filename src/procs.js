@@ -1085,47 +1085,16 @@ module.exports = function (Huebot) {
     })
   }
 
-  // Get latest news url in Slashdot
-  // If not seen yet, send it to chat
-  Huebot.check_slashdot = function () {
-    if (!Huebot.db.state.last_slashdot_url) {
-      Huebot.db.state.last_slashdot_url = "none"
-    }
-
-    console.info("Fetching Slashdot...")
-    fetch("https://slashdot.org/")
-  
-    .then(res => {
-      return res.text()
-    })
-  
-    .then(html => {
-      let $ = cheerio.load(html)
-      let latest = $(".article").first()
-      let title = latest.find(".story-title").eq(0)
-      let url = title.find("a").eq(0).attr("href")
-      url = url.replace(/^\/\//, "https://")
-
-      if (url) {
-        if (Huebot.db.state.last_slashdot_url !== url) {
-          Huebot.db.state.last_slashdot_url = url     
-          Huebot.send_message_all_rooms(url)
-          Huebot.save_file("state.json", Huebot.db.state)
-        }
-      }
-    })
-  
-    .catch(err => { 
-      console.error(err.message)
-    })  
-  }
-
   Huebot.check_rss = function () {
     if (!Huebot.db.state.last_rss_urls) {
       Huebot.db.state.last_rss_urls = {}
     }
 
-    for (let url of Huebot.db.config.rss_urls) {  
+    for (let item of Huebot.db.config.rss_urls) {  
+      let split = item.split(" ")
+      let url = split[0]
+      let modes = split[1].split(",")
+
       if (!Huebot.db.state.last_rss_urls[url]) {
         Huebot.db.state.last_rss_urls[url] = "none"
       }
@@ -1136,13 +1105,30 @@ module.exports = function (Huebot) {
         let date_1 = feed.items[0].isoDate
 
         if (date_1 && Huebot.db.state.last_rss_urls[url] !== date_1) {
-          for (let item of feed.items.slice(0, 10)) {
-            let text = "• " + item.contentSnippet.substring(0, 500).replace(/\n/g, " ")
+          for (let item of feed.items.slice(0, 5)) {
+            let s = ""
+
+            if (modes.includes("text")) {
+              if (modes.includes("bullet")) {
+                s += "• "
+              }
+
+              s += item.contentSnippet.substring(0, 500).replace(/\n/g, " ")
+            }
+            
+            if (modes.includes("link")) {
+              if (s) {
+                s += " "
+              }
+
+              s += item.link
+            }
+
             let date = item.isoDate
 
-            if (text && date) {  
+            if (s && date) {  
               if (Huebot.db.state.last_rss_urls[url] !== date) {
-                Huebot.send_message_all_rooms(text)
+                Huebot.send_message_all_rooms(s)
               } else {
                 break
               }

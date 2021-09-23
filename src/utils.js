@@ -911,20 +911,6 @@ module.exports = function (Huebot) {
     return s
   }
 
-  // Check Slashdot every x minutes
-  Huebot.start_slashdot_interval = function () {
-    if (Huebot.db.config.check_slashdot && Huebot.db.config.check_slashdot_delay) {
-      setInterval(function () {
-        if (Object.keys(Huebot.connected_rooms).length === 0) {
-          return
-        }
-      
-        Huebot.check_slashdot()
-      }, Huebot.db.config.check_slashdot_delay * 1000 * 60)	
-      console.info("check_slashdot interval started")
-    }    
-  }
-
   // Check RSS every x minutes
   Huebot.start_rss_interval = function () {
     if (Huebot.db.config.check_rss && Huebot.db.config.check_rss_delay) {

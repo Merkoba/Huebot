@@ -75,14 +75,6 @@ Id to use the Wolfram api
 
 Whether Wolfram features are enabled.
 
->check_slashdot
-
-Whether to check slashdot for news.
-
->check_slashdot_delay
-
-Check slashdot every x minutes.
-
 >check_rss
 
 Whether to check rss for news.
@@ -93,7 +85,13 @@ Check rss every x minutes.
 
 >rss_urls
 
-The rss urls to check,
+The rss urls to check.
+
+It has a special format where options can be given at the end:
+
+`someurl link` or `someurl text` or `someurl text,link` or `someurl text,bullet`
+
+This specifies what to output.
 
 # Replacements
 
