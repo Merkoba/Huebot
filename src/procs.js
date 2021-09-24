@@ -577,7 +577,7 @@ module.exports = function (Huebot) {
 
         $("br").replaceWith("\n")
 
-        let text = $.text().substring(0, 500)
+        let text = $.text().substring(0, 500).trim()
 
         if (!text) {
           return
