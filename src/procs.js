@@ -1113,7 +1113,7 @@ module.exports = function (Huebot) {
                 s += "• "
               }
 
-              s += item.contentSnippet.substring(0, 500).replace(/\n/g, " ")
+              s += item.contentSnippet.substring(0, 1000).replace(/\n/g, " ").trim()
             }
             
             if (modes.includes("link")) {
