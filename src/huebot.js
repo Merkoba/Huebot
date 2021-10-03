@@ -121,7 +121,7 @@ Huebot.start_connection = function (room_id) {
 		Huebot.socket_emit(ctx, 'join_room', {
 			alternative: true,
 			room_id: room_id,
-			email: Huebot.db.config.bot_email,
+			username: Huebot.db.config.bot_username,
 			password: Huebot.db.config.bot_password,
 			no_message_log: true
 		})
