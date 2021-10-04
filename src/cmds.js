@@ -348,19 +348,12 @@ module.exports = function (Huebot) {
 
     if(command) {
       command.exec({ctx:ctx, data:data, arg:arg, cmd:cmd})
+    } else if (Huebot.db.commands[cmd] !== undefined) {
+      Huebot.run_command(ctx, cmd, arg, data)
     } else {
       let closest = Huebot.find_closest(cmd, Huebot.command_list)
       if (closest) {
         Huebot.commands[closest].exec({ctx:ctx, data:data, arg:arg, cmd:closest})
-      } else {
-        if (Huebot.db.commands[cmd] !== undefined) {
-          Huebot.run_command(ctx, cmd, arg, data)
-        } else {
-          let closest = Huebot.find_closest(cmd, Object.keys(Huebot.db.commands))
-          if (closest) {
-            Huebot.run_command(ctx, closest, arg, data)
-          }
-        }
       }
     }
   }
