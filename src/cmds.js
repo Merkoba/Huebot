@@ -19,7 +19,7 @@ module.exports = function (Huebot) {
       description: "Shortcut to add a tv command",
       public: false,
       exec: function(ox) {
-        if (ox.arg.split(" ").length !== 2) {
+        if (ox.arg.split(" ").length < 2) {
           Huebot.process_feedback(ox.ctx, ox.data, "Correct format --> .add [name] [url]")
           return
         }
