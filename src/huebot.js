@@ -255,6 +255,6 @@ if (Huebot.db.config.use_webserver) {
 	let port = Huebot.db.config.webserver_port
 	
 	app.listen(port, () => {
-		console.log(`Web server started on port ${port}`)
+		console.info(`Web server started on port ${port}`)
 	})
 }

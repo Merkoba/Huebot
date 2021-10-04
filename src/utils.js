@@ -625,14 +625,6 @@ module.exports = function (Huebot) {
         src: command.url,
         comment: data.comment
       })
-    } else if (command.type === "alias") {
-      let c = command.url.split(" ")[0]
-
-      if (Huebot.command_list.includes(c)) {
-        data.message = `${Huebot.prefix}${command.url} ${arg}`
-
-        Huebot.process_command(ctx, data)
-      }
     }
   }
 

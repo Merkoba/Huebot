@@ -57,31 +57,18 @@ module.exports = function (Huebot) {
 
   Huebot.add_custom_command = function (ox) {
     let split = ox.arg.split(' ')
-    let command_name = split[0]
-    let command_type = split[1]
+    let command_type = split[0]
+    let command_name = split[1]
     let command_url = split.slice(2).join(" ")
 
-    if (!ox.arg || split.length < 3 || (!Huebot.config.media_types.includes(command_type) && command_type !== "alias")) {
-      Huebot.process_feedback(ox.ctx, ox.data, `Correct format is --> ${Huebot.prefix}${ox.cmd} add [name] ${Huebot.config.media_types.join("|")}|alias [url]`)
+    if (!ox.arg || split.length < 3 || (!Huebot.config.media_types.includes(command_type))) {
+      Huebot.process_feedback(ox.ctx, ox.data, `Correct format is --> ${Huebot.prefix}${ox.cmd} add ${Huebot.config.media_types.join("|")} [name] [url]`)
       return false
     }
 
     if (Huebot.command_list.includes(command_name)) {
       Huebot.process_feedback(ox.ctx, ox.data, `Command "${command_name}" is reserved.`)
       return false
-    }
-
-    if (command_type === "alias") {
-      let and_split = command_url.split(" && ")
-
-      for (let item of and_split) {
-        let c = item.trim().split(" ")[0]
-
-        if (!Huebot.command_list.includes(c)) {
-          Huebot.process_feedback(ox.ctx, ox.data, "Not a valid alias. Remember to not include the trigger character.")
-          return false
-        }
-      }
     }
 
     let testobj = {}
@@ -161,8 +148,6 @@ module.exports = function (Huebot) {
   
     let cmds = Object.keys(Huebot.db.commands)
   
-    cmds = cmds.filter(x => Huebot.db.commands[x].type !== "alias")
-  
     let s = Huebot.list_items({
       data: cmds,
       filter: ox.arg,
@@ -189,8 +174,6 @@ module.exports = function (Huebot) {
     }
 
     let cmds = Object.keys(Huebot.db.commands)
-    cmds = cmds.filter(x => Huebot.db.commands[x].type !== "alias")
-
     cmds = cmds.filter(x => Huebot.db.commands[x].type === ox.arg)
     let c = cmds[Huebot.get_random_int(0, cmds.length - 1)]
 

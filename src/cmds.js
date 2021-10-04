@@ -15,6 +15,14 @@ module.exports = function (Huebot) {
       public: false,
       exec: function(ox) {Huebot.manage_commands(ox)}
     },
+    "add": {
+      description: "Shortcut to add a tv command",
+      public: false,
+      exec: function(ox) {
+        ox.arg = `add tv ${ox.arg}`
+        Huebot.manage_commands(ox)
+      }
+    },    
     "q": {
       description: "Manage the queue",
       public: true,
@@ -224,21 +232,6 @@ module.exports = function (Huebot) {
           if (cmd2) {
             if (cmd2.type === "image" || cmd2.type === "tv") {
               allowed = true
-            } else if (cmd2.type === "alias") {
-              let split = cmd2.url.split(" && ")
-
-              allowed = true
-
-              for (let c of split) {
-                let sp = c.split(" ")
-                let cmd = sp[0]
-                let arg = sp.slice(1).join(" ")
-
-                if (!Huebot.public_command_list.includes(cmd)) {
-                  allowed = false
-                  break
-                }
-              }
             }
           }
         }
