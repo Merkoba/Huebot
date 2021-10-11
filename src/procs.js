@@ -355,7 +355,7 @@ module.exports = function (Huebot) {
       Huebot.send_message(ox.ctx, `Uploading background image...`)
 
       imgur
-      .uploadUrl(Huebot.db.config.server_url + "/" + obj.background)
+      .uploadUrl(Huebot.db.config.server_url + "/static/background/" + obj.background)
       .then((res) => {
         if (ox.ctx.background === obj.background) {
           ox.ctx.background = res.link
