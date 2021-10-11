@@ -101,7 +101,7 @@ Huebot.start_connection = function (room_id) {
 	ctx.emit_queue = []
 	ctx.recent_youtube_streams = []
 	ctx.userlist = []
-	ctx.background_image
+	ctx.background
 	ctx.current_image_source
 	ctx.current_tv_source
 	ctx.commands_queue = {}
@@ -144,7 +144,7 @@ Huebot.start_connection = function (room_id) {
 				Huebot.set_role(ctx, data.role)
 				Huebot.set_room_enables(ctx, data)
 				Huebot.set_theme(ctx, data)
-				Huebot.set_background_image(ctx, data.background_image)
+				Huebot.set_background(ctx, data)
 				Huebot.set_userlist(ctx, data)
 				Huebot.set_image_source(ctx, data.image_source)
 				Huebot.set_tv_source(ctx, data.tv_source)
@@ -212,8 +212,8 @@ Huebot.start_connection = function (room_id) {
 
 					Huebot.send_whisper(ctx, data.username, "Hi!")
 				}
-			} else if (type === 'background_image_changed') {
-				Huebot.set_background_image(ctx, data.background_image)
+			} else if (type === 'background_changed') {
+				Huebot.set_background(ctx, data)
 			} else if (type === 'image_source_changed') {
 				Huebot.set_image_source(ctx, data.source)
 			} else if (type === 'tv_source_changed') {

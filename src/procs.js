@@ -342,12 +342,12 @@ module.exports = function (Huebot) {
     let obj = {}
     obj.background_color = ox.ctx.background_color
     obj.text_color = ox.ctx.text_color
-    obj.background_image = ox.ctx.background_image
+    obj.background = ox.ctx.background
 
-    if (obj.background_image.startsWith("/")) {
+    if (ox.ctx.background_type === "hosted") {
       if (Huebot.db.config.server_url.includes("localhost")) {
         Huebot.send_message(ox.ctx, `Can't upload localhost image. Ignoring background image`)
-        obj.background_image = ""
+        obj.background = ""
         Huebot.do_theme_save(ox, obj)
         return
       }
@@ -355,13 +355,13 @@ module.exports = function (Huebot) {
       Huebot.send_message(ox.ctx, `Uploading background image...`)
 
       imgur
-      .uploadUrl(Huebot.db.config.server_url + "/" + obj.background_image)
+      .uploadUrl(Huebot.db.config.server_url + "/" + obj.background)
       .then((res) => {
-        if (ox.ctx.background_image === obj.background_image) {
-          ox.ctx.background_image = res.link
+        if (ox.ctx.background === obj.background) {
+          ox.ctx.background = res.link
         }
         
-        obj.background_image = res.link
+        obj.background = res.link
         Huebot.do_theme_save(ox, obj)
         return
       })
@@ -465,9 +465,9 @@ module.exports = function (Huebot) {
         })
       }
 
-      if (obj.background_image && obj.background_image !== ox.ctx.background_image) {
-        Huebot.socket_emit(ox.ctx, "change_background_image_source", {
-          src: obj.background_image
+      if (obj.background && obj.background !== ox.ctx.background) {
+        Huebot.socket_emit(ox.ctx, "change_background_source", {
+          src: obj.background
         })
       }
     } else {

@@ -700,8 +700,9 @@ module.exports = function (Huebot) {
     ctx.text_color = data.text_color
   }
 
-  Huebot.set_background_image = function (ctx, image) {
-    ctx.background_image = image
+  Huebot.set_background = function (ctx, data) {
+    ctx.background = data.background
+    ctx.background_type = data.background_type
   }
 
   Huebot.set_background_mode = function (ctx, mode) {
