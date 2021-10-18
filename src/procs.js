@@ -355,7 +355,7 @@ module.exports = function (Huebot) {
       Huebot.send_message(ox.ctx, `Uploading background image...`)
 
       imgur
-      .uploadUrl(Huebot.db.config.server_url + "/static/background/" + obj.background)
+      .uploadUrl(`${Huebot.db.config.server_url}/static/room/${ox.ctx.room_id}/${obj.background}`)
       .then((res) => {
         if (ox.ctx.background === obj.background) {
           ox.ctx.background = res.link
@@ -936,24 +936,24 @@ module.exports = function (Huebot) {
       return false
     }
 
-    let uname = split[0].trim()
+    let username = split[0].trim()
     let message = split.slice(1).join(">").trim()
 
-    if (uname === ox.data.username) {
+    if (username === ox.data.username) {
       Huebot.process_feedback(ox.ctx, ox.data, "Self-reminders are not allowed.")
       return false
     }
 
-    if (!uname || !message) {
+    if (!username || !message) {
       Huebot.process_feedback(ox.ctx, ox.data, `Correct format is --> ${Huebot.prefix}${ox.cmd} [username] > [message]`)
       return false
     }
 
-    if (Huebot.db.reminders[uname] === undefined) {
-      Huebot.db.reminders[uname] = []
+    if (Huebot.db.reminders[username] === undefined) {
+      Huebot.db.reminders[username] = []
     }
 
-    if (Huebot.db.reminders[uname].length >= 5) {
+    if (Huebot.db.reminders[username].length >= 5) {
       Huebot.process_feedback(ox.ctx, ox.data, "There are too many reminders for this user.")
       return false
     }
@@ -963,10 +963,10 @@ module.exports = function (Huebot) {
       message: message
     }
 
-    Huebot.db.reminders[uname].push(m)
+    Huebot.db.reminders[username].push(m)
 
     Huebot.save_file("reminders.json", Huebot.db.reminders, function () {
-      Huebot.process_feedback(ox.ctx, ox.data, `Reminder for ${uname} saved.`)
+      Huebot.process_feedback(ox.ctx, ox.data, `Reminder for ${username} saved.`)
       return false
     })
   }

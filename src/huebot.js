@@ -91,6 +91,7 @@ Huebot.connected_rooms = {}
 Huebot.start_connection = function (room_id) {
 	let ctx = {}
 
+	ctx.room_id = room_id
 	ctx.username = ""
 	ctx.role = false
 	ctx.room_image_mode = "disabled"
