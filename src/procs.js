@@ -354,7 +354,6 @@ module.exports = function (Huebot) {
 
       let bg_path = `${Huebot.db.config.server_url}/static/room/${ox.ctx.room_id}/${obj.background}`
       Huebot.send_message(ox.ctx, `Uploading background image...`)
-      console.info(bg_path)
 
       imgur
       .uploadUrl(bg_path)
