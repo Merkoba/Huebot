@@ -1089,7 +1089,7 @@ module.exports = function (Huebot) {
         let date_1 = feed.items[0].isoDate
 
         if (date_1 && Huebot.db.state.last_rss_urls[url] !== date_1) {
-          for (let item of feed.items.slice(0, 5)) {
+          for (let item of feed.items.slice(0, 3)) {
             let s = ""
 
             if (modes.includes("text")) {
