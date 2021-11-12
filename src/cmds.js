@@ -161,14 +161,9 @@ module.exports = function (Huebot) {
       exec: function(ox) {Huebot.show_users(ox)}
     },
     "decide": {
-      description: "Decide if yes or no",
+      description: "Decide on multiple options",
       public: true,
-      exec: function(ox) {Huebot.decide_something(ox)}
-    },
-    "pick": {
-      description: "Pick one among various items",
-      public: true,
-      exec: function(ox) {Huebot.pick_something(ox)}
+      exec: function(ox) {Huebot.decidedecide(ox)}
     },
     "wiki": {
       description: "Define something using wikipedia",

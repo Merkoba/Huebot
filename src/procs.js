@@ -580,25 +580,23 @@ module.exports = function (Huebot) {
     })    
   }
 
-  Huebot.decide_something = function (ox) {
-    let ans
-    let n = Huebot.get_random_int(0, 1)
-  
-    if (n == 0) {
-      ans = "Yeah"
-    } else {
-      ans = "Nah"
-    }
-  
-    Huebot.process_feedback(ox.ctx, ox.data, ans)
-  }
-
-  Huebot.pick_something = function (ox) {
+  Huebot.decide = function (ox) {
     if (!ox.arg) {
-      Huebot.process_feedback(ox.ctx, ox.data, "Give me a space separated list to pick from.")
+      Huebot.process_feedback(ox.ctx, ox.data, "Give me a comma or space separated list to pick from.")
     }
 
-    let split = ox.arg.split(' ')
+    let split
+
+    if (ox.arg.includes(",")) {
+      split = ox.arg.split(",").map(x => x.trim())
+    } else {
+      split = ox.arg.split(' ').map(x => x.trim())
+    }
+
+    if (split.length < 2) {
+      Huebot.process_feedback(ox.ctx, ox.data, "Give me at least two options.")
+    }
+
     let n = Huebot.get_random_int(0, split.length - 1)
     Huebot.process_feedback(ox.ctx, ox.data, split[n])
   }
