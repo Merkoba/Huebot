@@ -583,6 +583,7 @@ module.exports = function (Huebot) {
   Huebot.decide = function (ox) {
     if (!ox.arg) {
       Huebot.process_feedback(ox.ctx, ox.data, "Give me a comma or space separated list to pick from.")
+      return
     }
 
     let split
@@ -595,6 +596,7 @@ module.exports = function (Huebot) {
 
     if (split.length < 2) {
       Huebot.process_feedback(ox.ctx, ox.data, "Give me at least two options.")
+      return
     }
 
     let n = Huebot.get_random_int(0, split.length - 1)

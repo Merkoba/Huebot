@@ -163,7 +163,7 @@ module.exports = function (Huebot) {
     "decide": {
       description: "Decide on multiple options",
       public: true,
-      exec: function(ox) {Huebot.decidedecide(ox)}
+      exec: function(ox) {Huebot.decide(ox)}
     },
     "wiki": {
       description: "Define something using wikipedia",
