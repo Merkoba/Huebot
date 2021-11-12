@@ -7,7 +7,7 @@ const randomSentence = require("random-sentence")
 module.exports = function (Huebot) {
   Huebot.is_protected_admin = function (uname) {
     let low_uname = uname.toLowerCase()
-    
+
     for (let admin of Huebot.db.config.protected_admins) {
       if (admin.toLowerCase() === low_uname) {
         return true
@@ -19,7 +19,7 @@ module.exports = function (Huebot) {
 
   Huebot.is_admin = function (uname) {
     let low_uname = uname.toLowerCase()
-    
+
     for (let admin of Huebot.db.permissions.admins) {
       if (admin.toLowerCase() === low_uname) {
         return true
@@ -58,7 +58,13 @@ module.exports = function (Huebot) {
       "you're all a bunch of {{ adjective }} {{ nouns }}",
       "I want to eat {{ a_noun }}",
       "I see the {{ noun}}",
-      "Hit the road, shit-smelling {{ nouns }}!",
+      "hit the road, shit-smelling {{ nouns }}!",
+      "I bought some {{ nouns }}",
+      "{{ nouns }} are like {{ nouns }}",
+      "whatever you say Mr. {{ noun }}",
+      "whatever you say Ms. {{ noun }}",
+      "you are kinda {{ adjective }}",
+      "this {{ noun }} is a bit {{ adjective }}"
     ]
     
     let context = contexts[Huebot.get_random_int(0, contexts.length - 1)]
