@@ -6,11 +6,23 @@ const randomSentence = require("random-sentence")
 
 module.exports = function (Huebot) {
   Huebot.is_protected_admin = function (uname) {
-    return Huebot.db.config.protected_admins.includes(uname)
+    for (let admin of Huebot.db.config.protected_admins) {
+      if (admin.toLowerCase() === uname.toLowerCase()) {
+        return true
+      }
+    }
+
+    return false
   }
 
   Huebot.is_admin = function (uname) {
-    return Huebot.db.permissions.admins.includes(uname) || Huebot.is_protected_admin(uname)
+    for (let admin of Huebot.db.permissions.admins) {
+      if (admin.toLowerCase() === uname.toLowerCase()) {
+        return true
+      }
+    }
+
+    return false
   }
 
   Huebot.shuffle_array = function (array) {
