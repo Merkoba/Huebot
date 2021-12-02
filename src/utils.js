@@ -68,7 +68,11 @@ module.exports = function (Huebot) {
       "Whatever you say Mr. {{ Noun }}",
       "Whatever you say Ms. {{ Noun }}",
       "You are kinda {{ adjective }}",
-      "This {{ noun }} is a bit {{ adjective }}"
+      "This {{ noun }} is a bit {{ adjective }}",
+      "{{ user }} ate Mr. {{Noun}}",
+      "{{ user }} ate Ms. {{Noun}}",
+      "Hey {{ user }}, what's up?",
+      "{{ user }} is creeping me out right now"
     ]
     
     let context = contexts[Huebot.get_random_int(0, contexts.length - 1)]
