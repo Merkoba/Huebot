@@ -492,56 +492,34 @@ module.exports = function (Huebot) {
   }
 
   Huebot.do_replacements = function (ctx, s) {
+    function check_word (word, token, m1, m2, m3) {
+      if (token === m1) {
+        return word
+      } else if (token === m2) {
+        return Huebot.capitalize(word)
+      } else if (token === m3) {
+        return word.toUpperCase()
+      }
+    }
+
     s = s.replace(/\{\{\s*user\s*\}\}/gi, function () {
       return Huebot.get_random_user(ctx)
     })
 
     s = s.replace(/\{\{\s*(noun)\s*\}\}/gi, function (a, b) {
-      let word = Sentencer.make("{{ noun }}")
-
-      if (b === "noun") {
-        return word
-      } else if (b === "Noun") {
-        return Huebot.capitalize(word)
-      } else if (b === "NOUN") {
-        return word.toUpperCase()
-      }
+      return check_word(Sentencer.make("{{ noun }}"), b, "noun", "Noun", "NOUN")
     })
 
     s = s.replace(/\{\{\s*(a_noun)\s*\}\}/gi, function (a, b) {
-      let word = Sentencer.make("{{ a_noun }}")
-
-      if (b === "a_noun") {
-        return word
-      } else if (b === "A_noun") {
-        return Huebot.capitalize(word)
-      } else if (b === "A_NOUN") {
-        return word.toUpperCase()
-      }
+      return check_word(Sentencer.make("{{ a_noun }}"), b, "a_noun", "A_noun", "A_NOUN")
     })
 
     s = s.replace(/\{\{\s*(nouns)\s*\}\}/gi, function (a, b) {
-      let word = Sentencer.make("{{ nouns }}")
-
-      if (b === "nouns") {
-        return word
-      } else if (b === "Nouns") {
-        return Huebot.capitalize(word)
-      } else if (b === "NOUNS") {
-        return word.toUpperCase()
-      }
+      return check_word(Sentencer.make("{{ nouns }}"), b, "nouns", "Nouns", "NOUNS")
     })
 
     s = s.replace(/\{\{\s*(adjective)\s*\}\}/gi, function (a, b) {
-      let word = Sentencer.make("{{ adjective }}")
-
-      if (b === "adjective") {
-        return word
-      } else if (b === "Adjective") {
-        return Huebot.capitalize(word)
-      } else if (b === "ADJECTIVE") {
-        return word.toUpperCase()
-      }
+      return check_word(Sentencer.make("{{ adjective }}"), b, "adjective", "Adjective", "ADJECTIVE")
     })     
 
     return s
