@@ -183,7 +183,9 @@ module.exports = function (Huebot) {
     "debug": {
       description: "Used for dev debugging",
       public: false,
-      exec: function(ox) {Huebot.send_message(ox.ctx, "\n\n•aa\n•bb")}
+      exec: function(ox) {
+       
+      }
     }
   }
 

@@ -36,13 +36,17 @@ module.exports = function (Huebot) {
     }
   }
 
+  Huebot.capitalize = function (word) {
+    return word[0].toUpperCase() + word.slice(1)
+  }
+
   Huebot.get_random_word = function (mode = "normal") {
     let word = Sentencer.make("{{ noun }}")
 
     if (mode === "normal") {
       return word
     } else if (mode === "capitalized") {
-      return word[0].toUpperCase() + word.slice(1)
+      return capitalize(word)
     } else if (mode === "upper_case") {
       return word.toUpperCase()
     }
@@ -52,19 +56,19 @@ module.exports = function (Huebot) {
     let contexts = [
       "I want {{ a_noun }}",
       "I feel like {{ a_noun }}",
-      "would you like {{ a_noun }}?",
+      "Would you like {{ a_noun }}?",
       "I'm playing with {{ a_noun }}",
-      "you look like {{ a_noun }}",
-      "you're all a bunch of {{ adjective }} {{ nouns }}",
+      "You look like {{ a_noun }}",
+      "You're all a bunch of {{ adjective }} {{ nouns }}",
       "I want to eat {{ a_noun }}",
-      "I see the {{ noun}}",
-      "hit the road, shit-smelling {{ nouns }}!",
+      "I see the {{ noun }}",
+      "Hit the road, shit-smelling {{ nouns }}!",
       "I bought some {{ nouns }}",
       "{{ nouns }} are like {{ nouns }}",
-      "whatever you say Mr. {{ noun }}",
-      "whatever you say Ms. {{ noun }}",
-      "you are kinda {{ adjective }}",
-      "this {{ noun }} is a bit {{ adjective }}"
+      "Whatever you say Mr. {{ Noun }}",
+      "Whatever you say Ms. {{ Noun }}",
+      "You are kinda {{ adjective }}",
+      "This {{ noun }} is a bit {{ adjective }}"
     ]
     
     let context = contexts[Huebot.get_random_int(0, contexts.length - 1)]
@@ -492,7 +496,55 @@ module.exports = function (Huebot) {
       return Huebot.get_random_user(ctx)
     })
 
-    return Sentencer.make(s)
+    s = s.replace(/\{\{\s*(noun)\s*\}\}/gi, function (a, b) {
+      let word = Sentencer.make("{{ noun }}")
+
+      if (b === "noun") {
+        return word
+      } else if (b === "Noun") {
+        return Huebot.capitalize(word)
+      } else if (b === "NOUN") {
+        return word.toUpperCase()
+      }
+    })
+
+    s = s.replace(/\{\{\s*(a_noun)\s*\}\}/gi, function (a, b) {
+      let word = Sentencer.make("{{ a_noun }}")
+
+      if (b === "a_noun") {
+        return word
+      } else if (b === "A_noun") {
+        return Huebot.capitalize(word)
+      } else if (b === "A_NOUN") {
+        return word.toUpperCase()
+      }
+    })
+
+    s = s.replace(/\{\{\s*(nouns)\s*\}\}/gi, function (a, b) {
+      let word = Sentencer.make("{{ nouns }}")
+
+      if (b === "nouns") {
+        return word
+      } else if (b === "Nouns") {
+        return Huebot.capitalize(word)
+      } else if (b === "NOUNS") {
+        return word.toUpperCase()
+      }
+    })
+
+    s = s.replace(/\{\{\s*(adjective)\s*\}\}/gi, function (a, b) {
+      let word = Sentencer.make("{{ adjective }}")
+
+      if (b === "adjective") {
+        return word
+      } else if (b === "Adjective") {
+        return Huebot.capitalize(word)
+      } else if (b === "ADJECTIVE") {
+        return word.toUpperCase()
+      }
+    })     
+
+    return s
   }
 
   Huebot.set_image_source = function (ctx, src) {
