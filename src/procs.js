@@ -504,8 +504,10 @@ module.exports = function (Huebot) {
       return false
     }
   
-    let query = `https://en.wikipedia.org/api/rest_v1/page/summary/${ox.arg}`
-    console.info("Fetching Wikipedia...")
+    let query = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(ox.arg)}`
+    
+    console.info(`Fetching Wikipedia: ${query}`)
+    
     fetch(query)
   
     .then(res => {
@@ -1048,9 +1050,10 @@ module.exports = function (Huebot) {
       return
     }
 
-    let query = `http://api.wolframalpha.com/v2/query?input=${ox.arg}&appid=${Huebot.db.config.wolfram_id}&output=json&includepodid=Result&units=metric`
+    let query = `http://api.wolframalpha.com/v2/query?input=${encodeURIComponent(ox.arg)}&appid=${Huebot.db.config.wolfram_id}&output=json&includepodid=Result&units=metric`
 
-    console.info("Fetching Wolfram...")
+    console.info(`Fetching Wolfram: ${query}`)
+    
     fetch(query)
   
     .then(res => {
