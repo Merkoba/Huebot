@@ -216,7 +216,7 @@ module.exports = function (Huebot) {
 
     if (split.length > 1) {
       cmd += ' '
-      arg = Huebot.clean_string2(split.slice(1).join(" "))
+      arg = Huebot.single_space(split.slice(1).join(" "))
     } else {
       arg = ""
     }

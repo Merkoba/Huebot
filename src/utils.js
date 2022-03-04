@@ -336,15 +336,15 @@ module.exports = function (Huebot) {
     return ""
   }
 
-  Huebot.clean_string2 = function (s) {
+  Huebot.single_space = function (s) {
     return s.replace(/\s+/g, ' ').trim()
   }
 
-  Huebot.clean_string5 = function (s) {
+  Huebot.no_space = function (s) {
     return s.replace(/\s+/g, '').trim()
   }
 
-  Huebot.clean_string10 = function (s) {
+  Huebot.single_linebreak = function (s) {
     return s.replace(/[\n\r]+/g, '\n').replace(/\s+$/g, '')
   }
 
@@ -610,7 +610,7 @@ module.exports = function (Huebot) {
 
   Huebot.send_whisper = function (ctx, uname, message) {
     message = Huebot.do_replacements(ctx, message)
-    message = Huebot.clean_string10(Huebot.clean_multiline(message.substring(0, Huebot.config.max_text_length)))
+    message = Huebot.single_linebreak(Huebot.clean_multiline(message.substring(0, Huebot.config.max_text_length)))
 
     Huebot.socket_emit(ctx, 'whisper', {
       type: "user",
@@ -639,7 +639,7 @@ module.exports = function (Huebot) {
 
     args.src = Huebot.do_replacements(ctx, args.src)
 
-    args.src = Huebot.clean_string2(args.src)
+    args.src = Huebot.single_space(args.src)
 
     if (args.src.length > Huebot.db.max_media_source_length) {
       return false

@@ -443,8 +443,8 @@ module.exports = function (Huebot) {
     let obj = Huebot.db.themes[ox.arg]
 
     if (obj) {
-      obj.background_color = Huebot.clean_string5(obj.background_color)
-      obj.text_color = Huebot.clean_string5(obj.text_color)
+      obj.background_color = Huebot.no_space(obj.background_color)
+      obj.text_color = Huebot.no_space(obj.text_color)
 
       if (obj.background_color.startsWith("rgb")) {
         obj.background_color = Huebot.rgb_to_hex(obj.background_color)
