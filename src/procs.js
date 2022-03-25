@@ -364,7 +364,11 @@ module.exports = function (Huebot) {
         
         obj.background = res.link
         Huebot.do_theme_save(ox, obj)
-        Hue.change_background_source(obj.background)
+        
+        Huebot.socket_emit(ox.ctx, "change_background_source", {
+          src: obj.background
+        })
+
         return
       })
       .catch((err) => {
