@@ -189,7 +189,7 @@ Huebot.start_connection = function (room_id) {
 				ctx.background_color = data.color
 			} else if (type === 'text_color_changed') {
 				ctx.text_color = data.color
-			} else if (type === 'announce_role_changed') {
+			} else if (type === 'user_role_changed') {
 				if (ctx.username === data.username2) {
 					Huebot.set_role(ctx, data.role)
 				}
