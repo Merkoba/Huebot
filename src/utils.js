@@ -747,7 +747,7 @@ module.exports = function (Huebot) {
           ctx.emit_charge -= 1
         }
       }      
-    }, (Huebot.config.emit_limit / 2) * 1000);
+    }, 1000)
   }
 
   Huebot.set_theme = function (ctx, data) {
