@@ -529,6 +529,27 @@ module.exports = function (Huebot) {
     return s
   }
 
+  Huebot.set_media_sources = function (ctx, data) {
+    let tv_done = false
+    let image_done = false
+
+    for (let m of data.log_messages.slice(0).reverse()) {
+      if (!tv_done && m.type === "tv") {
+        Huebot.set_tv_source(ctx, m.data.source)
+        tv_done = true
+      }
+
+      if (!image_done && m.type === "image") {
+        Huebot.set_image_source(ctx, m.data.source)
+        image_done = true
+      }
+
+      if (tv_done && image_done) {
+        break
+      }
+    }
+  }
+
   Huebot.set_image_source = function (ctx, src) {
     ctx.current_image_source = src
   }
@@ -973,4 +994,35 @@ module.exports = function (Huebot) {
       console.info("check_rss interval started")
     }    
   }  
+
+  // Get id of youtube video from url
+  Huebot.get_youtube_id = function (url) {
+    let v_id = false
+    let list_id = false
+  
+    let split = url.split(/(vi\/|v%3D|v=|\/v\/|youtu\.be\/|\/embed\/)/)
+    let id = undefined !== split[2] ? split[2].split(/[^0-9a-z_\-]/i)[0] : split[0]
+  
+    v_id = id.length === 11 ? id : false
+  
+    let list_match = url.match(/(?:\?|&)(list=[0-9A-Za-z_-]+)/)
+  
+    let index_match = url.match(/(?:\?|&)(index=[0-9]+)/)
+  
+    if (list_match) {
+      list_id = list_match[1].replace("list=", "")
+    }
+  
+    if (list_id && !v_id) {
+      let index = 0
+  
+      if (index_match) {
+        index = parseInt(index_match[1].replace("index=", "")) - 1
+      }
+  
+      return ["list", [list_id, index]]
+    } else if (v_id) {
+      return ["video", v_id]
+    }
+  }
 }

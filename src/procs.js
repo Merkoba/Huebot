@@ -29,6 +29,18 @@ module.exports = function (Huebot) {
     })
   }
 
+  Huebot.inv_tv = function (ox, comment = "") {
+    let ans = Huebot.get_youtube_id(ox.ctx.current_tv_source)
+
+    if (ans && ans[0] === "video") {
+      Huebot.change_media(ox.ctx, {
+        type: 'tv',
+        src: `https://invidious.fdn.fr/embed/${ans[1]}`,
+        comment: comment
+      })
+    }
+  }  
+
   Huebot.manage_commands = function (ox) {
     let args = ox.arg.split(" ")
 

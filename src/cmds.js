@@ -186,6 +186,11 @@ module.exports = function (Huebot) {
       exec: function(ox) {
        
       }
+    },
+    "inv": {
+      description: "Change youtube tv to Invidious version",
+      public: false,
+      exec: function(ox) {Huebot.inv_tv(ox)}
     }
   }
 

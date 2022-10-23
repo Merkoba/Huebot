@@ -124,7 +124,6 @@ Huebot.start_connection = function (room_id) {
 			room_id: room_id,
 			username: Huebot.db.config.bot_username,
 			password: Huebot.db.config.bot_password,
-			no_message_log: true
 		})
 	})
 
@@ -147,8 +146,7 @@ Huebot.start_connection = function (room_id) {
 				Huebot.set_theme(ctx, data)
 				Huebot.set_background(ctx, data)
 				Huebot.set_userlist(ctx, data)
-				Huebot.set_image_source(ctx, data.image_source)
-				Huebot.set_tv_source(ctx, data.tv_source)
+				Huebot.set_media_sources(ctx, data)
 			} else if (type === 'chat_message') {
 				if (data.username === ctx.username) {
 					return false
