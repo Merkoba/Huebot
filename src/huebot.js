@@ -124,6 +124,7 @@ Huebot.start_connection = function (room_id) {
 			room_id: room_id,
 			username: Huebot.db.config.bot_username,
 			password: Huebot.db.config.bot_password,
+			no_message_board_posts: true
 		})
 	})
 
