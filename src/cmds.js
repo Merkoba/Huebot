@@ -115,11 +115,6 @@ module.exports = function (Huebot) {
       public: false,
       exec: function(ox) {Huebot.join_room(ox)}
     },
-    "thememode": {
-      description: "Change the theme mode",
-      public: false,
-      exec: function(ox) {Huebot.change_theme_mode(ox)}
-    },
     "sleep": {
       description: "Wait before executing the next command (ms)",
       public: false,
