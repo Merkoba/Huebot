@@ -1,11 +1,13 @@
 module.exports = function (Huebot) {
   Huebot.commands = {
     "image": {
+      aliases: ["img", "i"],
       description: "Change the image",
       public: false,
       exec: function(ox) {Huebot.change_image(ox)}
     },
     "tv": {
+      aliases: ["yt", "video", "v"],
       description: "Change the tv",
       public: false,
       exec: function(ox) {Huebot.change_tv(ox)}
@@ -343,12 +345,24 @@ module.exports = function (Huebot) {
   Huebot.execute_command = function (ctx, data, cmd, arg) {
     let command = Huebot.commands[cmd]
 
+    if (!command) {
+      for (let key in Huebot.commands) {
+        if (Huebot.commands[key].aliases) {
+          if (Huebot.commands[key].aliases.includes(cmd)) {
+            command = Huebot.commands[key]
+            break
+          }
+        }
+      }
+    }
+
     if(command) {
       command.exec({ctx:ctx, data:data, arg:arg, cmd:cmd})
     } else if (Huebot.db.commands[cmd] !== undefined) {
       Huebot.run_command(ctx, cmd, arg, data)
     } else {
       let closest = Huebot.find_closest(cmd, Huebot.command_list)
+      
       if (closest) {
         Huebot.commands[closest].exec({ctx:ctx, data:data, arg:arg, cmd:closest})
       }

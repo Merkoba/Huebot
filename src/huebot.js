@@ -157,7 +157,7 @@ Huebot.start_connection = function (room_id) {
 					return false
 				}
 
-				if (data.message === `hi ${ctx.username}` || data.message === `${ctx.username} hi`) {
+				if (data.message === `hi ${ctx.username}` || data.message === `hello ${ctx.username}`) {
 					Huebot.send_message(ctx, `hello ${data.username}!`)
 				}
 
