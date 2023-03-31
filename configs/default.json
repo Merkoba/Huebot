@@ -2,7 +2,7 @@
     "bot_username": "xxx",
     "bot_password": "xxx",
     "youtube_client_id": "xxx",
-    "youtube_enabled": true,
+    "youtube_enabled": false,
     "server_address": "http://localhost:3210",
     "server_url": "https://some.site",
     "room_ids": ["main"],
@@ -11,12 +11,12 @@
     "speak_chance_percentage": 1,
     "speak_modes": [1, 2, 3, 4],
     "wolfram_id": "xxx",
-    "wolfram_enabled": true,
+    "wolfram_enabled": false,
     "use_webserver": false,
     "webserver_port": 1845,
     "check_rss": false,
     "check_rss_delay": 30,
     "rss_urls": [],
-    "openai_enabled": true,
+    "openai_enabled": false,
     "openai_key": "xxx"
 }
