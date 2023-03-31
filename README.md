@@ -75,6 +75,14 @@ Id to use the Wolfram api
 
 Whether Wolfram features are enabled.
 
+>openai_enabled
+
+Whether to start and use openai
+
+>openai_key
+
+secret openai api key
+
 >check_rss
 
 Whether to check rss for news.
@@ -86,14 +94,6 @@ Check rss every x minutes.
 >rss_urls
 
 The rss urls to check.
-
->openai_enabled
-
-Whether to start and use openai
-
->openai_key
-
-secret openai api key
 
 It has a special format where options can be given at the end:
 
