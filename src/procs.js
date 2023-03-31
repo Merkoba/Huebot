@@ -41,6 +41,34 @@ module.exports = function (Huebot) {
     }
   }  
 
+  Huebot.ask_openai = async function (ox) {
+    if (!Huebot.db.config.openai_enabled || !ox.arg) {
+      return
+    }
+
+    if (ox.arg.length > 300) {
+      return
+    }
+    
+    try {
+      console.log("Asking ai")
+
+      let ans = await Huebot.openai_client.createCompletion({
+        model: "text-davinci-003",
+        prompt: ox.arg,
+        max_tokens: 200
+      })
+
+      if (ans.status === 200) {
+        let text = ans.data.choices[0].text.trim()
+        Huebot.process_feedback(ox.ctx, ox.data, text)
+      }
+    }
+    catch (err) {
+      console.error("openai completion error")
+    } 
+  }    
+
   Huebot.manage_commands = function (ox) {
     let args = ox.arg.split(" ")
 

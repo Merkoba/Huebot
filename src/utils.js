@@ -981,20 +981,6 @@ module.exports = function (Huebot) {
     return s
   }
 
-  // Check RSS every x minutes
-  Huebot.start_rss_interval = function () {
-    if (Huebot.db.config.check_rss && Huebot.db.config.check_rss_delay) {
-      setInterval(function () {
-        if (Object.keys(Huebot.connected_rooms).length === 0) {
-          return
-        }
-      
-        Huebot.check_rss()
-      }, Huebot.db.config.check_rss_delay * 1000 * 60)
-      console.info("check_rss interval started")
-    }    
-  }  
-
   // Get id of youtube video from url
   Huebot.get_youtube_id = function (url) {
     let v_id = false

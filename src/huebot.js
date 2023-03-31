@@ -4,6 +4,7 @@ const path = require('path')
 const fs = require("fs")
 const io = require("socket.io-client")
 const express = require("express")
+const openai = require("openai")
 
 const Huebot = {}
 Huebot.db = {}
@@ -233,8 +234,35 @@ for (let room_id of Huebot.db.config.room_ids) {
 	Huebot.start_connection(room_id)
 }
 
+// Check RSS every x minutes
+Huebot.start_rss_interval = function () {
+	if (Huebot.db.config.check_rss && Huebot.db.config.check_rss_delay) {
+		setInterval(function () {
+			if (Object.keys(Huebot.connected_rooms).length === 0) {
+				return
+			}
+		
+			Huebot.check_rss()
+		}, Huebot.db.config.check_rss_delay * 1000 * 60)
+		console.info("check_rss interval started")
+	}    
+}  
+
+// Start openai client
+Huebot.start_openai = function () {
+	if (Huebot.db.config.openai_enabled) {
+		let configuration = new openai.Configuration({
+			apiKey: Huebot.db.config.openai_key
+		})
+	
+		Huebot.openai_client = new openai.OpenAIApi(configuration)
+		console.info("openai started")
+	}
+}  
+
 Huebot.start_emit_charge_loop()
 Huebot.start_rss_interval()
+Huebot.start_openai()
 
 // Web Server
 

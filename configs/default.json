@@ -16,5 +16,7 @@
     "webserver_port": 1845,
     "check_rss": false,
     "check_rss_delay": 30,
-    "rss_urls": []    
+    "rss_urls": [],
+    "openai_enabled": true,
+    "openai_key": "xxx"
 }

@@ -188,7 +188,12 @@ module.exports = function (Huebot) {
       description: "Change youtube tv to Invidious version",
       public: false,
       exec: function(ox) {Huebot.inv_tv(ox)}
-    }
+    },
+    "ai": {
+      description: "Ask something to openai",
+      public: false,
+      exec: function(ox) {Huebot.ask_openai(ox)}
+    },    
   }
 
   Huebot.command_list = []
