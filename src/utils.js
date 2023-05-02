@@ -1,11 +1,11 @@
-const fs = require("fs")
+const fs = require(`fs`)
 const path = require('path')
-const fetch = require("node-fetch")
+const fetch = require(`node-fetch`)
 const Sentencer = require('sentencer')
-const randomSentence = require("random-sentence")
+const randomSentence = require(`random-sentence`)
 
-module.exports = function (Huebot) {
-  Huebot.is_protected_admin = function (uname) {
+module.exports = (Huebot) => {
+  Huebot.is_protected_admin = (uname) => {
     let low_uname = uname.toLowerCase()
 
     for (let admin of Huebot.db.config.protected_admins) {
@@ -17,7 +17,7 @@ module.exports = function (Huebot) {
     return false
   }
 
-  Huebot.is_admin = function (uname) {
+  Huebot.is_admin = (uname) => {
     let low_uname = uname.toLowerCase()
 
     for (let admin of Huebot.db.permissions.admins) {
@@ -29,73 +29,75 @@ module.exports = function (Huebot) {
     return false
   }
 
-  Huebot.shuffle_array = function (array) {
+  Huebot.shuffle_array = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]]; // eslint-disable-line no-param-reassign
     }
   }
 
-  Huebot.capitalize = function (word) {
+  Huebot.capitalize = (word) => {
     return word[0].toUpperCase() + word.slice(1)
   }
 
-  Huebot.get_random_word = function (mode = "normal") {
-    let word = Sentencer.make("{{ noun }}")
+  Huebot.get_random_word = (mode = `normal`) => {
+    let word = Sentencer.make(`{{ noun }}`)
 
-    if (mode === "normal") {
+    if (mode === `normal`) {
       return word
-    } else if (mode === "capitalized") {
+    }
+    else if (mode === `capitalized`) {
       return capitalize(word)
-    } else if (mode === "upper_case") {
+    }
+    else if (mode === `upper_case`) {
       return word.toUpperCase()
     }
   }
 
-  Huebot.get_random_sentence = function (ctx) {
+  Huebot.get_random_sentence = (ctx) => {
     let contexts = [
-      "I want {{ a_noun }}",
-      "I feel like {{ a_noun }}",
-      "Would you like {{ a_noun }}?",
-      "I'm playing with {{ a_noun }}",
-      "You look like {{ a_noun }}",
-      "You're all a bunch of {{ adjective }} {{ nouns }}",
-      "I want to eat {{ a_noun }}",
-      "I see the {{ noun }}",
-      "Hit the road, shit-smelling {{ nouns }}!",
-      "I bought some {{ nouns }}",
-      "{{ nouns }} are like {{ nouns }}",
-      "Whatever you say Mr. {{ Noun }}",
-      "Whatever you say Ms. {{ Noun }}",
-      "You are kinda {{ adjective }}",
-      "This {{ noun }} is a bit {{ adjective }}",
-      "{{ user }} ate Mr. {{Noun}}",
-      "{{ user }} ate Ms. {{Noun}}",
-      "Hey {{ user }}, what's up?",
-      "{{ user }} is creeping me out right now"
+      `I want {{ a_noun }}`,
+      `I feel like {{ a_noun }}`,
+      `Would you like {{ a_noun }}?`,
+      `I'm playing with {{ a_noun }}`,
+      `You look like {{ a_noun }}`,
+      `You're all a bunch of {{ adjective }} {{ nouns }}`,
+      `I want to eat {{ a_noun }}`,
+      `I see the {{ noun }}`,
+      `Hit the road, shit-smelling {{ nouns }}!`,
+      `I bought some {{ nouns }}`,
+      `{{ nouns }} are like {{ nouns }}`,
+      `Whatever you say Mr. {{ Noun }}`,
+      `Whatever you say Ms. {{ Noun }}`,
+      `You are kinda {{ adjective }}`,
+      `This {{ noun }} is a bit {{ adjective }}`,
+      `{{ user }} ate Mr. {{Noun}}`,
+      `{{ user }} ate Ms. {{Noun}}`,
+      `Hey {{ user }}, what's up?`,
+      `{{ user }} is creeping me out right now`
     ]
-    
+
     let context = contexts[Huebot.get_random_int(0, contexts.length - 1)]
     return Huebot.do_replacements(ctx, context)
   }
 
-  Huebot.get_random_weird_sentence = function () {
+  Huebot.get_random_weird_sentence = () => {
     return randomSentence({words: Huebot.get_random_int(1, 8)})
   }
 
-  Huebot.safe_replacements = function (s) {
-    s = s.replace(/\$user\$/g, "[random user]")
-    s = s.replace(/\$word\$/g, "[random word]")
-    s = s.replace(/\$Word\$/g, "[random Word]")
-    s = s.replace(/\$WORD\$/g, "[random WORD]")
+  Huebot.safe_replacements = (s) => {
+    s = s.replace(/\$user\$/g, `[random user]`)
+    s = s.replace(/\$word\$/g, `[random word]`)
+    s = s.replace(/\$Word\$/g, `[random Word]`)
+    s = s.replace(/\$WORD\$/g, `[random WORD]`)
 
     return s
   }
 
-  Huebot.get_random_string = function (n) {
-    let text = ""
+  Huebot.get_random_string = (n) => {
+    let text = ``
 
-    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    let possible = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`
 
     for (let i = 0; i < n; i++) {
       text += possible[Huebot.get_random_int(0, possible.length - 1)]
@@ -104,7 +106,7 @@ module.exports = function (Huebot) {
     return text
   }
 
-  Huebot.string_similarity = function (s1, s2) {
+  Huebot.string_similarity = (s1, s2) => {
     let longer = s1
     let shorter = s2
 
@@ -122,7 +124,7 @@ module.exports = function (Huebot) {
     return (longerLength - Huebot.string_similarity_distance(longer, shorter)) / parseFloat(longerLength)
   }
 
-  Huebot.string_similarity_distance = function (s1, s2) {
+  Huebot.string_similarity_distance = (s1, s2) => {
     s1 = s1.toLowerCase()
     s2 = s2.toLowerCase()
 
@@ -134,7 +136,8 @@ module.exports = function (Huebot) {
       for (let j = 0; j <= s2.length; j++) {
         if (i == 0) {
           costs[j] = j
-        } else {
+        }
+        else {
           if (j > 0) {
             let newValue = costs[j - 1]
 
@@ -157,17 +160,17 @@ module.exports = function (Huebot) {
     return costs[s2.length]
   }
 
-  Huebot.is_admin_or_op = function (rol) {
-    return rol === "admin" || rol === "op"
+  Huebot.is_admin_or_op = (rol) => {
+    return rol === `admin` || rol === `op`
   }
 
-  Huebot.get_random_int = function (min, max) {
+  Huebot.get_random_int = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
-  Huebot.get_q_item = function (id, op = "normal") {
-    let media = id.split("_")[0]
-    
+  Huebot.get_q_item = (id, op = `normal`) => {
+    let media = id.split(`_`)[0]
+
     if (!Huebot.check_if_media(media)) {
       return false
     }
@@ -176,7 +179,7 @@ module.exports = function (Huebot) {
 
     for (let item of Huebot.db.queue[media]) {
       if (item.id === id) {
-        if (op === "delete") {
+        if (op === `delete`) {
           Huebot.db.queue[media].splice(i, 1)
         }
 
@@ -189,13 +192,14 @@ module.exports = function (Huebot) {
     return false
   }
 
-  Huebot.save_file = function (name, content, callback = false) {
+  Huebot.save_file = (name, content, callback = false) => {
     let text = JSON.stringify(content)
 
-    fs.writeFile(path.join(Huebot.files_path, name), text, 'utf8', function (err) {
+    fs.writeFile(path.join(Huebot.files_path, name), text, 'utf8', (err) => {
       if (err) {
         console.error(err)
-      } else {
+      }
+      else {
         if (callback) {
           return callback()
         }
@@ -203,7 +207,7 @@ module.exports = function (Huebot) {
     })
   }
 
-  Huebot.fill_defaults = function (args, def_args) {
+  Huebot.fill_defaults = (args, def_args) => {
     for (let key in def_args) {
       let d = def_args[key]
 
@@ -213,15 +217,15 @@ module.exports = function (Huebot) {
     }
   }
 
-  Huebot.list_items = function (args = {}) {
+  Huebot.list_items = (args = {}) => {
     let def_args = {
       data: {},
-      filter: "",
-      prepend: "",
-      append: "",
-      sort_mode: "none",
+      filter: ``,
+      prepend: ``,
+      append: ``,
+      sort_mode: `none`,
       whisperify: false,
-      mode: "",
+      mode: ``,
       limit: true
     }
 
@@ -234,7 +238,8 @@ module.exports = function (Huebot) {
 
     if (Array.isArray(args.data)) {
       props = args.data
-    } else {
+    }
+    else {
       props = Object.keys(args.data)
     }
 
@@ -242,18 +247,20 @@ module.exports = function (Huebot) {
 
     if (args.limit) {
       max = Huebot.config.max_list_items
-    } else {
+    }
+    else {
       max = props.length
     }
 
-    if (args.sort_mode === "random") {
+    if (args.sort_mode === `random`) {
       props = props.map(x => [Math.random(), x]).sort(([a], [b]) => a - b).map(([_, x]) => x)
-    } else if (args.sort_mode === "sort") {
+    }
+    else if (args.sort_mode === `sort`) {
       props.sort()
     }
 
     let i = 0
-    let s = ""
+    let s = ``
 
     for (let p of props) {
       if (do_filter) {
@@ -262,7 +269,8 @@ module.exports = function (Huebot) {
             break
           }
         }
-      } else {
+      }
+      else {
         if (!on_added(p)) {
           break
         }
@@ -277,12 +285,12 @@ module.exports = function (Huebot) {
       }
 
       if (i <= max) {
-        s += " "
+        s += ` `
       }
 
-      let bp = ""
+      let bp = ``
 
-      if (args.mode === "commands") {
+      if (args.mode === `commands`) {
         let cmd = Huebot.db.commands[p]
 
         if (cmd && cmd.type) {
@@ -290,19 +298,20 @@ module.exports = function (Huebot) {
         }
       }
 
-      let w = ""
-      let w2 = ""
+      let w = ``
+      let w2 = ``
 
       if (args.whisperify) {
         w = `[whisper ${args.whisperify}${p}]`
-        w2 = "[/whisper]"
+        w2 = `[/whisper]`
       }
 
       let ns = `${w}${args.prepend}${p}${bp}${w2}`
 
       if (s.length + ns.length > Huebot.config.max_text_length) {
         return false
-      } else {
+      }
+      else {
         s += ns
       }
 
@@ -316,16 +325,17 @@ module.exports = function (Huebot) {
     return s.trim()
   }
 
-  Huebot.get_extension = function (s) {
-    if (s.startsWith("http://") || s.startsWith("https://")) {
-      let s2 = s.split("//").slice(1).join("//")
+  Huebot.get_extension = (s) => {
+    if (s.startsWith(`http://`) || s.startsWith(`https://`)) {
+      let s2 = s.split(`//`).slice(1).join(`//`)
 
       let matches = s2.match(/\/.*\.(\w+)(?=$|[#?])/)
 
       if (matches) {
         return matches[1]
       }
-    } else {
+    }
+    else {
       let matches = s.match(/\.(\w+)(?=$|[#?])/)
 
       if (matches) {
@@ -333,47 +343,49 @@ module.exports = function (Huebot) {
       }
     }
 
-    return ""
+    return ``
   }
 
-  Huebot.single_space = function (s) {
+  Huebot.single_space = (s) => {
     return s.replace(/\s+/g, ' ').trim()
   }
 
-  Huebot.no_space = function (s) {
+  Huebot.no_space = (s) => {
     return s.replace(/\s+/g, '').trim()
   }
 
-  Huebot.single_linebreak = function (s) {
+  Huebot.single_linebreak = (s) => {
     return s.replace(/[\n\r]+/g, '\n').replace(/\s+$/g, '')
   }
 
-	Huebot.remove_pre_empty_lines = function (s) {
-		let split = s.split("\n")
+	Huebot.remove_pre_empty_lines = (s) => {
+		let split = s.split(`\n`)
 		let counter = 0
 
 		for (let line of split) {
 			if (line.trim()) {
-				return split.slice(counter).join("\n")
-			} else {
+				return split.slice(counter).join(`\n`)
+			}
+			else {
 				counter += 1
 			}
 		}
-	}  
+	}
 
-	Huebot.remove_multiple_empty_lines = function (s, level = 1) {
+	Huebot.remove_multiple_empty_lines = (s, level = 1) => {
 		let ns = []
 		let charge = 0
 		let split = s.split('\n')
 
 		for (let line of split) {
-			if (line.trim() === "") {
+			if (line.trim() === ``) {
 				if (charge < level) {
 					ns.push(line)
 				}
-        
+
 				charge += 1
-			} else {
+			}
+			else {
 				charge = 0
 				ns.push(line)
 			}
@@ -382,23 +394,25 @@ module.exports = function (Huebot) {
 		let pf = ns.join('\n')
 
 		return pf
-	} 
+	}
 
-  Huebot.smart_capitalize = function (s) {
+  Huebot.smart_capitalize = (s) => {
     if (s.length > 2) {
       return s[0].toUpperCase() + s.slice(1)
-    } else {
+    }
+    else {
       return s.toUpperCase()
     }
   }
 
-  Huebot.clean_multiline = function (message) {
-    let message_split = message.split("\n")
+  Huebot.clean_multiline = (message) => {
+    let message_split = message.split(`\n`)
     let num_lines = message_split.length
 
     if (num_lines === 1) {
       message = message.trim()
-    } else {
+    }
+    else {
       let new_lines = []
 
       for (let line of message_split) {
@@ -407,49 +421,50 @@ module.exports = function (Huebot) {
         }
       }
 
-      message = new_lines.join("\n")
+      message = new_lines.join(`\n`)
     }
 
     return message
   }
 
-  Huebot.round = function (value, decimals) {
+  Huebot.round = (value, decimals) => {
     return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals)
   }
 
-  Huebot.rgb_to_hex = function (rgb, hash = true) {
-    if (typeof rgb === "string") {
+  Huebot.rgb_to_hex = (rgb, hash = true) => {
+    if (typeof rgb === `string`) {
       rgb = Huebot.rgb_to_array(rgb)
     }
 
     let code = ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1)
 
     if (hash) {
-      code = "#" + code
+      code = `#` + code
     }
 
     return code
   }
 
-  Huebot.rgb_to_array = function (rgb) {
+  Huebot.rgb_to_array = (rgb) => {
     let array
 
     if (Array.isArray(rgb)) {
       array = []
 
       for (let i = 0; i < rgb.length; i++) {
-        let split = rgb[i].replace("rgb(", "").replace(")", "").split(",")
+        let split = rgb[i].replace(`rgb(`, ``).replace(`)`, ``).split(`,`)
         array[i] = split.map(x => parseInt(x))
       }
-    } else {
-      let split = rgb.replace("rgb(", "").replace(")", "").split(",")
+    }
+    else {
+      let split = rgb.replace(`rgb(`, ``).replace(`)`, ``).split(`,`)
       array = split.map(x => parseInt(x))
     }
 
     return array
   }
 
-  Huebot.is_command = function (message) {
+  Huebot.is_command = (message) => {
     if (message.length > 1 && message[0] === Huebot.prefix && message[1] !== Huebot.prefix) {
       return true
     }
@@ -457,89 +472,89 @@ module.exports = function (Huebot) {
     return false
   }
 
-  Huebot.get_shower_thought = async function () {
+  Huebot.get_shower_thought = async () => {
     return new Promise(async (resolve, reject) =>
     {
-        console.info("Fetching Reddit...")
-        fetch("https://www.reddit.com/r/Showerthoughts/random.json")
-
+        console.info(`Fetching Reddit...`)
+        fetch(`https://www.reddit.com/r/Showerthoughts/random.json`)
         .then(res => {
           return res.json()
         })
-  
         .then(res => {
           let title = res[0].data.children[0].data.title
           let url = res[0].data.children[0].data.url
           resolve({title:title, url:url})
         })
-  
         .catch(err => {
           reject()
         })
     })
   }
-  
-  Huebot.process_feedback = function (ctx, data, s) {
+
+  Huebot.process_feedback = (ctx, data, s) => {
     if (!s) {
       return false
     }
 
-    if (data.method === "whisper") {
+    if (data.method === `whisper`) {
       Huebot.send_whisper(ctx, data.username, s)
-    } else {
+    }
+    else {
       Huebot.send_message(ctx, s)
     }
   }
 
-  Huebot.get_random_user = function (ctx) {
+  Huebot.get_random_user = (ctx) => {
     return ctx.userlist[Huebot.get_random_int(0, ctx.userlist.length - 1)]
   }
 
-  Huebot.do_replacements = function (ctx, s) {
+  Huebot.do_replacements = (ctx, s) => {
     function check_word (word, token, m1, m2, m3) {
       if (token === m1) {
         return word
-      } else if (token === m2) {
+      }
+      else if (token === m2) {
         return Huebot.capitalize(word)
-      } else if (token === m3) {
+      }
+      else if (token === m3) {
         return word.toUpperCase()
       }
     }
 
-    s = s.replace(/\{\{\s*user\s*\}\}/gi, function () {
+    s = s.replace(/\{\{\s*user\s*\}\}/gi, () => {
       return Huebot.get_random_user(ctx)
     })
 
-    s = s.replace(/\{\{\s*(noun)\s*\}\}/gi, function (a, b) {
-      return check_word(Sentencer.make("{{ noun }}"), b, "noun", "Noun", "NOUN")
+    s = s.replace(/\{\{\s*(noun)\s*\}\}/gi, (a, b) => {
+      return check_word(Sentencer.make(`{{ noun }}`), b, `noun`, `Noun`, `NOUN`)
     })
 
-    s = s.replace(/\{\{\s*(a_noun)\s*\}\}/gi, function (a, b) {
-      return check_word(Sentencer.make("{{ a_noun }}"), b, "a_noun", "A_noun", "A_NOUN")
+    s = s.replace(/\{\{\s*(a_noun)\s*\}\}/gi, (a, b) => {
+      return check_word(Sentencer.make(`{{ a_noun }}`), b, `a_noun`, `A_noun`, `A_NOUN`)
     })
 
-    s = s.replace(/\{\{\s*(nouns)\s*\}\}/gi, function (a, b) {
-      return check_word(Sentencer.make("{{ nouns }}"), b, "nouns", "Nouns", "NOUNS")
+    s = s.replace(/\{\{\s*(nouns)\s*\}\}/gi, (a, b) => {
+      return check_word(Sentencer.make(`{{ nouns }}`), b, `nouns`, `Nouns`, `NOUNS`)
     })
 
-    s = s.replace(/\{\{\s*(adjective)\s*\}\}/gi, function (a, b) {
-      return check_word(Sentencer.make("{{ adjective }}"), b, "adjective", "Adjective", "ADJECTIVE")
-    })     
+    s = s.replace(/\{\{\s*(adjective)\s*\}\}/gi, (a, b) => {
+      return check_word(Sentencer.make(`{{ adjective }}`), b, `adjective`, `Adjective`, `ADJECTIVE`)
+    })
 
     return s
   }
 
-  Huebot.set_media_sources = function (ctx, data) {
+  Huebot.set_media_sources = (ctx, data) => {
     let tv_done = false
     let image_done = false
 
     for (let m of data.log_messages.slice(0).reverse()) {
-      if (!tv_done && m.type === "tv") {
+      if (!tv_done && m.type === `tv`) {
         Huebot.set_tv_source(ctx, m.data.source)
         tv_done = true
       }
 
-      if (!image_done && m.type === "image") {
+      if (!image_done && m.type === `image`) {
         Huebot.set_image_source(ctx, m.data.source)
         image_done = true
       }
@@ -550,15 +565,15 @@ module.exports = function (Huebot) {
     }
   }
 
-  Huebot.set_image_source = function (ctx, src) {
+  Huebot.set_image_source = (ctx, src) => {
     ctx.current_image_source = src
   }
 
-  Huebot.set_tv_source = function (ctx, src) {
+  Huebot.set_tv_source = (ctx, src) => {
     ctx.current_tv_source = src
   }
 
-  Huebot.run_commands_queue = function (ctx, id) {
+  Huebot.run_commands_queue = (ctx, id) => {
     let cq = ctx.commands_queue[id]
 
     if (!cq) {
@@ -581,27 +596,28 @@ module.exports = function (Huebot) {
       message: cmd,
       username: cq.username,
       method: cq.method,
-      callback: function () {
+      callback: () => {
         Huebot.run_commands_queue(ctx, id)
       }
     }
 
-    if (lc_cmd.startsWith(".sleep") || lc_cmd === ".sleep") {
-      let n = parseInt(lc_cmd.replace(".sleep ", ""))
+    if (lc_cmd.startsWith(`.sleep`) || lc_cmd === `.sleep`) {
+      let n = parseInt(lc_cmd.replace(`.sleep `, ``))
 
       if (isNaN(n)) {
         n = 1000
       }
 
-      setTimeout(function () {
+      setTimeout(() => {
         Huebot.run_commands_queue(ctx, id)
       }, n)
-    } else {
+    }
+    else {
       Huebot.process_command(ctx, obj)
     }
   }
 
-  Huebot.send_message = function (ctx, message, feedback = true) {
+  Huebot.send_message = (ctx, message, feedback = true) => {
     if (!message) {
       return false
     }
@@ -617,35 +633,35 @@ module.exports = function (Huebot) {
     })
   }
 
-  Huebot.send_message_all_rooms = function (text) {
+  Huebot.send_message_all_rooms = (text) => {
     for (let key in Huebot.connected_rooms) {
       Huebot.send_message(Huebot.connected_rooms[key].context, text)
-    }	    
+    }
   }
 
-  Huebot.delete_message = function (ctx, id) {
+  Huebot.delete_message = (ctx, id) => {
     Huebot.socket_emit(ctx, 'delete_message', {
       id: id
     })
   }
 
-  Huebot.send_whisper = function (ctx, uname, message) {
+  Huebot.send_whisper = (ctx, uname, message) => {
     message = Huebot.do_replacements(ctx, message)
     message = Huebot.single_linebreak(Huebot.clean_multiline(message.substring(0, Huebot.config.max_text_length)))
 
     Huebot.socket_emit(ctx, 'whisper', {
-      type: "user",
+      type: `user`,
       usernames: [uname],
       message: message
     })
   }
 
-  Huebot.change_media = function (ctx, args = {}) {
+  Huebot.change_media = (ctx, args = {}) => {
     let def_args = {
-      type: "",
-      src: "",
+      type: ``,
+      src: ``,
       feedback: true,
-      comment: ""
+      comment: ``
     }
 
     Huebot.fill_defaults(args, def_args)
@@ -666,7 +682,7 @@ module.exports = function (Huebot) {
       return false
     }
 
-    if (args.type === "image") {
+    if (args.type === `image`) {
       if (ctx.current_image_source === args.src) {
         return false
       }
@@ -675,7 +691,8 @@ module.exports = function (Huebot) {
         src: args.src,
         comment: args.comment
       })
-    } else if (args.type === "tv") {
+    }
+    else if (args.type === `tv`) {
       if (ctx.current_tv_source === args.src) {
         return false
       }
@@ -687,38 +704,39 @@ module.exports = function (Huebot) {
     }
   }
 
-  Huebot.run_command = function (ctx, cmd, arg, data) {
+  Huebot.run_command = (ctx, cmd, arg, data) => {
     let command = Huebot.db.commands[cmd]
 
-    if (command.type === "image") {
+    if (command.type === `image`) {
       Huebot.change_media(ctx, {
-        type: "image",
+        type: `image`,
         src: command.url,
         comment: data.comment
       })
-    } else if (command.type === "tv") {
+    }
+    else if (command.type === `tv`) {
       Huebot.change_media(ctx, {
-        type: "tv",
+        type: `tv`,
         src: command.url,
         comment: data.comment
       })
     }
   }
 
-  Huebot.set_username = function (ctx, uname) {
+  Huebot.set_username = (ctx, uname) => {
     ctx.username = uname
   }
 
-  Huebot.set_role = function (ctx, rol) {
+  Huebot.set_role = (ctx, rol) => {
     ctx.role = rol
   }
 
-  Huebot.set_room_enables = function (ctx, data) {
+  Huebot.set_room_enables = (ctx, data) => {
     ctx.room_image_mode = data.room_image_mode
     ctx.room_tv_mode = data.room_tv_mode
   }
 
-  Huebot.socket_emit = function (ctx, destination, data) {
+  Huebot.socket_emit = (ctx, destination, data) => {
     let obj = {
       destination: destination,
       data: data
@@ -731,70 +749,71 @@ module.exports = function (Huebot) {
     }
   }
 
-  Huebot.check_emit_queue = function (ctx) {
+  Huebot.check_emit_queue = (ctx) => {
     if (ctx.emit_queue.length > 0) {
       let obj = ctx.emit_queue[0]
 
-      if (obj !== "first") {
+      if (obj !== `first`) {
         Huebot.do_socket_emit(ctx, obj)
       }
 
       ctx.emit_queue.shift()
 
-      ctx.emit_queue_timeout = setTimeout(function () {
+      ctx.emit_queue_timeout = setTimeout(() => {
         Huebot.check_emit_queue(ctx)
       }, Huebot.config.socket_emit_throttle)
-    } else {
+    }
+    else {
       clearTimeout(ctx.emit_queue_timeout)
       ctx.emit_queue_timeout = undefined
     }
   }
 
-  Huebot.do_socket_emit = function (ctx, obj) {
+  Huebot.do_socket_emit = (ctx, obj) => {
     if (ctx.emit_charge >= Huebot.config.emit_limit) {
       return false
     }
 
     obj.data.server_method_name = obj.destination
-    ctx.socket.emit("server_method", obj.data)
+    ctx.socket.emit(`server_method`, obj.data)
     ctx.emit_charge += 1
   }
 
-  Huebot.start_emit_charge_loop = function () {
+  Huebot.start_emit_charge_loop = () => {
     setInterval(() => {
       for (let key in Huebot.connected_rooms) {
         let ctx = Huebot.connected_rooms[key].context
         if (ctx.emit_charge > 0) {
           ctx.emit_charge -= 1
         }
-      }      
+      }
     }, 1000)
   }
 
-  Huebot.set_theme = function (ctx, data) {
+  Huebot.set_theme = (ctx, data) => {
     ctx.background_color = data.background_color
     ctx.text_color_mode = data.text_color_mode
     ctx.text_color = data.text_color
   }
 
-  Huebot.set_background = function (ctx, data) {
+  Huebot.set_background = (ctx, data) => {
     ctx.background = data.background
     ctx.background_type = data.background_type
   }
 
-  Huebot.set_background_mode = function (ctx, mode) {
+  Huebot.set_background_mode = (ctx, mode) => {
     ctx.background_mode = mode
   }
 
-  Huebot.set_background_effect = function (ctx, effect) {
+  Huebot.set_background_effect = (ctx, effect) => {
     ctx.background_effect = effect
   }
 
-  Huebot.set_background_tile_dimensions = function (ctx, dimensions) {
+  Huebot.set_background_tile_dimensions = (ctx, dimensions) => {
     ctx.background_tile_dimensions = dimensions
   }
 
-  Huebot.set_userlist = function (ctx, data) {
+  Huebot.set_userlist = (ctx, data) => {
     ctx.userlist = []
 
     for (let user of data.userlist) {
@@ -802,7 +821,7 @@ module.exports = function (Huebot) {
     }
   }
 
-  Huebot.add_to_userlist = function (ctx, uname) {
+  Huebot.add_to_userlist = (ctx, uname) => {
     for (let u of ctx.userlist) {
       if (u === uname) {
         return false
@@ -812,7 +831,7 @@ module.exports = function (Huebot) {
     ctx.userlist.push(uname)
   }
 
-  Huebot.remove_from_userlist = function (ctx, uname) {
+  Huebot.remove_from_userlist = (ctx, uname) => {
     for (let i = 0; i < ctx.userlist.length; i++) {
       let u = ctx.userlist[i]
 
@@ -823,7 +842,7 @@ module.exports = function (Huebot) {
     }
   }
 
-  Huebot.replace_in_userlist = function (ctx, old_uname, new_uname) {
+  Huebot.replace_in_userlist = (ctx, old_uname, new_uname) => {
     for (let i = 0; i < ctx.userlist.length; i++) {
       let u = ctx.userlist[i]
 
@@ -834,7 +853,7 @@ module.exports = function (Huebot) {
     }
   }
 
-  Huebot.check_reminders = function (ctx, uname) {
+  Huebot.check_reminders = (ctx, uname) => {
     if (Huebot.db.reminders[uname] === undefined || Huebot.db.reminders[uname].length === 0) {
       return false
     }
@@ -845,11 +864,10 @@ module.exports = function (Huebot) {
     }
 
     Huebot.db.reminders[uname] = []
-
-    Huebot.save_file("reminders.json", Huebot.db.reminders)
+    Huebot.save_file(`reminders.json`, Huebot.db.reminders)
   }
 
-  Huebot.check_speech = function (ctx, data, arg) {
+  Huebot.check_speech = (ctx, data, arg) => {
     let p = Math.min(100, Huebot.db.config.speak_chance_percentage)
 
     if (p <= 0) {
@@ -857,9 +875,9 @@ module.exports = function (Huebot) {
     }
 
     let n = Huebot.get_random_int(1, 100)
-    
+
     if (n <= (p)) {
-      setTimeout(function () {
+      setTimeout(() => {
         let modes = Huebot.db.config.speak_modes
 
         if (modes.length === 0) {
@@ -869,42 +887,44 @@ module.exports = function (Huebot) {
         let mode = modes[Huebot.get_random_int(0, modes.length - 1)]
 
         if (mode === 1) {
-          Huebot.think({ctx:ctx, data:data, arg:arg, cmd:"think"})
-        } else if (mode === 2) {
+          Huebot.think({ctx:ctx, data:data, arg:arg, cmd:`think`})
+        }
+        else if (mode === 2) {
           Huebot.send_message(ctx, Huebot.get_random_sentence(ctx))
-        } else if (mode === 3) {
+        }
+        else if (mode === 3) {
           Huebot.send_message(ctx, Huebot.get_random_weird_sentence())
-        } else if (mode === 4) {
+        }
+        else if (mode === 4) {
           Huebot.get_random_4chan_post(ctx)
         }
       }, 1000)
     }
   }
 
-  Huebot.selective_play = function (ctx, kind, url, comment = "") {
-    if (kind === "image") {
+  Huebot.selective_play = (ctx, kind, url, comment = ``) => {
+    if (kind === `image`) {
       Huebot.change_media(ctx, {
-        type: "image",
+        type: `image`,
         src: url,
         comment: comment
       })
-    } else if (kind === "tv") {
+    }
+    else if (kind === `tv`) {
       Huebot.change_media(ctx, {
-        type: "tv",
+        type: `tv`,
         src: url,
         comment: comment
       })
     }
   }
 
-  Huebot.get_youtube_stream = function (ctx) {
-    console.info("Fetching Youtube...")
+  Huebot.get_youtube_stream = (ctx) => {
+    console.info(`Fetching Youtube...`)
     fetch(`https://www.googleapis.com/youtube/v3/search?videoEmbeddable=true&maxResults=20&type=video&eventType=live&videoCategoryId=20&fields=items(id(videoId))&part=snippet&key=${Huebot.db.config.youtube_client_id}`)
-
     .then(res => {
       return res.json()
     })
-
     .then(res => {
       if (res.items !== undefined && res.items.length > 0) {
         Huebot.shuffle_array(res.items)
@@ -926,20 +946,19 @@ module.exports = function (Huebot) {
         }
 
         Huebot.change_media(ctx, {
-          type: "tv",
+          type: `tv`,
           src: `https://youtube.com/watch?v=${id}`
         })
       }
     })
-
     .catch(err => {
       console.error(err)
     })
   }
 
-  Huebot.find_closest = function (s, list) {
+  Huebot.find_closest = (s, list) => {
     let highest_num = 0
-    let highest_cmd = ""
+    let highest_cmd = ``
 
     for (let s2 of list) {
       let num = Huebot.string_similarity(s, s2)
@@ -952,28 +971,30 @@ module.exports = function (Huebot) {
 
     if (highest_num >= 0.7) {
       return highest_cmd
-    } else {
-      return ""
+    }
+    else {
+      return ``
     }
   }
 
-  Huebot.get_media_name = function (media) {
-    let name = ""
+  Huebot.get_media_name = (media) => {
+    let name = ``
 
-    if (media === "image") {
-      name = "Image"
-    } else if (media === "tv") {
-      name = "TV"
+    if (media === `image`) {
+      name = `Image`
+    }
+    else if (media === `tv`) {
+      name = `TV`
     }
 
     return name
   }
 
-  Huebot.check_if_media = function (s) {
-    return (s === "image" || s === "tv")
+  Huebot.check_if_media = (s) => {
+    return (s === `image` || s === `tv`)
   }
 
-  Huebot.tv_default = function (s, media) {
+  Huebot.tv_default = (s, media) => {
     if (!Huebot.check_if_media(media)) {
       s = `tv ${s}`
     }
@@ -982,33 +1003,30 @@ module.exports = function (Huebot) {
   }
 
   // Get id of youtube video from url
-  Huebot.get_youtube_id = function (url) {
+  Huebot.get_youtube_id = (url) => {
     let v_id = false
     let list_id = false
-  
     let split = url.split(/(vi\/|v%3D|v=|\/v\/|youtu\.be\/|\/embed\/)/)
     let id = undefined !== split[2] ? split[2].split(/[^0-9a-z_\-]/i)[0] : split[0]
-  
     v_id = id.length === 11 ? id : false
-  
     let list_match = url.match(/(?:\?|&)(list=[0-9A-Za-z_-]+)/)
-  
     let index_match = url.match(/(?:\?|&)(index=[0-9]+)/)
-  
+
     if (list_match) {
-      list_id = list_match[1].replace("list=", "")
+      list_id = list_match[1].replace(`list=`, ``)
     }
-  
+
     if (list_id && !v_id) {
       let index = 0
-  
+
       if (index_match) {
-        index = parseInt(index_match[1].replace("index=", "")) - 1
+        index = parseInt(index_match[1].replace(`index=`, ``)) - 1
       }
-  
-      return ["list", [list_id, index]]
-    } else if (v_id) {
-      return ["video", v_id]
+
+      return [`list`, [list_id, index]]
+    }
+    else if (v_id) {
+      return [`video`, v_id]
     }
   }
 }

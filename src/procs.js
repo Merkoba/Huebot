@@ -418,7 +418,6 @@ module.exports = (Huebot) => {
 
       imgur
       .uploadUrl(bg_path)
-
       .then((res) => {
         if (ox.ctx.background === obj.background) {
           ox.ctx.background = res.link
@@ -433,7 +432,6 @@ module.exports = (Huebot) => {
 
         return
       })
-
       .catch((err) => {
         console.error(err.message)
         return
@@ -580,23 +578,14 @@ module.exports = (Huebot) => {
     console.info(`Fetching Wikipedia: ${query}`)
 
     fetch(query)
-
-
-
     .then(res => {
       return res.json()
     })
-
-
-
     .then(res => {
       if (res.extract) {
         Huebot.process_feedback(ox.ctx, ox.data, res.extract)
       }
     })
-
-
-
     .catch(err => {
       console.error(err.message)
     })
@@ -606,15 +595,9 @@ module.exports = (Huebot) => {
     let query = `https://a.4cdn.org/g/threads.json`
     console.info(`Fetching 4chan...`)
     fetch(query)
-
-
-
     .then(res => {
       return res.json()
     })
-
-
-
     .then(json => {
       let threads = json[`0`][`threads`]
       let id = threads[Huebot.get_random_int(0, threads.length - 1)][`no`]
@@ -622,15 +605,9 @@ module.exports = (Huebot) => {
 
       console.info(`Fetching 4chan (2)...`)
       fetch(query)
-
-
-
       .then(res => {
         return res.json()
       })
-
-
-
       .then(json => {
         let posts = json[`posts`]
         let post = posts[Huebot.get_random_int(0, posts.length - 1)]
@@ -656,16 +633,10 @@ module.exports = (Huebot) => {
 
         Huebot.process_feedback(ctx, texox.data, t)
       })
-
-
-
       .catch(err => {
         console.error(err.message)
       })
     })
-
-
-
     .catch(err => {
       console.error(err.message)
     })
@@ -1155,28 +1126,18 @@ module.exports = (Huebot) => {
     }
 
     let query = `http://api.wolframalpha.com/v2/query?input=${encodeURIComponent(ox.arg)}&appid=${Huebot.db.config.wolfram_id}&output=json&includepodid=Result&units=metric`
-
     console.info(`Fetching Wolfram: ${query}`)
 
     fetch(query)
-
-
-
     .then(res => {
       return res.json()
     })
-
-
-
     .then(res => {
       if (res.queryresult && res.queryresult.pods) {
         let result = res.queryresult.pods[0].subpods[0].plaintext
         Huebot.process_feedback(ox.ctx, ox.data, result)
       }
     })
-
-
-
     .catch(err => {
       console.error(err.message)
     })
