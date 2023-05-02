@@ -74,7 +74,7 @@ module.exports = (Huebot) => {
       `{{ user }} ate Mr. {{Noun}}`,
       `{{ user }} ate Ms. {{Noun}}`,
       `Hey {{ user }}, what's up?`,
-      `{{ user }} is creeping me out right now`
+      `{{ user }} is creeping me out right now`,
     ]
 
     let context = contexts[Huebot.get_random_int(0, contexts.length - 1)]
@@ -90,13 +90,11 @@ module.exports = (Huebot) => {
     s = s.replace(/\$word\$/g, `[random word]`)
     s = s.replace(/\$Word\$/g, `[random Word]`)
     s = s.replace(/\$WORD\$/g, `[random WORD]`)
-
     return s
   }
 
   Huebot.get_random_string = (n) => {
     let text = ``
-
     let possible = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`
 
     for (let i = 0; i < n; i++) {
@@ -127,7 +125,6 @@ module.exports = (Huebot) => {
   Huebot.string_similarity_distance = (s1, s2) => {
     s1 = s1.toLowerCase()
     s2 = s2.toLowerCase()
-
     let costs = new Array()
 
     for (let i = 0; i <= s1.length; i++) {
@@ -230,9 +227,7 @@ module.exports = (Huebot) => {
     }
 
     Huebot.fill_defaults(args, def_args)
-
     args.filter = args.filter.toLowerCase()
-
     let do_filter = args.filter ? true : false
     let props
 
@@ -328,7 +323,6 @@ module.exports = (Huebot) => {
   Huebot.get_extension = (s) => {
     if (s.startsWith(`http://`) || s.startsWith(`https://`)) {
       let s2 = s.split(`//`).slice(1).join(`//`)
-
       let matches = s2.match(/\/.*\.(\w+)(?=$|[#?])/)
 
       if (matches) {
@@ -589,7 +583,6 @@ module.exports = (Huebot) => {
     }
 
     let cmd = cmds.shift()
-
     let lc_cmd = cmd.toLowerCase()
 
     let obj = {
@@ -675,7 +668,6 @@ module.exports = (Huebot) => {
     }
 
     args.src = Huebot.do_replacements(ctx, args.src)
-
     args.src = Huebot.single_space(args.src)
 
     if (args.src.length > Huebot.db.max_media_source_length) {
@@ -928,7 +920,6 @@ module.exports = (Huebot) => {
     .then(res => {
       if (res.items !== undefined && res.items.length > 0) {
         Huebot.shuffle_array(res.items)
-
         let item
 
         for (item of res.items) {
@@ -938,7 +929,6 @@ module.exports = (Huebot) => {
         }
 
         let id = item.id.videoId
-
         ctx.recent_youtube_streams.push(id)
 
         if (ctx.recent_youtube_streams.length > Huebot.config.recent_streams_max_length) {

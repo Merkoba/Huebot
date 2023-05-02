@@ -327,7 +327,6 @@ module.exports = (Huebot) => {
     if (data.message.includes(` && `)) {
       if (cmd !== `commands`) {
         let full_cmd = `${cmd} ${arg}`
-
         let and_split = full_cmd.split(` && `)
 
         if (and_split.length > 1) {
@@ -335,9 +334,7 @@ module.exports = (Huebot) => {
 
           for (let i = 0; i < and_split.length; i++) {
             let item = and_split[i]
-
             let c = item.trim()
-
             let cc
             let c2
 
@@ -364,7 +361,6 @@ module.exports = (Huebot) => {
           }
 
           let qcmax = 0
-
           let cqid
 
           while (true) {

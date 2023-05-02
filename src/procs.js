@@ -574,7 +574,6 @@ module.exports = (Huebot) => {
     }
 
     let query = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(ox.arg)}`
-
     console.info(`Fetching Wikipedia: ${query}`)
 
     fetch(query)
@@ -847,7 +846,6 @@ module.exports = (Huebot) => {
     obj.date = Date.now()
     obj.id = `${obj.kind}_${obj.date}_${Huebot.get_random_string(4)}`
     obj.username = ox.data.username
-
     Huebot.db.queue[args[0]].push(obj)
 
     Huebot.save_file(`queue.json`, Huebot.db.queue, () => {
