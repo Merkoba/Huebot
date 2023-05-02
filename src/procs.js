@@ -1157,7 +1157,6 @@ module.exports = (Huebot) => {
 
       console.info(`Fetching RSS: ${url}`)
       rss_parser.parseURL(url)
-
       .then(feed => {
         let date_1 = feed.items[0].isoDate
 
@@ -1197,7 +1196,6 @@ module.exports = (Huebot) => {
           Huebot.save_file(`state.json`, Huebot.db.state)
         }
       })
-
       .catch(err => {
         console.error(err)
       })
