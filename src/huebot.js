@@ -1,22 +1,22 @@
 // T:11
 
 const path = require('path')
-const fs = require("fs")
-const io = require("socket.io-client")
-const express = require("express")
-const openai = require("openai")
+const fs = require(`fs`)
+const io = require(`socket.io-client`)
+const express = require(`express`)
+const openai = require(`openai`)
 
 const Huebot = {}
 Huebot.db = {}
 Huebot.config = {}
 
-require("./cmds.js")(Huebot)
-require("./procs.js")(Huebot)
-require("./utils.js")(Huebot)
+require(`./cmds.js`)(Huebot)
+require(`./procs.js`)(Huebot)
+require(`./utils.js`)(Huebot)
 
 let args = process.argv.slice(2)
-const configs_location = "../configs/"
-const configs_path = path.normalize(path.resolve(__dirname, configs_location) + "/")
+const configs_location = `../configs/`
+const configs_path = path.normalize(path.resolve(__dirname, configs_location) + `/`)
 
 // Huebot supports launching with a custom config file
 // For instance `node huebot.json goodBot`
@@ -26,29 +26,31 @@ const configs_path = path.normalize(path.resolve(__dirname, configs_location) + 
 
 let config_name
 
-if (args.length >= 1 && args[0] != "default") {
+if (args.length >= 1 && args[0] != `default`) {
 	config_name = args[0]
-} else {
-	config_name = "default"
+}
+else {
+	config_name = `default`
 }
 
 console.info(`Using config file: ${config_name}`)
 Huebot.db.config = require(`${configs_path}${config_name}.json`)
 
 const template_files_location = `../files/_template_`
-const template_files_path = path.normalize(path.resolve(__dirname, template_files_location) + "/")
+const template_files_path = path.normalize(path.resolve(__dirname, template_files_location) + `/`)
 
 let files_name
 
-if (args.length >= 2 && args[1] != "default") {
+if (args.length >= 2 && args[1] != `default`) {
 	files_name = args[1]
-} else {
-	files_name = "default"
+}
+else {
+	files_name = `default`
 }
 
 console.info(`Files path: ${files_name}`)
 const files_location = `../files/${files_name}`
-Huebot.files_path = path.normalize(path.resolve(__dirname, files_location) + "/")
+Huebot.files_path = path.normalize(path.resolve(__dirname, files_location) + `/`)
 
 // Check if files dir exists
 if (!fs.existsSync(Huebot.files_path)) {
@@ -85,18 +87,18 @@ Huebot.config.max_media_source_length = 800
 Huebot.config.max_list_items = 20
 Huebot.config.num_suggestions = 5
 
-Huebot.config.media_types = ["image", "tv"]
+Huebot.config.media_types = [`image`, `tv`]
 Huebot.prefix = Huebot.db.config.command_prefix
 Huebot.connected_rooms = {}
 
-Huebot.start_connection = function (room_id) {
+Huebot.start_connection = (room_id) => {
 	let ctx = {}
 
 	ctx.room_id = room_id
-	ctx.username = ""
+	ctx.username = ``
 	ctx.role = false
-	ctx.room_image_mode = "disabled"
-	ctx.room_tv_mode = "disabled"
+	ctx.room_image_mode = `disabled`
+	ctx.room_tv_mode = `disabled`
 	ctx.theme
 	ctx.text_color
 	ctx.emit_queue_timeout
@@ -119,7 +121,7 @@ Huebot.start_connection = function (room_id) {
 		reconnectionAttempts: 1000
 	})
 
-	ctx.socket.on('connect', function () {
+	ctx.socket.on('connect', () => {
 		Huebot.socket_emit(ctx, 'join_room', {
 			alternative: true,
 			room_id: room_id,
@@ -129,14 +131,14 @@ Huebot.start_connection = function (room_id) {
 		})
 	})
 
-	ctx.socket.on('update', function (received) {
+	ctx.socket.on('update', (received) => {
 		try {
 			let type = received.type
 			let data = received.data
 
 			if (type === 'joined') {
 				if (data.room_locked) {
-					console.info("Seems I'm banned from this room")
+					console.info(`Seems I'm banned from this room`)
 					return false
 				}
 
@@ -149,7 +151,8 @@ Huebot.start_connection = function (room_id) {
 				Huebot.set_background(ctx, data)
 				Huebot.set_userlist(ctx, data)
 				Huebot.set_media_sources(ctx, data)
-			} else if (type === 'chat_message') {
+			}
+			else if (type === 'chat_message') {
 				if (data.username === ctx.username) {
 					return false
 				}
@@ -166,34 +169,41 @@ Huebot.start_connection = function (room_id) {
 					let obj = {
 						username: data.username,
 						message: data.message,
-						method: "public"
+						method: `public`
 					}
 
 					Huebot.process_command(ctx, obj)
 				}
 
 				Huebot.check_reminders(ctx, data.username)
-				Huebot.check_speech(ctx, data, "")
-			} else if (type === "user_joined") {
+				Huebot.check_speech(ctx, data, ``)
+			}
+			else if (type === `user_joined`) {
 				Huebot.add_to_userlist(ctx, data.username)
 				Huebot.check_reminders(ctx, data.username)
-			} else if (type === "user_disconnected") {
+			}
+			else if (type === `user_disconnected`) {
 				Huebot.remove_from_userlist(ctx, data.username)
-			} else if (type === 'new_username') {
+			}
+			else if (type === 'new_username') {
 				if (ctx.username === data.old_username) {
 					Huebot.set_username(ctx, data.username)
 				}
 
 				Huebot.replace_in_userlist(ctx, data.old_username, data.username)
-			} else if (type === 'background_color_changed') {
+			}
+			else if (type === 'background_color_changed') {
 				ctx.background_color = data.color
-			} else if (type === 'text_color_changed') {
+			}
+			else if (type === 'text_color_changed') {
 				ctx.text_color = data.color
-			} else if (type === 'user_role_changed') {
+			}
+			else if (type === 'user_role_changed') {
 				if (ctx.username === data.username2) {
 					Huebot.set_role(ctx, data.role)
 				}
-			} else if (type === "whisper") {
+			}
+			else if (type === `whisper`) {
 				if (data.username === ctx.username) {
 					return false
 				}
@@ -202,30 +212,35 @@ Huebot.start_connection = function (room_id) {
 					let obj = {
 						username: data.username,
 						message: data.message,
-						method: "whisper"
+						method: `whisper`
 					}
 
 					Huebot.process_command(ctx, obj)
-				} else {
+				}
+				else {
 					if (!Huebot.is_admin(data.username)) {
 						return false
 					}
 
-					Huebot.send_whisper(ctx, data.username, "Hi!")
+					Huebot.send_whisper(ctx, data.username, `Hi!`)
 				}
-			} else if (type === 'background_changed') {
+			}
+			else if (type === 'background_changed') {
 				Huebot.set_background(ctx, data)
-			} else if (type === 'image_source_changed') {
+			}
+			else if (type === 'image_source_changed') {
 				Huebot.set_image_source(ctx, data.source)
-			} else if (type === 'tv_source_changed') {
+			}
+			else if (type === 'tv_source_changed') {
 				Huebot.set_tv_source(ctx, data.source)
 			}
-		} catch (err) {
+		}
+		catch (err) {
 			console.error(err)
 		}
 	})
 
-	ctx.socket.on('disconnect', function () {
+	ctx.socket.on('disconnect', () => {
 		delete Huebot.connected_rooms[room_id]
 	})
 }
@@ -235,30 +250,30 @@ for (let room_id of Huebot.db.config.room_ids) {
 }
 
 // Check RSS every x minutes
-Huebot.start_rss_interval = function () {
+Huebot.start_rss_interval = () => {
 	if (Huebot.db.config.check_rss && Huebot.db.config.check_rss_delay) {
-		setInterval(function () {
+		setInterval(() => {
 			if (Object.keys(Huebot.connected_rooms).length === 0) {
 				return
 			}
-		
+
 			Huebot.check_rss()
 		}, Huebot.db.config.check_rss_delay * 1000 * 60)
-		console.info("check_rss interval started")
-	}    
-}  
+		console.info(`check_rss interval started`)
+	}
+}
 
 // Start openai client
-Huebot.start_openai = function () {
+Huebot.start_openai = () => {
 	if (Huebot.db.config.openai_enabled) {
 		let configuration = new openai.Configuration({
 			apiKey: Huebot.db.config.openai_key
 		})
-	
+
 		Huebot.openai_client = new openai.OpenAIApi(configuration)
-		console.info("openai started")
+		console.info(`openai started`)
 	}
-}  
+}
 
 Huebot.start_emit_charge_loop()
 Huebot.start_rss_interval()
@@ -277,11 +292,11 @@ if (Huebot.db.config.use_webserver) {
 			}
 		}
 
-		res.send("ok")
+		res.send(`ok`)
 	})
 
 	let port = Huebot.db.config.webserver_port
-	
+
 	app.listen(port, () => {
 		console.info(`Web server started on port ${port}`)
 	})
