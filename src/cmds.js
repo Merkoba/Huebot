@@ -234,7 +234,7 @@ module.exports = (Huebot) => {
       description: `Random board post`,
       public: false,
       exec: (ox) => {
-        Huebot.get_random_4chan_post(ox.ctx)
+        Huebot.get_random_4chan_post(ox)
       }
     },
     debug: {

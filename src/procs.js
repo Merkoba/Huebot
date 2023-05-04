@@ -590,7 +590,7 @@ module.exports = (Huebot) => {
     })
   }
 
-  Huebot.get_random_4chan_post = (ctx) => {
+  Huebot.get_random_4chan_post = (ox) => {
     let query = `https://a.4cdn.org/g/threads.json`
     console.info(`Fetching 4chan...`)
     fetch(query)
@@ -630,7 +630,7 @@ module.exports = (Huebot) => {
           return
         }
 
-        Huebot.process_feedback(ctx, texox.data, t)
+        Huebot.process_feedback(ox.ctx, ox.data, text)
       })
       .catch(err => {
         console.error(err.message)
