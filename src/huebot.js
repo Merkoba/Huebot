@@ -1,7 +1,7 @@
 // T:11
 const App = {}
-App.i = {}
 
+App.i = {}
 App.i.fs = require(`fs`)
 App.i.path = require('path')
 App.i.io = require(`socket.io-client`)
