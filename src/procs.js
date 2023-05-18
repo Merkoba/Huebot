@@ -1,10 +1,8 @@
 module.exports = (App) => {
-  let math_config = {
+  App.math = App.i.mathjs.create(App.i.mathjs.all, {
     number: 'BigNumber',
     precision: 64
-  }
-
-  App.math = App.i.mathjs.create(App.i.mathjs.all, math_config)
+  })
 
   App.change_image = (ox, comment = ``) => {
     App.change_media(ox.ctx, {
