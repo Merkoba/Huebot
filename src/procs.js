@@ -770,6 +770,10 @@ module.exports = (Huebot) => {
     let item = Huebot.get_q_item(args[1], `delete`)
 
     if (item) {
+      if (args[2]) {
+        Huebot.delete_message(ox.ctx, args[2])
+      }
+
       Huebot.selective_play(ox.ctx, item.kind, item.url, `Selected by ${item.username}`)
       Huebot.save_file(`queue.json`, Huebot.db.queue)
     }
@@ -850,7 +854,7 @@ module.exports = (Huebot) => {
 
     Huebot.save_file(`queue.json`, Huebot.db.queue, () => {
       let links = `[whisper ${Huebot.prefix}q remove ${obj.id} $id$]Remove[/whisper]`
-      links += ` | [whisper ${Huebot.prefix}q play ${obj.id}]Play[/whisper]`
+      links += ` | [whisper ${Huebot.prefix}q play ${obj.id} $id$]Play[/whisper]`
       let ans = `Done >> ${links}`
       Huebot.process_feedback(ox.ctx, ox.data, ans)
     })
