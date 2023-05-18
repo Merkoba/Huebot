@@ -1,11 +1,11 @@
-module.exports = (Huebot) => {
-  Huebot.commands = {
+module.exports = (App) => {
+  App.commands = {
     image: {
       aliases: [`img`, `i`],
       description: `Change the image`,
       public: false,
       exec: (ox) => {
-        Huebot.change_image(ox)
+        App.change_image(ox)
       }
     },
     tv: {
@@ -13,14 +13,14 @@ module.exports = (Huebot) => {
       description: `Change the tv`,
       public: false,
       exec: (ox) => {
-        Huebot.change_tv(ox)
+        App.change_tv(ox)
       }
     },
     commands: {
       description: `Manage commands`,
       public: false,
       exec: (ox) => {
-        Huebot.manage_commands(ox)
+        App.manage_commands(ox)
       }
     },
     add: {
@@ -28,18 +28,18 @@ module.exports = (Huebot) => {
       public: false,
       exec: (ox) => {
         if (ox.arg.split(` `).length < 2) {
-          Huebot.process_feedback(ox.ctx, ox.data, `Correct format --> .add [name] [url]`)
+          App.process_feedback(ox.ctx, ox.data, `Correct format --> .add [name] [url]`)
           return
         }
         ox.arg = `add tv ${ox.arg}`
-        Huebot.manage_commands(ox)
+        App.manage_commands(ox)
       }
     },
     q: {
       description: `Manage the queue`,
       public: true,
       exec: (ox) => {
-        Huebot.manage_queue(ox)
+        App.manage_queue(ox)
       }
     },
     next: {
@@ -47,112 +47,112 @@ module.exports = (Huebot) => {
       public: true,
       exec: (ox) => {
         ox.arg = `next`
-        Huebot.manage_queue(ox)
+        App.manage_queue(ox)
       }
     },
     adminadd: {
       description: `Add a bot admin`,
       public: false,
       exec: (ox) => {
-        Huebot.add_admin(ox)
+        App.add_admin(ox)
       }
     },
     adminremove: {
       description: `Remove a bot admin`,
       public: false,
       exec: (ox) => {
-        Huebot.remove_admin(ox)
+        App.remove_admin(ox)
       }
     },
     admins: {
       description: `List admins`,
       public: false,
       exec: (ox) => {
-        Huebot.manage_admins(ox)
+        App.manage_admins(ox)
       }
     },
     themes: {
       description: `Manage themes`,
       public: false,
       exec: (ox) => {
-        Huebot.manage_themes(ox)
+        App.manage_themes(ox)
       }
     },
     stream: {
       description: `Put a random video stream`,
       public: false,
       exec: (ox) => {
-        Huebot.get_random_stream(ox)
+        App.get_random_stream(ox)
       }
     },
     activity: {
       description: `Show recent bot users`,
       public: false,
       exec: (ox) => {
-        Huebot.show_activity(ox)
+        App.show_activity(ox)
       }
     },
     clearadmins: {
       description: `Remove all bot admins`,
       public: false,
       exec: (ox) => {
-        Huebot.clear_admins(ox)
+        App.clear_admins(ox)
       }
     },
     help: {
       description: `Show a summary of commands`,
       public: true,
       exec: (ox) => {
-        Huebot.show_help(ox)
+        App.show_help(ox)
       }
     },
     ping: {
       description: `Returns a Pong`,
       public: false,
       exec: (ox) => {
-        Huebot.ping(ox)
+        App.ping(ox)
       }
     },
     whatis: {
       description: `Inspects a command`,
       public: true,
       exec: (ox) => {
-        Huebot.whatis_command(ox)
+        App.whatis_command(ox)
       }
     },
     say: {
       description: `Make the bot say something`,
       public: false,
       exec: (ox) => {
-        Huebot.say(ox)
+        App.say(ox)
       }
     },
     say2: {
       description: `Make the bot say something through a whisper`,
       public: false,
       exec: (ox) => {
-        Huebot.say(ox, true)
+        App.say(ox, true)
       }
     },
     random: {
       description: `Random video. Optional keyword for semi-random search`,
       public: true,
       exec: (ox) => {
-        Huebot.random(ox)
+        App.random(ox)
       }
     },
     leave: {
       description: `Leave the room`,
       public: false,
       exec: (ox) => {
-        Huebot.leave_room(ox)
+        App.leave_room(ox)
       }
     },
     join: {
       description: `Join a room`,
       public: false,
       exec: (ox) => {
-        Huebot.join_room(ox)
+        App.join_room(ox)
       }
     },
     sleep: {
@@ -164,77 +164,77 @@ module.exports = (Huebot) => {
       description: `Suggest topics`,
       public: false,
       exec: (ox) => {
-        Huebot.suggest(ox)
+        App.suggest(ox)
       }
     },
     think: {
       description: `Get a random showerthought`,
       public: false,
       exec: (ox) => {
-        Huebot.think(ox)
+        App.think(ox)
       }
     },
     public: {
       description: `Enable or disable public commands`,
       public: false,
       exec: (ox) => {
-        Huebot.change_public(ox)
+        App.change_public(ox)
       }
     },
     remind: {
       description: `Remind a message to a user when they become active`,
       public: false,
       exec: (ox) => {
-        Huebot.remind(ox)
+        App.remind(ox)
       }
     },
     calc: {
       description: `Make a math calculation`,
       public: true,
       exec: (ox) => {
-        Huebot.do_calculation(ox)
+        App.do_calculation(ox)
       }
     },
     roll: {
       description: `Simulate a dice`,
       public: true,
       exec: (ox) => {
-        Huebot.roll_dice(ox)
+        App.roll_dice(ox)
       }
     },
     users: {
       description: `List connected users`,
       public: true,
       exec: (ox) => {
-        Huebot.show_users(ox)
+        App.show_users(ox)
       }
     },
     decide: {
       description: `Decide on multiple options`,
       public: true,
       exec: (ox) => {
-        Huebot.decide(ox)
+        App.decide(ox)
       }
     },
     wiki: {
       description: `Define something using wikipedia`,
       public: true,
       exec: (ox) => {
-        Huebot.search_wiki(ox)
+        App.search_wiki(ox)
       }
     },
     wolfram: {
       description: `Ask Wolfram something`,
       public: true,
       exec: (ox) => {
-        Huebot.ask_wolfram(ox)
+        App.ask_wolfram(ox)
       }
     },
     shitpost: {
       description: `Random board post`,
       public: false,
       exec: (ox) => {
-        Huebot.get_random_4chan_post(ox)
+        App.get_random_4chan_post(ox)
       }
     },
     debug: {
@@ -245,27 +245,27 @@ module.exports = (Huebot) => {
     inv: {
       description: `Change youtube tv to Invidious version`,
       public: true,
-      exec: (ox) => {Huebot.inv_tv(ox)}
+      exec: (ox) => {App.inv_tv(ox)}
     },
     ai: {
       description: `Ask something to openai`,
       public: false,
-      exec: (ox) => {Huebot.ask_openai(ox)}
+      exec: (ox) => {App.ask_openai(ox)}
     },
   }
 
-  Huebot.command_list = []
-  Huebot.public_command_list = []
+  App.command_list = []
+  App.public_command_list = []
 
-  for (let key in Huebot.commands) {
-    Huebot.command_list.push(key)
+  for (let key in App.commands) {
+    App.command_list.push(key)
 
-    if (Huebot.commands[key].public) {
-      Huebot.public_command_list.push(key)
+    if (App.commands[key].public) {
+      App.public_command_list.push(key)
     }
   }
 
-  Huebot.command_list.sort()
+  App.command_list.sort()
 
   // Must Include:
   // data.message
@@ -273,7 +273,7 @@ module.exports = (Huebot) => {
   // data.method
   // Optional:
   // data.callback
-  Huebot.process_command = (ctx, data) => {
+  App.process_command = (ctx, data) => {
     let allowed = false
     let split = data.message.split(' ')
     let cmd = split[0]
@@ -281,7 +281,7 @@ module.exports = (Huebot) => {
 
     if (split.length > 1) {
       cmd += ' '
-      arg = Huebot.single_space(split.slice(1).join(` `))
+      arg = App.single_space(split.slice(1).join(` `))
     }
     else {
       arg = ``
@@ -289,13 +289,13 @@ module.exports = (Huebot) => {
 
     cmd = cmd.substring(1).trim()
 
-    if (!Huebot.is_admin(data.username)) {
-      if (Huebot.db.options.public_commands) {
-        if (Huebot.public_command_list.includes(cmd)) {
+    if (!App.is_admin(data.username)) {
+      if (App.db.options.public_commands) {
+        if (App.public_command_list.includes(cmd)) {
           allowed = true
         }
         else {
-          let cmd2 = Huebot.db.commands[cmd]
+          let cmd2 = App.db.commands[cmd]
 
           if (cmd2) {
             if (cmd2.type === `image` || cmd2.type === `tv`) {
@@ -320,7 +320,7 @@ module.exports = (Huebot) => {
 
     ctx.user_command_activity.push(data.username)
 
-    if (ctx.user_command_activity.length > Huebot.config.max_user_command_activity) {
+    if (ctx.user_command_activity.length > App.config.max_user_command_activity) {
       ctx.user_command_activity.shift()
     }
 
@@ -338,8 +338,8 @@ module.exports = (Huebot) => {
             let cc
             let c2
 
-            if (!c.startsWith(Huebot.prefix)) {
-              cc = Huebot.prefix + c
+            if (!c.startsWith(App.prefix)) {
+              cc = App.prefix + c
               c2 = c
             }
             else {
@@ -347,13 +347,13 @@ module.exports = (Huebot) => {
               c2 = c.substring(1)
             }
 
-            let acmd = Huebot.db.commands[c2]
+            let acmd = App.db.commands[c2]
 
             if (acmd !== undefined) {
               let spc = acmd.url.split(` `)[0]
 
-              if (Huebot.command_list.includes(spc)) {
-                cc = Huebot.prefix + acmd.url
+              if (App.command_list.includes(spc)) {
+                cc = App.prefix + acmd.url
               }
             }
 
@@ -364,7 +364,7 @@ module.exports = (Huebot) => {
           let cqid
 
           while (true) {
-            cqid = Huebot.get_random_string(5) + Date.now()
+            cqid = App.get_random_string(5) + Date.now()
 
             if (ctx.commands_queue[cqid] === undefined) {
               break
@@ -387,7 +387,7 @@ module.exports = (Huebot) => {
           ctx.commands_queue[cqid].method = data.method
           ctx.commands_queue[cqid].commands = cmds
 
-          Huebot.run_commands_queue(ctx, cqid)
+          App.run_commands_queue(ctx, cqid)
 
           if (data.callback) {
             return data.callback()
@@ -399,7 +399,7 @@ module.exports = (Huebot) => {
       }
     }
 
-    Huebot.execute_command(ctx, data, cmd, arg)
+    App.execute_command(ctx, data, cmd, arg)
 
     if (data.callback) {
       return data.callback()
@@ -409,14 +409,14 @@ module.exports = (Huebot) => {
     }
   }
 
-  Huebot.execute_command = (ctx, data, cmd, arg) => {
-    let command = Huebot.commands[cmd]
+  App.execute_command = (ctx, data, cmd, arg) => {
+    let command = App.commands[cmd]
 
     if (!command) {
-      for (let key in Huebot.commands) {
-        if (Huebot.commands[key].aliases) {
-          if (Huebot.commands[key].aliases.includes(cmd)) {
-            command = Huebot.commands[key]
+      for (let key in App.commands) {
+        if (App.commands[key].aliases) {
+          if (App.commands[key].aliases.includes(cmd)) {
+            command = App.commands[key]
             break
           }
         }
@@ -426,14 +426,14 @@ module.exports = (Huebot) => {
     if(command) {
       command.exec({ctx:ctx, data:data, arg:arg, cmd:cmd})
     }
-    else if (Huebot.db.commands[cmd] !== undefined) {
-      Huebot.run_command(ctx, cmd, arg, data)
+    else if (App.db.commands[cmd] !== undefined) {
+      App.run_command(ctx, cmd, arg, data)
     }
     else {
-      let closest = Huebot.find_closest(cmd, Huebot.command_list)
+      let closest = App.find_closest(cmd, App.command_list)
 
       if (closest) {
-        Huebot.commands[closest].exec({ctx:ctx, data:data, arg:arg, cmd:closest})
+        App.commands[closest].exec({ctx:ctx, data:data, arg:arg, cmd:closest})
       }
     }
   }

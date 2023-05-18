@@ -1,14 +1,8 @@
-const fs = require(`fs`)
-const path = require('path')
-const fetch = require(`node-fetch`)
-const Sentencer = require('sentencer')
-const randomSentence = require(`random-sentence`)
-
-module.exports = (Huebot) => {
-  Huebot.is_protected_admin = (uname) => {
+module.exports = (App) => {
+  App.is_protected_admin = (uname) => {
     let low_uname = uname.toLowerCase()
 
-    for (let admin of Huebot.db.config.protected_admins) {
+    for (let admin of App.db.config.protected_admins) {
       if (admin.toLowerCase() === low_uname) {
         return true
       }
@@ -17,10 +11,10 @@ module.exports = (Huebot) => {
     return false
   }
 
-  Huebot.is_admin = (uname) => {
+  App.is_admin = (uname) => {
     let low_uname = uname.toLowerCase()
 
-    for (let admin of Huebot.db.permissions.admins) {
+    for (let admin of App.db.permissions.admins) {
       if (admin.toLowerCase() === low_uname) {
         return true
       }
@@ -29,19 +23,19 @@ module.exports = (Huebot) => {
     return false
   }
 
-  Huebot.shuffle_array = (array) => {
+  App.shuffle_array = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]]; // eslint-disable-line no-param-reassign
     }
   }
 
-  Huebot.capitalize = (word) => {
+  App.capitalize = (word) => {
     return word[0].toUpperCase() + word.slice(1)
   }
 
-  Huebot.get_random_word = (mode = `normal`) => {
-    let word = Sentencer.make(`{{ noun }}`)
+  App.get_random_word = (mode = `normal`) => {
+    let word = App.i.sentencer.make(`{{ noun }}`)
 
     if (mode === `normal`) {
       return word
@@ -54,7 +48,7 @@ module.exports = (Huebot) => {
     }
   }
 
-  Huebot.get_random_sentence = (ctx) => {
+  App.get_random_sentence = (ctx) => {
     let contexts = [
       `I want {{ a_noun }}`,
       `I feel like {{ a_noun }}`,
@@ -77,15 +71,15 @@ module.exports = (Huebot) => {
       `{{ user }} is creeping me out right now`,
     ]
 
-    let context = contexts[Huebot.get_random_int(0, contexts.length - 1)]
-    return Huebot.do_replacements(ctx, context)
+    let context = contexts[App.get_random_int(0, contexts.length - 1)]
+    return App.do_replacements(ctx, context)
   }
 
-  Huebot.get_random_weird_sentence = () => {
-    return randomSentence({words: Huebot.get_random_int(1, 8)})
+  App.get_random_weird_sentence = () => {
+    return App.i.random_sentence({words: App.get_random_int(1, 8)})
   }
 
-  Huebot.safe_replacements = (s) => {
+  App.safe_replacements = (s) => {
     s = s.replace(/\$user\$/g, `[random user]`)
     s = s.replace(/\$word\$/g, `[random word]`)
     s = s.replace(/\$Word\$/g, `[random Word]`)
@@ -93,18 +87,18 @@ module.exports = (Huebot) => {
     return s
   }
 
-  Huebot.get_random_string = (n) => {
+  App.get_random_string = (n) => {
     let text = ``
     let possible = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`
 
     for (let i = 0; i < n; i++) {
-      text += possible[Huebot.get_random_int(0, possible.length - 1)]
+      text += possible[App.get_random_int(0, possible.length - 1)]
     }
 
     return text
   }
 
-  Huebot.string_similarity = (s1, s2) => {
+  App.string_similarity = (s1, s2) => {
     let longer = s1
     let shorter = s2
 
@@ -119,10 +113,10 @@ module.exports = (Huebot) => {
       return 1.0
     }
 
-    return (longerLength - Huebot.string_similarity_distance(longer, shorter)) / parseFloat(longerLength)
+    return (longerLength - App.string_similarity_distance(longer, shorter)) / parseFloat(longerLength)
   }
 
-  Huebot.string_similarity_distance = (s1, s2) => {
+  App.string_similarity_distance = (s1, s2) => {
     s1 = s1.toLowerCase()
     s2 = s2.toLowerCase()
     let costs = new Array()
@@ -157,27 +151,27 @@ module.exports = (Huebot) => {
     return costs[s2.length]
   }
 
-  Huebot.is_admin_or_op = (rol) => {
+  App.is_admin_or_op = (rol) => {
     return rol === `admin` || rol === `op`
   }
 
-  Huebot.get_random_int = (min, max) => {
+  App.get_random_int = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
-  Huebot.get_q_item = (id, op = `normal`) => {
+  App.get_q_item = (id, op = `normal`) => {
     let media = id.split(`_`)[0]
 
-    if (!Huebot.check_if_media(media)) {
+    if (!App.check_if_media(media)) {
       return false
     }
 
     let i = 0
 
-    for (let item of Huebot.db.queue[media]) {
+    for (let item of App.db.queue[media]) {
       if (item.id === id) {
         if (op === `delete`) {
-          Huebot.db.queue[media].splice(i, 1)
+          App.db.queue[media].splice(i, 1)
         }
 
         return item
@@ -189,12 +183,12 @@ module.exports = (Huebot) => {
     return false
   }
 
-  Huebot.save_file = (name, content, callback = false) => {
+  App.save_file = (name, content, callback = false) => {
     let text = JSON.stringify(content)
 
-    fs.writeFile(path.join(Huebot.files_path, name), text, 'utf8', (err) => {
+    App.i.fs.writeFile(App.i.path.join(App.files_path, name), text, 'utf8', (err) => {
       if (err) {
-        console.error(err)
+        App.log(err, `error`)
       }
       else {
         if (callback) {
@@ -204,7 +198,7 @@ module.exports = (Huebot) => {
     })
   }
 
-  Huebot.fill_defaults = (args, def_args) => {
+  App.fill_defaults = (args, def_args) => {
     for (let key in def_args) {
       let d = def_args[key]
 
@@ -214,7 +208,7 @@ module.exports = (Huebot) => {
     }
   }
 
-  Huebot.list_items = (args = {}) => {
+  App.list_items = (args = {}) => {
     let def_args = {
       data: {},
       filter: ``,
@@ -226,7 +220,7 @@ module.exports = (Huebot) => {
       limit: true
     }
 
-    Huebot.fill_defaults(args, def_args)
+    App.fill_defaults(args, def_args)
     args.filter = args.filter.toLowerCase()
     let do_filter = args.filter ? true : false
     let props
@@ -241,7 +235,7 @@ module.exports = (Huebot) => {
     let max
 
     if (args.limit) {
-      max = Huebot.config.max_list_items
+      max = App.config.max_list_items
     }
     else {
       max = props.length
@@ -286,7 +280,7 @@ module.exports = (Huebot) => {
       let bp = ``
 
       if (args.mode === `commands`) {
-        let cmd = Huebot.db.commands[p]
+        let cmd = App.db.commands[p]
 
         if (cmd && cmd.type) {
           bp = ` (${cmd.type})`
@@ -303,7 +297,7 @@ module.exports = (Huebot) => {
 
       let ns = `${w}${args.prepend}${p}${bp}${w2}`
 
-      if (s.length + ns.length > Huebot.config.max_text_length) {
+      if (s.length + ns.length > App.config.max_text_length) {
         return false
       }
       else {
@@ -320,7 +314,7 @@ module.exports = (Huebot) => {
     return s.trim()
   }
 
-  Huebot.get_extension = (s) => {
+  App.get_extension = (s) => {
     if (s.startsWith(`http://`) || s.startsWith(`https://`)) {
       let s2 = s.split(`//`).slice(1).join(`//`)
       let matches = s2.match(/\/.*\.(\w+)(?=$|[#?])/)
@@ -340,19 +334,19 @@ module.exports = (Huebot) => {
     return ``
   }
 
-  Huebot.single_space = (s) => {
+  App.single_space = (s) => {
     return s.replace(/\s+/g, ' ').trim()
   }
 
-  Huebot.no_space = (s) => {
+  App.no_space = (s) => {
     return s.replace(/\s+/g, '').trim()
   }
 
-  Huebot.single_linebreak = (s) => {
+  App.single_linebreak = (s) => {
     return s.replace(/[\n\r]+/g, '\n').replace(/\s+$/g, '')
   }
 
-	Huebot.remove_pre_empty_lines = (s) => {
+	App.remove_pre_empty_lines = (s) => {
 		let split = s.split(`\n`)
 		let counter = 0
 
@@ -366,7 +360,7 @@ module.exports = (Huebot) => {
 		}
 	}
 
-	Huebot.remove_multiple_empty_lines = (s, level = 1) => {
+	App.remove_multiple_empty_lines = (s, level = 1) => {
 		let ns = []
 		let charge = 0
 		let split = s.split('\n')
@@ -390,7 +384,7 @@ module.exports = (Huebot) => {
 		return pf
 	}
 
-  Huebot.smart_capitalize = (s) => {
+  App.smart_capitalize = (s) => {
     if (s.length > 2) {
       return s[0].toUpperCase() + s.slice(1)
     }
@@ -399,7 +393,7 @@ module.exports = (Huebot) => {
     }
   }
 
-  Huebot.clean_multiline = (message) => {
+  App.clean_multiline = (message) => {
     let message_split = message.split(`\n`)
     let num_lines = message_split.length
 
@@ -421,13 +415,13 @@ module.exports = (Huebot) => {
     return message
   }
 
-  Huebot.round = (value, decimals) => {
+  App.round = (value, decimals) => {
     return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals)
   }
 
-  Huebot.rgb_to_hex = (rgb, hash = true) => {
+  App.rgb_to_hex = (rgb, hash = true) => {
     if (typeof rgb === `string`) {
-      rgb = Huebot.rgb_to_array(rgb)
+      rgb = App.rgb_to_array(rgb)
     }
 
     let code = ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1)
@@ -439,7 +433,7 @@ module.exports = (Huebot) => {
     return code
   }
 
-  Huebot.rgb_to_array = (rgb) => {
+  App.rgb_to_array = (rgb) => {
     let array
 
     if (Array.isArray(rgb)) {
@@ -458,19 +452,20 @@ module.exports = (Huebot) => {
     return array
   }
 
-  Huebot.is_command = (message) => {
-    if (message.length > 1 && message[0] === Huebot.prefix && message[1] !== Huebot.prefix) {
+  App.is_command = (message) => {
+    if (message.length > 1 && message[0] === App.prefix && message[1] !== App.prefix) {
       return true
     }
 
     return false
   }
 
-  Huebot.get_shower_thought = async () => {
+  App.get_shower_thought = async () => {
     return new Promise(async (resolve, reject) =>
     {
-        console.info(`Fetching Reddit...`)
-        fetch(`https://www.reddit.com/r/Showerthoughts/random.json`)
+        App.log(`Fetching Reddit...`)
+
+        App.i.fetch(`https://www.reddit.com/r/Showerthoughts/random.json`)
         .then(res => {
           return res.json()
         })
@@ -485,30 +480,30 @@ module.exports = (Huebot) => {
     })
   }
 
-  Huebot.process_feedback = (ctx, data, s) => {
+  App.process_feedback = (ctx, data, s) => {
     if (!s) {
       return false
     }
 
     if (data.method === `whisper`) {
-      Huebot.send_whisper(ctx, data.username, s)
+      App.send_whisper(ctx, data.username, s)
     }
     else {
-      Huebot.send_message(ctx, s)
+      App.send_message(ctx, s)
     }
   }
 
-  Huebot.get_random_user = (ctx) => {
-    return ctx.userlist[Huebot.get_random_int(0, ctx.userlist.length - 1)]
+  App.get_random_user = (ctx) => {
+    return ctx.userlist[App.get_random_int(0, ctx.userlist.length - 1)]
   }
 
-  Huebot.do_replacements = (ctx, s) => {
+  App.do_replacements = (ctx, s) => {
     function check_word (word, token, m1, m2, m3) {
       if (token === m1) {
         return word
       }
       else if (token === m2) {
-        return Huebot.capitalize(word)
+        return App.capitalize(word)
       }
       else if (token === m3) {
         return word.toUpperCase()
@@ -516,40 +511,40 @@ module.exports = (Huebot) => {
     }
 
     s = s.replace(/\{\{\s*user\s*\}\}/gi, () => {
-      return Huebot.get_random_user(ctx)
+      return App.get_random_user(ctx)
     })
 
     s = s.replace(/\{\{\s*(noun)\s*\}\}/gi, (a, b) => {
-      return check_word(Sentencer.make(`{{ noun }}`), b, `noun`, `Noun`, `NOUN`)
+      return check_word(App.i.sentencer.make(`{{ noun }}`), b, `noun`, `Noun`, `NOUN`)
     })
 
     s = s.replace(/\{\{\s*(a_noun)\s*\}\}/gi, (a, b) => {
-      return check_word(Sentencer.make(`{{ a_noun }}`), b, `a_noun`, `A_noun`, `A_NOUN`)
+      return check_word(App.i.sentencer.make(`{{ a_noun }}`), b, `a_noun`, `A_noun`, `A_NOUN`)
     })
 
     s = s.replace(/\{\{\s*(nouns)\s*\}\}/gi, (a, b) => {
-      return check_word(Sentencer.make(`{{ nouns }}`), b, `nouns`, `Nouns`, `NOUNS`)
+      return check_word(App.i.sentencer.make(`{{ nouns }}`), b, `nouns`, `Nouns`, `NOUNS`)
     })
 
     s = s.replace(/\{\{\s*(adjective)\s*\}\}/gi, (a, b) => {
-      return check_word(Sentencer.make(`{{ adjective }}`), b, `adjective`, `Adjective`, `ADJECTIVE`)
+      return check_word(App.i.sentencer.make(`{{ adjective }}`), b, `adjective`, `Adjective`, `ADJECTIVE`)
     })
 
     return s
   }
 
-  Huebot.set_media_sources = (ctx, data) => {
+  App.set_media_sources = (ctx, data) => {
     let tv_done = false
     let image_done = false
 
     for (let m of data.log_messages.slice(0).reverse()) {
       if (!tv_done && m.type === `tv`) {
-        Huebot.set_tv_source(ctx, m.data.source)
+        App.set_tv_source(ctx, m.data.source)
         tv_done = true
       }
 
       if (!image_done && m.type === `image`) {
-        Huebot.set_image_source(ctx, m.data.source)
+        App.set_image_source(ctx, m.data.source)
         image_done = true
       }
 
@@ -559,15 +554,15 @@ module.exports = (Huebot) => {
     }
   }
 
-  Huebot.set_image_source = (ctx, src) => {
+  App.set_image_source = (ctx, src) => {
     ctx.current_image_source = src
   }
 
-  Huebot.set_tv_source = (ctx, src) => {
+  App.set_tv_source = (ctx, src) => {
     ctx.current_tv_source = src
   }
 
-  Huebot.run_commands_queue = (ctx, id) => {
+  App.run_commands_queue = (ctx, id) => {
     let cq = ctx.commands_queue[id]
 
     if (!cq) {
@@ -590,7 +585,7 @@ module.exports = (Huebot) => {
       username: cq.username,
       method: cq.method,
       callback: () => {
-        Huebot.run_commands_queue(ctx, id)
+        App.run_commands_queue(ctx, id)
       }
     }
 
@@ -602,54 +597,54 @@ module.exports = (Huebot) => {
       }
 
       setTimeout(() => {
-        Huebot.run_commands_queue(ctx, id)
+        App.run_commands_queue(ctx, id)
       }, n)
     }
     else {
-      Huebot.process_command(ctx, obj)
+      App.process_command(ctx, obj)
     }
   }
 
-  Huebot.send_message = (ctx, message, feedback = true) => {
+  App.send_message = (ctx, message, feedback = true) => {
     if (!message) {
       return false
     }
 
-    message = Huebot.do_replacements(ctx, message)
-    message = message.substring(0, Huebot.config.max_text_length)
-    message = Huebot.remove_pre_empty_lines(message)
-    message = Huebot.remove_multiple_empty_lines(message)
+    message = App.do_replacements(ctx, message)
+    message = message.substring(0, App.config.max_text_length)
+    message = App.remove_pre_empty_lines(message)
+    message = App.remove_multiple_empty_lines(message)
     message = message.trimEnd()
 
-    Huebot.socket_emit(ctx, 'sendchat', {
+    App.socket_emit(ctx, 'sendchat', {
       message: message
     })
   }
 
-  Huebot.send_message_all_rooms = (text) => {
-    for (let key in Huebot.connected_rooms) {
-      Huebot.send_message(Huebot.connected_rooms[key].context, text)
+  App.send_message_all_rooms = (text) => {
+    for (let key in App.connected_rooms) {
+      App.send_message(App.connected_rooms[key].context, text)
     }
   }
 
-  Huebot.delete_message = (ctx, id) => {
-    Huebot.socket_emit(ctx, 'delete_message', {
+  App.delete_message = (ctx, id) => {
+    App.socket_emit(ctx, 'delete_message', {
       id: id
     })
   }
 
-  Huebot.send_whisper = (ctx, uname, message) => {
-    message = Huebot.do_replacements(ctx, message)
-    message = Huebot.single_linebreak(Huebot.clean_multiline(message.substring(0, Huebot.config.max_text_length)))
+  App.send_whisper = (ctx, uname, message) => {
+    message = App.do_replacements(ctx, message)
+    message = App.single_linebreak(App.clean_multiline(message.substring(0, App.config.max_text_length)))
 
-    Huebot.socket_emit(ctx, 'whisper', {
+    App.socket_emit(ctx, 'whisper', {
       type: `user`,
       usernames: [uname],
       message: message
     })
   }
 
-  Huebot.change_media = (ctx, args = {}) => {
+  App.change_media = (ctx, args = {}) => {
     let def_args = {
       type: ``,
       src: ``,
@@ -657,9 +652,9 @@ module.exports = (Huebot) => {
       comment: ``
     }
 
-    Huebot.fill_defaults(args, def_args)
+    App.fill_defaults(args, def_args)
 
-    if (!Huebot.config.media_types.includes(args.type)) {
+    if (!App.config.media_types.includes(args.type)) {
       return false
     }
 
@@ -667,10 +662,10 @@ module.exports = (Huebot) => {
       return false
     }
 
-    args.src = Huebot.do_replacements(ctx, args.src)
-    args.src = Huebot.single_space(args.src)
+    args.src = App.do_replacements(ctx, args.src)
+    args.src = App.single_space(args.src)
 
-    if (args.src.length > Huebot.db.max_media_source_length) {
+    if (args.src.length > App.db.max_media_source_length) {
       return false
     }
 
@@ -679,7 +674,7 @@ module.exports = (Huebot) => {
         return false
       }
 
-      Huebot.socket_emit(ctx, 'change_image_source', {
+      App.socket_emit(ctx, 'change_image_source', {
         src: args.src,
         comment: args.comment
       })
@@ -689,25 +684,25 @@ module.exports = (Huebot) => {
         return false
       }
 
-      Huebot.socket_emit(ctx, 'change_tv_source', {
+      App.socket_emit(ctx, 'change_tv_source', {
         src: args.src,
         comment: args.comment
       })
     }
   }
 
-  Huebot.run_command = (ctx, cmd, arg, data) => {
-    let command = Huebot.db.commands[cmd]
+  App.run_command = (ctx, cmd, arg, data) => {
+    let command = App.db.commands[cmd]
 
     if (command.type === `image`) {
-      Huebot.change_media(ctx, {
+      App.change_media(ctx, {
         type: `image`,
         src: command.url,
         comment: data.comment
       })
     }
     else if (command.type === `tv`) {
-      Huebot.change_media(ctx, {
+      App.change_media(ctx, {
         type: `tv`,
         src: command.url,
         comment: data.comment
@@ -715,20 +710,20 @@ module.exports = (Huebot) => {
     }
   }
 
-  Huebot.set_username = (ctx, uname) => {
+  App.set_username = (ctx, uname) => {
     ctx.username = uname
   }
 
-  Huebot.set_role = (ctx, rol) => {
+  App.set_role = (ctx, rol) => {
     ctx.role = rol
   }
 
-  Huebot.set_room_enables = (ctx, data) => {
+  App.set_room_enables = (ctx, data) => {
     ctx.room_image_mode = data.room_image_mode
     ctx.room_tv_mode = data.room_tv_mode
   }
 
-  Huebot.socket_emit = (ctx, destination, data) => {
+  App.socket_emit = (ctx, destination, data) => {
     let obj = {
       destination: destination,
       data: data
@@ -737,23 +732,23 @@ module.exports = (Huebot) => {
     ctx.emit_queue.push(obj)
 
     if (ctx.emit_queue_timeout === undefined) {
-      Huebot.check_emit_queue(ctx)
+      App.check_emit_queue(ctx)
     }
   }
 
-  Huebot.check_emit_queue = (ctx) => {
+  App.check_emit_queue = (ctx) => {
     if (ctx.emit_queue.length > 0) {
       let obj = ctx.emit_queue[0]
 
       if (obj !== `first`) {
-        Huebot.do_socket_emit(ctx, obj)
+        App.do_socket_emit(ctx, obj)
       }
 
       ctx.emit_queue.shift()
 
       ctx.emit_queue_timeout = setTimeout(() => {
-        Huebot.check_emit_queue(ctx)
-      }, Huebot.config.socket_emit_throttle)
+        App.check_emit_queue(ctx)
+      }, App.config.socket_emit_throttle)
     }
     else {
       clearTimeout(ctx.emit_queue_timeout)
@@ -761,8 +756,8 @@ module.exports = (Huebot) => {
     }
   }
 
-  Huebot.do_socket_emit = (ctx, obj) => {
-    if (ctx.emit_charge >= Huebot.config.emit_limit) {
+  App.do_socket_emit = (ctx, obj) => {
+    if (ctx.emit_charge >= App.config.emit_limit) {
       return false
     }
 
@@ -771,10 +766,10 @@ module.exports = (Huebot) => {
     ctx.emit_charge += 1
   }
 
-  Huebot.start_emit_charge_loop = () => {
+  App.start_emit_charge_loop = () => {
     setInterval(() => {
-      for (let key in Huebot.connected_rooms) {
-        let ctx = Huebot.connected_rooms[key].context
+      for (let key in App.connected_rooms) {
+        let ctx = App.connected_rooms[key].context
         if (ctx.emit_charge > 0) {
           ctx.emit_charge -= 1
         }
@@ -782,30 +777,30 @@ module.exports = (Huebot) => {
     }, 1000)
   }
 
-  Huebot.set_theme = (ctx, data) => {
+  App.set_theme = (ctx, data) => {
     ctx.background_color = data.background_color
     ctx.text_color_mode = data.text_color_mode
     ctx.text_color = data.text_color
   }
 
-  Huebot.set_background = (ctx, data) => {
+  App.set_background = (ctx, data) => {
     ctx.background = data.background
     ctx.background_type = data.background_type
   }
 
-  Huebot.set_background_mode = (ctx, mode) => {
+  App.set_background_mode = (ctx, mode) => {
     ctx.background_mode = mode
   }
 
-  Huebot.set_background_effect = (ctx, effect) => {
+  App.set_background_effect = (ctx, effect) => {
     ctx.background_effect = effect
   }
 
-  Huebot.set_background_tile_dimensions = (ctx, dimensions) => {
+  App.set_background_tile_dimensions = (ctx, dimensions) => {
     ctx.background_tile_dimensions = dimensions
   }
 
-  Huebot.set_userlist = (ctx, data) => {
+  App.set_userlist = (ctx, data) => {
     ctx.userlist = []
 
     for (let user of data.userlist) {
@@ -813,7 +808,7 @@ module.exports = (Huebot) => {
     }
   }
 
-  Huebot.add_to_userlist = (ctx, uname) => {
+  App.add_to_userlist = (ctx, uname) => {
     for (let u of ctx.userlist) {
       if (u === uname) {
         return false
@@ -823,7 +818,7 @@ module.exports = (Huebot) => {
     ctx.userlist.push(uname)
   }
 
-  Huebot.remove_from_userlist = (ctx, uname) => {
+  App.remove_from_userlist = (ctx, uname) => {
     for (let i = 0; i < ctx.userlist.length; i++) {
       let u = ctx.userlist[i]
 
@@ -834,7 +829,7 @@ module.exports = (Huebot) => {
     }
   }
 
-  Huebot.replace_in_userlist = (ctx, old_uname, new_uname) => {
+  App.replace_in_userlist = (ctx, old_uname, new_uname) => {
     for (let i = 0; i < ctx.userlist.length; i++) {
       let u = ctx.userlist[i]
 
@@ -845,65 +840,65 @@ module.exports = (Huebot) => {
     }
   }
 
-  Huebot.check_reminders = (ctx, uname) => {
-    if (Huebot.db.reminders[uname] === undefined || Huebot.db.reminders[uname].length === 0) {
+  App.check_reminders = (ctx, uname) => {
+    if (App.db.reminders[uname] === undefined || App.db.reminders[uname].length === 0) {
       return false
     }
 
-    for (let reminder of Huebot.db.reminders[uname]) {
+    for (let reminder of App.db.reminders[uname]) {
       let s = `To: ${uname} - From: ${reminder.from}\n"${reminder.message}"`
-      Huebot.send_message(ctx, s)
+      App.send_message(ctx, s)
     }
 
-    Huebot.db.reminders[uname] = []
-    Huebot.save_file(`reminders.json`, Huebot.db.reminders)
+    App.db.reminders[uname] = []
+    App.save_file(`reminders.json`, App.db.reminders)
   }
 
-  Huebot.check_speech = (ctx, data, arg) => {
-    let p = Math.min(100, Huebot.db.config.speak_chance_percentage)
+  App.check_speech = (ctx, data, arg) => {
+    let p = Math.min(100, App.db.config.speak_chance_percentage)
 
     if (p <= 0) {
       return
     }
 
-    let n = Huebot.get_random_int(1, 100)
+    let n = App.get_random_int(1, 100)
 
     if (n <= (p)) {
       setTimeout(() => {
-        let modes = Huebot.db.config.speak_modes
+        let modes = App.db.config.speak_modes
 
         if (modes.length === 0) {
           return
         }
 
-        let mode = modes[Huebot.get_random_int(0, modes.length - 1)]
+        let mode = modes[App.get_random_int(0, modes.length - 1)]
 
         if (mode === 1) {
-          Huebot.think({ctx:ctx, data:data, arg:arg, cmd:`think`})
+          App.think({ctx:ctx, data:data, arg:arg, cmd:`think`})
         }
         else if (mode === 2) {
-          Huebot.send_message(ctx, Huebot.get_random_sentence(ctx))
+          App.send_message(ctx, App.get_random_sentence(ctx))
         }
         else if (mode === 3) {
-          Huebot.send_message(ctx, Huebot.get_random_weird_sentence())
+          App.send_message(ctx, App.get_random_weird_sentence())
         }
         else if (mode === 4) {
-          Huebot.get_random_4chan_post(ctx)
+          App.get_random_4chan_post(ctx)
         }
       }, 1000)
     }
   }
 
-  Huebot.selective_play = (ctx, kind, url, comment = ``) => {
+  App.selective_play = (ctx, kind, url, comment = ``) => {
     if (kind === `image`) {
-      Huebot.change_media(ctx, {
+      App.change_media(ctx, {
         type: `image`,
         src: url,
         comment: comment
       })
     }
     else if (kind === `tv`) {
-      Huebot.change_media(ctx, {
+      App.change_media(ctx, {
         type: `tv`,
         src: url,
         comment: comment
@@ -911,15 +906,16 @@ module.exports = (Huebot) => {
     }
   }
 
-  Huebot.get_youtube_stream = (ctx) => {
-    console.info(`Fetching Youtube...`)
-    fetch(`https://www.googleapis.com/youtube/v3/search?videoEmbeddable=true&maxResults=20&type=video&eventType=live&videoCategoryId=20&fields=items(id(videoId))&part=snippet&key=${Huebot.db.config.youtube_client_id}`)
+  App.get_youtube_stream = (ctx) => {
+    App.log(`Fetching Youtube...`)
+
+    App.i.fetch(`https://www.googleapis.com/youtube/v3/search?videoEmbeddable=true&maxResults=20&type=video&eventType=live&videoCategoryId=20&fields=items(id(videoId))&part=snippet&key=${App.db.config.youtube_client_id}`)
     .then(res => {
       return res.json()
     })
     .then(res => {
       if (res.items !== undefined && res.items.length > 0) {
-        Huebot.shuffle_array(res.items)
+        App.shuffle_array(res.items)
         let item
 
         for (item of res.items) {
@@ -931,27 +927,27 @@ module.exports = (Huebot) => {
         let id = item.id.videoId
         ctx.recent_youtube_streams.push(id)
 
-        if (ctx.recent_youtube_streams.length > Huebot.config.recent_streams_max_length) {
+        if (ctx.recent_youtube_streams.length > App.config.recent_streams_max_length) {
           ctx.recent_youtube_streams.shift()
         }
 
-        Huebot.change_media(ctx, {
+        App.change_media(ctx, {
           type: `tv`,
           src: `https://youtube.com/watch?v=${id}`
         })
       }
     })
     .catch(err => {
-      console.error(err)
+      App.log(err, `error`)
     })
   }
 
-  Huebot.find_closest = (s, list) => {
+  App.find_closest = (s, list) => {
     let highest_num = 0
     let highest_cmd = ``
 
     for (let s2 of list) {
-      let num = Huebot.string_similarity(s, s2)
+      let num = App.string_similarity(s, s2)
 
       if (num > highest_num) {
         highest_num = num
@@ -967,7 +963,7 @@ module.exports = (Huebot) => {
     }
   }
 
-  Huebot.get_media_name = (media) => {
+  App.get_media_name = (media) => {
     let name = ``
 
     if (media === `image`) {
@@ -980,12 +976,12 @@ module.exports = (Huebot) => {
     return name
   }
 
-  Huebot.check_if_media = (s) => {
+  App.check_if_media = (s) => {
     return (s === `image` || s === `tv`)
   }
 
-  Huebot.tv_default = (s, media) => {
-    if (!Huebot.check_if_media(media)) {
+  App.tv_default = (s, media) => {
+    if (!App.check_if_media(media)) {
       s = `tv ${s}`
     }
 
@@ -993,7 +989,7 @@ module.exports = (Huebot) => {
   }
 
   // Get id of youtube video from url
-  Huebot.get_youtube_id = (url) => {
+  App.get_youtube_id = (url) => {
     let v_id = false
     let list_id = false
     let split = url.split(/(vi\/|v%3D|v=|\/v\/|youtu\.be\/|\/embed\/)/)
@@ -1017,6 +1013,16 @@ module.exports = (Huebot) => {
     }
     else if (v_id) {
       return [`video`, v_id]
+    }
+  }
+
+  // Centralized log function
+  App.log = (message, mode = `normal`) => {
+    if (mode === `error`) {
+      console.error(message)
+    }
+    else {
+      console.info(`🟢 ${message}`)
     }
   }
 }
