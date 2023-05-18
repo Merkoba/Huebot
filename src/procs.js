@@ -51,7 +51,7 @@ module.exports = (Huebot) => {
     }
 
     try {
-      console.info(`Asking ai`)
+      console.info(`Asking AI`)
 
       let ans = await Huebot.openai_client.createCompletion({
         model: `text-davinci-003`,
