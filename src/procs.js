@@ -1152,7 +1152,7 @@ module.exports = (App) => {
       }
 
       App.log(`Fetching RSS: ${url}`)
-      rss_parser.parseURL(url)
+      App.i.rss_parser.parseURL(url)
       .then(feed => {
         let date_1 = feed.items[0].isoDate
 
