@@ -396,7 +396,7 @@ module.exports = (App) => {
     obj.text_color = ox.ctx.text_color
     obj.background = ox.ctx.background
 
-    if (ox.ctx.background_type === `hosted`) {
+    if (obj.background && ox.ctx.background_type === `hosted`) {
       if (App.db.config.server_url.includes(`localhost`)) {
         App.process_feedback(ox.ctx, ox.data, `Can't upload localhost image. Ignoring background image`)
         obj.background = ``
