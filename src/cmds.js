@@ -170,6 +170,7 @@ module.exports = (App) => {
     think: {
       description: `Get a random showerthought`,
       public: false,
+      no_whisper: true,
       exec: (ox) => {
         App.think(ox)
       }
@@ -226,6 +227,7 @@ module.exports = (App) => {
     wolfram: {
       description: `Ask Wolfram something`,
       public: true,
+      no_whisper: true,
       exec: (ox) => {
         App.ask_wolfram(ox)
       }
@@ -233,6 +235,7 @@ module.exports = (App) => {
     shitpost: {
       description: `Random board post`,
       public: false,
+      no_whisper: true,
       exec: (ox) => {
         App.get_random_4chan_post(ox)
       }
@@ -250,6 +253,7 @@ module.exports = (App) => {
     ai: {
       description: `Ask something to openai`,
       public: false,
+      no_whisper: true,
       exec: (ox) => {App.ask_openai(ox)}
     },
   }
@@ -386,7 +390,6 @@ module.exports = (App) => {
           ctx.commands_queue[cqid].username = data.username
           ctx.commands_queue[cqid].method = data.method
           ctx.commands_queue[cqid].commands = cmds
-
           App.run_commands_queue(ctx, cqid)
 
           if (data.callback) {
@@ -410,6 +413,12 @@ module.exports = (App) => {
   }
 
   App.execute_command = (ctx, data, cmd, arg) => {
+    function whisper_check (c) {
+      if ((data.method === `whisper`) && c.no_whisper) {
+        return false
+      }
+    }
+
     let command = App.commands[cmd]
 
     if (!command) {
@@ -424,6 +433,10 @@ module.exports = (App) => {
     }
 
     if(command) {
+      if (whisper_check(command)) {
+        return
+      }
+
       command.exec({ctx:ctx, data:data, arg:arg, cmd:cmd})
     }
     else if (App.db.commands[cmd] !== undefined) {
@@ -433,6 +446,10 @@ module.exports = (App) => {
       let closest = App.find_closest(cmd, App.command_list)
 
       if (closest) {
+        if (whisper_check(App.commands[closest])) {
+          return
+        }
+
         App.commands[closest].exec({ctx:ctx, data:data, arg:arg, cmd:closest})
       }
     }
