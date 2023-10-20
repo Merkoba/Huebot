@@ -415,8 +415,10 @@ module.exports = (App) => {
   App.execute_command = (ctx, data, cmd, arg) => {
     function whisper_check (c) {
       if ((data.method === `whisper`) && c.no_whisper) {
-        return false
+        return true
       }
+
+      return false
     }
 
     let command = App.commands[cmd]
