@@ -369,6 +369,9 @@ module.exports = (App) => {
       ox.arg = args.slice(1).join(` `)
       App.remove_theme(ox)
     }
+    else if (args[0] === `random`) {
+      App.apply_random_theme(ox.ctx)
+    }
     else if (args[0] === `rename`) {
       ox.arg = args.slice(1).join(` `)
       App.rename_theme(ox)
@@ -502,37 +505,41 @@ module.exports = (App) => {
     let obj = App.db.themes[ox.arg]
 
     if (obj) {
-      obj.background_color = App.no_space(obj.background_color)
-      obj.text_color = App.no_space(obj.text_color)
-
-      if (obj.background_color.startsWith(`rgb`)) {
-        obj.background_color = App.rgb_to_hex(obj.background_color)
-      }
-
-      if (obj.text_color.startsWith(`rgb`)) {
-        obj.text_color = App.rgb_to_hex(obj.text_color)
-      }
-
-      if (obj.background_color && obj.background_color !== ox.ctx.background_color) {
-        App.socket_emit(ox.ctx, `change_background_color`, {
-          color: obj.background_color
-        })
-      }
-
-      if (obj.text_color && obj.text_color !== ox.ctx.text_color) {
-        App.socket_emit(ox.ctx, `change_text_color`, {
-          color: obj.text_color
-        })
-      }
-
-      if (obj.background && obj.background !== ox.ctx.background) {
-        App.socket_emit(ox.ctx, `change_background_source`, {
-          src: obj.background
-        })
-      }
+      App.apply_theme_obj(ox.ctx, obj)
     }
     else {
       App.process_feedback(ox.ctx, ox.data, `Theme "${ox.arg}" doesn't exist.`)
+    }
+  }
+
+  App.apply_theme_obj = (ctx, obj) => {
+    obj.background_color = App.no_space(obj.background_color)
+    obj.text_color = App.no_space(obj.text_color)
+
+    if (obj.background_color.startsWith(`rgb`)) {
+      obj.background_color = App.rgb_to_hex(obj.background_color)
+    }
+
+    if (obj.text_color.startsWith(`rgb`)) {
+      obj.text_color = App.rgb_to_hex(obj.text_color)
+    }
+
+    if (obj.background_color && obj.background_color !== ctx.background_color) {
+      App.socket_emit(ctx, `change_background_color`, {
+        color: obj.background_color
+      })
+    }
+
+    if (obj.text_color && obj.text_color !== ctx.text_color) {
+      App.socket_emit(ctx, `change_text_color`, {
+        color: obj.text_color
+      })
+    }
+
+    if (obj.background && obj.background !== ctx.background) {
+      App.socket_emit(ctx, `change_background_source`, {
+        src: obj.background
+      })
     }
   }
 
@@ -1196,5 +1203,23 @@ module.exports = (App) => {
         App.log(err, `error`)
       })
     }
+  }
+
+  App.apply_random_theme = (ctx) => {
+    let keys = Object.keys(App.db.themes)
+
+    if (keys.length < 2) {
+      return
+    }
+
+    if (App.last_random_theme) {
+      keys = keys.filter(x => x !== App.last_random_theme)
+    }
+
+    let index = App.get_random_int(0, keys.length - 1)
+    let next_key = keys[index]
+    App.last_random_theme = next_key
+    let obj = App.db.themes[next_key]
+    App.apply_theme_obj(ctx, obj)
   }
 }

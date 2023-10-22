@@ -18,5 +18,7 @@
     "check_rss_delay": 30,
     "rss_urls": [],
     "openai_enabled": false,
-    "openai_key": "xxx"
+    "openai_key": "xxx",
+    "auto_theme": false,
+    "auto_theme_delay": 60
 }

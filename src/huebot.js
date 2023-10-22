@@ -272,6 +272,23 @@ App.start_rss_interval = () => {
 	}
 }
 
+// Change theme every x minutes
+App.start_auto_theme_interval = () => {
+	if (App.db.config.auto_theme && App.db.config.auto_theme_delay) {
+		setInterval(() => {
+			if (Object.keys(App.connected_rooms).length === 0) {
+				return
+			}
+
+			for (let key in App.connected_rooms) {
+				let ctx = App.connected_rooms[key].context
+				App.apply_random_theme(ctx)
+			}
+		}, App.db.config.auto_theme_delay * 1000 * 60)
+		App.log(`auto_theme interval started`)
+	}
+}
+
 // Start openai client
 App.start_openai = () => {
 	if (App.db.config.openai_enabled) {
@@ -286,6 +303,7 @@ App.start_openai = () => {
 
 App.start_emit_charge_loop()
 App.start_rss_interval()
+App.start_auto_theme_interval()
 App.start_openai()
 
 // Web Server

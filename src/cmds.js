@@ -439,7 +439,7 @@ module.exports = (App) => {
         return
       }
 
-      command.exec({ctx:ctx, data:data, arg:arg, cmd:cmd})
+      command.exec({ctx: ctx, data: data, arg: arg, cmd: cmd})
     }
     else if (App.db.commands[cmd] !== undefined) {
       App.run_command(ctx, cmd, arg, data)
@@ -452,7 +452,7 @@ module.exports = (App) => {
           return
         }
 
-        App.commands[closest].exec({ctx:ctx, data:data, arg:arg, cmd:closest})
+        App.commands[closest].exec({ctx: ctx, data: data, arg: arg, cmd: closest})
       }
     }
   }
