@@ -266,6 +266,7 @@ App.start_rss_interval = () => {
 
 		if (isNaN(delay)) {
 			App.log(`RSS delay is not a number`)
+			return
 		}
 
 		setInterval(() => {
@@ -288,6 +289,7 @@ App.start_auto_theme_interval = () => {
 
 		if (isNaN(delay)) {
 			App.log(`Auto theme delay is not a number`)
+			return
 		}
 
 		setInterval(() => {
