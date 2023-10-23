@@ -261,20 +261,35 @@ for (let room_id of App.db.config.room_ids) {
 // Check RSS every x minutes
 App.start_rss_interval = () => {
 	if (App.db.config.check_rss && App.db.config.check_rss_delay) {
+		let mins = App.db.config.check_rss_delay
+		let delay = mins * 1000 * 60
+
+		if (isNaN(delay)) {
+			App.log(`RSS delay is not a number`)
+		}
+
 		setInterval(() => {
 			if (Object.keys(App.connected_rooms).length === 0) {
 				return
 			}
 
 			App.check_rss()
-		}, App.db.config.check_rss_delay * 1000 * 60)
-		App.log(`check_rss interval started`)
+		}, delay)
+
+		App.log(`check_rss interval: ${mins} mins`)
 	}
 }
 
 // Change theme every x minutes
 App.start_auto_theme_interval = () => {
 	if (App.db.config.auto_theme && App.db.config.auto_theme_delay) {
+		let mins = App.db.config.auto_theme_delay
+		let delay = mins * 1000 * 60
+
+		if (isNaN(delay)) {
+			App.log(`Auto theme delay is not a number`)
+		}
+
 		setInterval(() => {
 			if (Object.keys(App.connected_rooms).length === 0) {
 				return
@@ -284,8 +299,9 @@ App.start_auto_theme_interval = () => {
 				let ctx = App.connected_rooms[key].context
 				App.apply_random_theme(ctx)
 			}
-		}, App.db.config.auto_theme_delay * 1000 * 60)
-		App.log(`auto_theme interval started`)
+		}, delay)
+
+		App.log(`auto_theme interval: ${mins} mins`)
 	}
 }
 
