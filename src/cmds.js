@@ -251,6 +251,7 @@ module.exports = (App) => {
       exec: (ox) => {App.inv_tv(ox)}
     },
     ai: {
+      aliases: [`ia`],
       description: `Ask something to openai`,
       public: false,
       no_whisper: true,
