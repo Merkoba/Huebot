@@ -45,7 +45,7 @@ module.exports = (App) => {
       App.log(`Asking AI`)
 
       let ans = await App.openai_client.createCompletion({
-        model: `text-davinci-003`,
+        model: `gpt-3.5-turbo-instruct`,
         prompt: ox.arg,
         max_tokens: 200
       })
