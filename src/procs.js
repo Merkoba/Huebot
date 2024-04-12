@@ -5,9 +5,32 @@ module.exports = (App) => {
   })
 
   App.change_image = (ox, comment = ``) => {
+    App.image_p = 0
+
+    App.i.image_api.image_search({query: ox.arg, moderate: true })
+    .then(results => {
+      if (results) {
+        App.image_results = results
+        App.next_image(ox, comment)
+      }
+    })
+  }
+
+  App.next_image = (ox, comment = ``) => {
+    let src = ""
+
+    try {
+      src = App.image_results[App.image_p].image
+    }
+    catch (err) {
+      return
+    }
+
+    App.image_p += 1
+
     App.change_media(ox.ctx, {
       type: 'image',
-      src: ox.arg,
+      src: src,
       comment: comment
     })
   }

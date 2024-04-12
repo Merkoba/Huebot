@@ -14,6 +14,7 @@ App.i.mathjs = require(`mathjs`)
 App.i.imgur = require(`imgur`)
 App.i.cheerio = require(`cheerio`)
 App.i.parser = require(`rss-parser`)
+App.i.image_api = require(`duckduckgo-images-api`)
 App.i.rss_parser = new App.i.parser()
 
 App.db = {}

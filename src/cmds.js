@@ -8,6 +8,14 @@ module.exports = (App) => {
         App.change_image(ox)
       }
     },
+    nextimage: {
+      aliases: [`pp`],
+      description: `Get the next image`,
+      public: false,
+      exec: (ox) => {
+        App.next_image(ox)
+      }
+    },
     tv: {
       aliases: [`yt`, `video`, `v`],
       description: `Change the tv`,
