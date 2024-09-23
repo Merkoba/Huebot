@@ -655,7 +655,8 @@ module.exports = (App) => {
           return
         }
 
-        text += `\n${query}`
+        let url = `https://boards.4chan.org/${board}/thread/${id}`
+        let ans = text + `\n` + url
         App.process_feedback(ox.ctx, ox.data, text)
       })
       .catch(err => {
