@@ -612,6 +612,7 @@ module.exports = (App) => {
   }
 
   App.get_random_4chan_post = (ox) => {
+    let boards = [`g`, `an`, `ck`, `lit`, `x`, `tv`, `v`, `fit`, `k`, `o`, `sci`, `his`]
     let query = `https://a.4cdn.org/g/threads.json`
     App.log(`Fetching 4chan...`)
 
@@ -622,7 +623,8 @@ module.exports = (App) => {
     .then(json => {
       let threads = json[`0`][`threads`]
       let id = threads[App.get_random_int(0, threads.length - 1)][`no`]
-      let query = `https://a.4cdn.org/g/thread/${id}.json`
+      let board = boards[App.get_random_int(0, boards.length - 1)]
+      let query = `https://a.4cdn.org/${board}/thread/${id}.json`
 
       App.log(`Fetching 4chan (2)...`)
 
@@ -647,12 +649,13 @@ module.exports = (App) => {
 
         $(`br`).replaceWith(`\n`)
 
-        let text = $.text().substring(0, 500).trim()
+        let text = $.text().substring(0, 1000).trim()
 
         if (!text) {
           return
         }
 
+        text += `\n${query}`
         App.process_feedback(ox.ctx, ox.data, text)
       })
       .catch(err => {
