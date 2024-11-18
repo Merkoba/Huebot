@@ -51,7 +51,7 @@ module.exports = (App) => {
     if (ans && ans[0] === `video`) {
       App.change_media(ox.ctx, {
         type: 'tv',
-        src: `https://invidious.fdn.fr/embed/${ans[1]}`,
+        src: `https://inv.nadeko.net/embed/${ans[1]}`,
         comment: comment
       })
     }
