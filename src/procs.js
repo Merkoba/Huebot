@@ -6,13 +6,15 @@ module.exports = (App) => {
 
   App.change_image = (ox, comment = ``) => {
     App.image_p = 0
+    let url = `https://22get.merkoba.com/api/v1/images?s=${ox.arg}>&scraper=ddg`
 
-    App.i.image_api.image_search({query: ox.arg, moderate: true })
-    .then(results => {
-      if (results) {
-        App.image_results = results
-        App.next_image(ox, comment)
-      }
+    App.i.fetch(url)
+    .then(res => {
+      return res.json()
+    })
+    .then(res => {
+      App.image_results = res.image
+      App.next_image(ox, comment)
     })
   }
 
@@ -20,7 +22,7 @@ module.exports = (App) => {
     let src = ""
 
     try {
-      src = App.image_results[App.image_p].image
+      src = App.image_results[App.image_p].source[0].url
     }
     catch (err) {
       return
