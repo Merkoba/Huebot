@@ -7,7 +7,7 @@ module.exports = (App) => {
   App.change_image = (ox, comment = ``) => {
     App.image_p = 0
     let query = App.do_replacements(ox.ctx, ox.arg)
-    let url = `https://22get.merkoba.com/api/v1/images?s=${query}>&scraper=ddg`
+    let url = `https://4get.bloat.cat/api/v1/images?s=${query}>&scraper=ddg`
 
     App.i.fetch(url)
     .then(res => {
