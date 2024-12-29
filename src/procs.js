@@ -1266,7 +1266,7 @@ module.exports = (App) => {
     }
 
     if (!ox.arg) {
-      App.process_feedback(ox.ctx, ox.data, `Correct format is --> ${App.prefix}${ox.cmd} [instance]`)
+      App.process_feedback(ox.ctx, ox.data, `4get instance: ${App.db.config.fourget}`)
       return false
     }
 
@@ -1287,7 +1287,7 @@ module.exports = (App) => {
     }
 
     if (!ox.arg) {
-      App.process_feedback(ox.ctx, ox.data, `Correct format is --> ${App.prefix}${ox.cmd} [scraper]`)
+      App.process_feedback(ox.ctx, ox.data, `Scraper: ${App.db.config.scraper}`)
       return false
     }
 
