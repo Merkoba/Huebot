@@ -25,7 +25,7 @@ require(`./utils.js`)(App)
 
 let args = process.argv.slice(2)
 const configs_location = `../configs/`
-const configs_path = App.i.path.normalize(App.i.path.resolve(__dirname, configs_location) + `/`)
+App.configs_path = App.i.path.normalize(App.i.path.resolve(__dirname, configs_location) + `/`)
 
 // Bot supports launching with a custom config file
 // For instance `node huebot.json goodBot`
@@ -33,17 +33,28 @@ const configs_path = App.i.path.normalize(App.i.path.resolve(__dirname, configs_
 // This is to allow multiple instances easily
 // If no argument is passed then it uses default.json
 
-let config_name
-
 if (args.length >= 1 && args[0] != `default`) {
-	config_name = args[0]
+	App.config_name = args[0]
 }
 else {
-	config_name = `default`
+	App.config_name = `default`
 }
 
-App.log(`Using config file: ${config_name}`)
-App.db.config = require(`${configs_path}${config_name}.json`)
+App.log(`Using config file: ${App.config_name}`)
+App.db.config = require(`${App.configs_path}${App.config_name}.json`)
+let def_config = require(`${App.configs_path}default.json`)
+let config_changed = false
+
+for (let key in def_config) {
+	if (App.db.config[key] === undefined) {
+		App.db.config[key] = def_config[key]
+		config_changed = true
+	}
+}
+
+if (config_changed) {
+	App.i.fs.writeFileSync(`${App.configs_path}${App.config_name}.json`, JSON.stringify(App.db.config, `utf-8`, 4))
+}
 
 const template_files_location = `../files/_template_`
 const template_files_path = App.i.path.normalize(App.i.path.resolve(__dirname, template_files_location) + `/`)

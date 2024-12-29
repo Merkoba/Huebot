@@ -20,5 +20,7 @@
     "openai_enabled": false,
     "openai_key": "xxx",
     "auto_theme": false,
-    "auto_theme_delay": 60
+    "auto_theme_delay": 60,
+    "fourget": "https://4get.bloat.cat",
+    "scraper": "ddg"
 }

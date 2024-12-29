@@ -265,6 +265,16 @@ module.exports = (App) => {
       no_whisper: true,
       exec: (ox) => {App.ask_openai(ox)}
     },
+    fourget: {
+      description: `Change 4get instance for image search`,
+      public: false,
+      exec: (ox) => {App.set_fourget(ox)}
+    },
+    scraper: {
+      description: `Change the scraper for image search`,
+      public: false,
+      exec: (ox) => {App.set_scraper(ox)}
+    },
   }
 
   App.command_list = []

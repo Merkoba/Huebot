@@ -7,7 +7,9 @@ module.exports = (App) => {
   App.change_image = (ox, comment = ``) => {
     App.image_p = 0
     let query = App.do_replacements(ox.ctx, ox.arg)
-    let url = `https://4get.bloat.cat/api/v1/images?s=${query}>&scraper=ddg`
+    let instance = App.db.config.fourget
+    let scraper = App.db.config.scraper
+    let url = `${instance}/api/v1/images?s=${query}>&scraper=${scraper}`
 
     App.i.fetch(url)
     .then(res => {
@@ -16,6 +18,9 @@ module.exports = (App) => {
     .then(res => {
       App.image_results = res.image
       App.next_image(ox, comment)
+    })
+    .catch(err => {
+      App.log(err.message, `error`)
     })
   }
 
@@ -1251,5 +1256,43 @@ module.exports = (App) => {
     App.last_random_theme = next_key
     let obj = App.db.themes[next_key]
     App.apply_theme_obj(ctx, obj)
+  }
+
+  App.set_fourget = (ox) => {
+    if (!App.is_protected_admin(ox.data.username)) {
+      return false
+    }
+
+    if (!ox.arg) {
+      App.process_feedback(ox.ctx, ox.data, `Correct format is --> ${App.prefix}${ox.cmd} [instance]`)
+      return false
+    }
+
+    if (!ox.arg.startsWith(`https://`) && !ox.arg.startsWith(`http://`)) {
+      ox.arg = `https://${ox.arg}`
+    }
+
+    App.db.config.fourget = ox.arg
+
+    App.save_config(() => {
+      App.process_feedback(ox.ctx, ox.data, `4get instance set to "${ox.arg}".`)
+    })
+  }
+
+  App.set_scraper = (ox) => {
+    if (!App.is_protected_admin(ox.data.username)) {
+      return false
+    }
+
+    if (!ox.arg) {
+      App.process_feedback(ox.ctx, ox.data, `Correct format is --> ${App.prefix}${ox.cmd} [scraper]`)
+      return false
+    }
+
+    App.db.config.scraper = ox.arg
+
+    App.save_config(() => {
+      App.process_feedback(ox.ctx, ox.data, `Scraper set to "${ox.arg}".`)
+    })
   }
 }

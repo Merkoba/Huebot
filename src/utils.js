@@ -186,7 +186,23 @@ module.exports = (App) => {
   App.save_file = (name, content, callback = false) => {
     let text = JSON.stringify(content)
 
-    App.i.fs.writeFile(App.i.path.join(App.files_path, name), text, 'utf8', (err) => {
+    App.i.fs.writeFile(App.i.path.join(App.files_path, name), text, `utf8`, (err) => {
+      if (err) {
+        App.log(err, `error`)
+      }
+      else {
+        if (callback) {
+          return callback()
+        }
+      }
+    })
+  }
+
+  App.save_config = (callback = false) => {
+    let text = JSON.stringify(App.db.config, null, 4)
+    let path = App.i.path.join(App.configs_path, `${App.config_name}.json`)
+
+    App.i.fs.writeFile(path, text, `utf8`, (err) => {
       if (err) {
         App.log(err, `error`)
       }
