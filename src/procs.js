@@ -25,10 +25,12 @@ module.exports = (App) => {
   }
 
   App.next_image = (ox, comment = ``) => {
-    let src = ""
+    let src = ``
+    let title = ``
 
     try {
       src = App.image_results[App.image_p].source[0].url
+      title = App.image_results[App.image_p].title
     }
     catch (err) {
       return
@@ -37,9 +39,9 @@ module.exports = (App) => {
     App.image_p += 1
 
     App.change_media(ox.ctx, {
-      type: 'image',
+      type: `image`,
       src: src,
-      comment: comment
+      comment: comment || title
     })
   }
 
