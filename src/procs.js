@@ -77,15 +77,21 @@ module.exports = (App) => {
     try {
       App.log(`Asking AI`)
 
-      let ans = await App.openai_client.createCompletion({
-        model: `gpt-3.5-turbo-instruct`,
-        prompt: ox.arg,
-        max_tokens: 200
+      let messages = []
+      messages.push({role: `user`, content: ox.arg.trim()})
+
+      let ans = await App.openai_client.chat.completions.create({
+        model: App.db.config.model,
+        max_tokens: 300,
+        messages,
       })
 
-      if (ans.status === 200) {
-        let text = ans.data.choices[0].text.trim()
-        App.process_feedback(ox.ctx, ox.data, text)
+      if (ans && ans.choices) {
+        let text = ans.choices[0].message.content.trim()
+
+        if (text) {
+          App.process_feedback(ox.ctx, ox.data, text)
+        }
       }
     }
     catch (err) {
@@ -1295,6 +1301,23 @@ module.exports = (App) => {
 
     App.save_config(() => {
       App.process_feedback(ox.ctx, ox.data, `Scraper set to "${ox.arg}".`)
+    })
+  }
+
+  App.set_model = (ox) => {
+    if (!App.is_protected_admin(ox.data.username)) {
+      return false
+    }
+
+    if (!ox.arg) {
+      App.process_feedback(ox.ctx, ox.data, `Model: ${App.db.config.model}`)
+      return false
+    }
+
+    App.db.config.model = ox.arg
+
+    App.save_config(() => {
+      App.process_feedback(ox.ctx, ox.data, `Model set to "${ox.arg}".`)
     })
   }
 }

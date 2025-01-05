@@ -22,5 +22,6 @@
     "auto_theme": false,
     "auto_theme_delay": 60,
     "fourget": "https://4get.bloat.cat",
-    "scraper": "ddg"
+    "scraper": "ddg",
+    "model": "gpt-4o-mini"
 }

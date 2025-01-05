@@ -275,6 +275,11 @@ module.exports = (App) => {
       public: false,
       exec: (ox) => {App.set_scraper(ox)}
     },
+    model: {
+      description: `Change the model for ChatGPT`,
+      public: false,
+      exec: (ox) => {App.set_model(ox)}
+    },
   }
 
   App.command_list = []
