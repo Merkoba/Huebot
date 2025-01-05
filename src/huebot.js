@@ -321,11 +321,10 @@ App.start_auto_theme_interval = () => {
 // Start openai client
 App.start_openai = () => {
 	if (App.db.config.openai_enabled) {
-		let configuration = new App.i.openai.Configuration({
-			apiKey: App.db.config.openai_key
-		})
+    App.openai_client = new App.i.openai({
+      apiKey: App.db.config.openai_key,
+    })
 
-		App.openai_client = new App.i.openai.OpenAIApi(configuration)
 		App.log(`openai started`)
 	}
 }

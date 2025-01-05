@@ -78,6 +78,7 @@ module.exports = (App) => {
       App.log(`Asking AI`)
 
       let messages = []
+      messages.push({role: `system`, content: `Respond in 100 words or less`})
       messages.push({role: `user`, content: ox.arg.trim()})
 
       let ans = await App.openai_client.chat.completions.create({
