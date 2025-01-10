@@ -163,6 +163,20 @@ module.exports = (App) => {
         App.join_room(ox)
       }
     },
+    addroom: {
+      description: `Add a room`,
+      public: false,
+      exec: (ox) => {
+        App.add_room(ox)
+      }
+    },
+    removeroom: {
+      description: `Remove a room`,
+      public: false,
+      exec: (ox) => {
+        App.remove_room(ox)
+      }
+    },
     sleep: {
       description: `Wait before executing the next command (ms)`,
       public: false,

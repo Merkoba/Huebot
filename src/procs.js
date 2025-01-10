@@ -982,6 +982,50 @@ module.exports = (App) => {
     App.start_connection(ox.arg)
   }
 
+  App.add_room = (ox) => {
+    if (!App.is_protected_admin(ox.data.username)) {
+      return false
+    }
+
+    if (!ox.arg) {
+      App.process_feedback(ox.ctx, ox.data, `Argument must be a room ID.`)
+      return false
+    }
+
+    if (App.db.config.room_ids.includes(ox.arg)) {
+      App.process_feedback(ox.ctx, ox.data, `Room already exists in the list.`)
+      return false
+    }
+
+    App.db.config.room_ids.push(ox.arg)
+
+    App.save_config(() => {
+      App.process_feedback(ox.ctx, ox.data, `Room added.`)
+    })
+  }
+
+  App.remove_room = (ox) => {
+    if (!App.is_protected_admin(ox.data.username)) {
+      return false
+    }
+
+    if (!ox.arg) {
+      App.process_feedback(ox.ctx, ox.data, `Argument must be a room ID.`)
+      return false
+    }
+
+    if (!App.db.config.room_ids.includes(ox.arg)) {
+      App.process_feedback(ox.ctx, ox.data, `Room not in list.`)
+      return false
+    }
+
+    App.db.config.room_ids = App.db.config.room_ids.filter(x => x !== ox.arg)
+
+    App.save_config(() => {
+      App.process_feedback(ox.ctx, ox.data, `Room removed.`)
+    })
+  }
+
   App.leave_room = (ox) => {
     if (!App.is_protected_admin(ox.data.username)) {
       return false
