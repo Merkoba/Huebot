@@ -102,7 +102,7 @@ module.exports = (App) => {
 
       let ans = await client.chat.completions.create({
         model,
-        max_tokens: 300,
+        max_completion_tokens: 300,
         messages,
       })
 
