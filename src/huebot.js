@@ -33,7 +33,7 @@ App.configs_path = App.i.path.normalize(App.i.path.resolve(__dirname, configs_lo
 // This is to allow multiple instances easily
 // If no argument is passed then it uses default.json
 
-if (args.length >= 1 && args[0] != `default`) {
+if ((args.length >= 1) && (args[0] !== `default`)) {
   App.config_name = args[0]
 }
 else {
@@ -61,7 +61,7 @@ const template_files_path = App.i.path.normalize(App.i.path.resolve(__dirname, t
 
 let files_name
 
-if (args.length >= 2 && args[1] != `default`) {
+if ((args.length >= 2) && (args[1] !== `default`)) {
   files_name = args[1]
 }
 else {

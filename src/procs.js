@@ -326,7 +326,7 @@ module.exports = (App) => {
       let command = App.db.commands[ox.arg]
 
       if (command) {
-        App.process_feedback(ox.ctx, ox.data, `"${ox.arg}" is of type "${command.type}" and is set to "${safe_replacements(command.url)}".`)
+        App.process_feedback(ox.ctx, ox.data, `"${ox.arg}" is of type "${command.type}" and is set to "${App.safe_replacements(command.url)}".`)
       }
       else {
         App.process_feedback(ox.ctx, ox.data, `Command "${ox.arg}" doesn't exist.`)
@@ -1125,22 +1125,6 @@ module.exports = (App) => {
     App.process_feedback(ox.ctx, ox.data, suggestions)
   }
 
-  App.think = async (ox) => {
-    let thought = await App.get_shower_thought()
-
-    if (!thought) {
-      return false
-    }
-
-    let ans = `${thought.title} [anchor ${thought.url}](Source)[/anchor]`
-
-    if (ox.arg === `again`) {
-      ox.data.method = `public`
-    }
-
-    App.process_feedback(ox.ctx, ox.data, ans)
-  }
-
   App.remind = (ox) => {
     if (!ox.arg) {
       App.process_feedback(ox.ctx, ox.data, `Correct format is --> ${App.prefix}${ox.cmd} [username] > [message]`)
@@ -1232,7 +1216,7 @@ module.exports = (App) => {
   }
 
   App.show_users = (ox) => {
-    s = App.list_items({
+    let s = App.list_items({
       data: ox.ctx.userlist.slice(0, 20),
       append: `,`,
       sort_mode: `random`,

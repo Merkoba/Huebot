@@ -190,14 +190,6 @@ module.exports = (App) => {
         App.suggest(ox)
       },
     },
-    think: {
-      description: `Get a random showerthought`,
-      public: false,
-      no_whisper: true,
-      exec: (ox) => {
-        App.think(ox)
-      },
-    },
     public: {
       description: `Enable or disable public commands`,
       public: false,
@@ -357,7 +349,7 @@ module.exports = (App) => {
         if (data.callback) {
           return data.callback()
         }
-        
+
         return false
       }
     }
@@ -423,7 +415,7 @@ module.exports = (App) => {
               if (data.callback) {
                 return data.callback()
               }
-              
+
               return false
             }
           }
@@ -437,7 +429,7 @@ module.exports = (App) => {
           if (data.callback) {
             return data.callback()
           }
-          
+
           return false
         }
       }
@@ -448,7 +440,7 @@ module.exports = (App) => {
     if (data.callback) {
       return data.callback()
     }
-    
+
     return false
   }
 

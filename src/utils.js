@@ -26,7 +26,7 @@ module.exports = (App) => {
   App.shuffle_array = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]]  
+      [array[i], array[j]] = [array[j], array[i]]
     }
   }
 
@@ -41,7 +41,7 @@ module.exports = (App) => {
       return word
     }
     else if (mode === `capitalized`) {
-      return capitalize(word)
+      return App.capitalize(word)
     }
     else if (mode === `upper_case`) {
       return word.toUpperCase()
@@ -107,13 +107,13 @@ module.exports = (App) => {
       shorter = s1
     }
 
-    let longerLength = longer.length
+    let longer_length = longer.length
 
-    if (longerLength == 0) {
+    if (longer_length === 0) {
       return 1.0
     }
 
-    return (longerLength - App.string_similarity_distance(longer, shorter)) / parseFloat(longerLength)
+    return (longer_length - App.string_similarity_distance(longer, shorter)) / parseFloat(longer_length)
   }
 
   App.string_similarity_distance = (s1, s2) => {
@@ -125,13 +125,13 @@ module.exports = (App) => {
       let lastValue = i
 
       for (let j = 0; j <= s2.length; j++) {
-        if (i == 0) {
+        if (i === 0) {
           costs[j] = j
         }
         else if (j > 0) {
           let newValue = costs[j - 1]
 
-          if (s1.charAt(i - 1) != s2.charAt(j - 1)) {
+          if (s1.charAt(i - 1) !== s2.charAt(j - 1)) {
             newValue = Math.min(Math.min(newValue, lastValue),
               costs[j]) + 1
           }
@@ -308,7 +308,7 @@ module.exports = (App) => {
       if (s.length + ns.length > App.config.max_text_length) {
         return false
       }
-      
+
       s += ns
 
       if (i >= max) {
@@ -361,7 +361,7 @@ module.exports = (App) => {
       if (line.trim()) {
         return split.slice(counter).join(`\n`)
       }
-			
+
       counter += 1
     }
   }
@@ -394,7 +394,7 @@ module.exports = (App) => {
     if (s.length > 2) {
       return s[0].toUpperCase() + s.slice(1)
     }
-    
+
     return s.toUpperCase()
   }
 
@@ -463,25 +463,6 @@ module.exports = (App) => {
     }
 
     return false
-  }
-
-  App.get_shower_thought = async () => {
-    return new Promise(async (resolve, reject) => {
-      App.log(`Fetching Reddit...`)
-
-      App.i.fetch(`https://www.reddit.com/r/Showerthoughts/random.json`)
-        .then(res => {
-          return res.json()
-        })
-        .then(res => {
-          let title = res[0].data.children[0].data.title
-          let url = res[0].data.children[0].data.url
-          resolve({title, url})
-        })
-        .catch(err => {
-          reject()
-        })
-    })
   }
 
   App.process_feedback = (ctx, data, s) => {
@@ -963,7 +944,7 @@ module.exports = (App) => {
     if (highest_num >= 0.7) {
       return highest_cmd
     }
-    
+
     return ``
   }
 
@@ -997,7 +978,7 @@ module.exports = (App) => {
     let v_id = false
     let list_id = false
     let split = url.split(/(vi\/|v%3D|v=|\/v\/|youtu\.be\/|\/embed\/)/)
-    let id = undefined !== split[2] ? split[2].split(/[^0-9a-z_\-]/i)[0] : split[0]
+    let id = undefined !== split[2] ? split[2].split(/[^0-9a-z_-]/i)[0] : split[0]
     v_id = id.length === 11 ? id : false
     let list_match = url.match(/(?:\?|&)(list=[0-9A-Za-z_-]+)/)
     let index_match = url.match(/(?:\?|&)(index=[0-9]+)/)
@@ -1021,6 +1002,7 @@ module.exports = (App) => {
   }
 
   // Centralized log function
+  /* eslint-disable no-console */
   App.log = (message, mode = `normal`) => {
     if (mode === `error`) {
       console.error(message)
