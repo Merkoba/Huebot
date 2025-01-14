@@ -144,12 +144,12 @@ module.exports = (App) => {
 
       App.log(`Generating Image`)
       let messages = []
+      let prompt = ox.arg.trim()
       messages.push({role: `system`, content: `Respond in 100 words or less`})
-      messages.push({role: `user`, content: ox.arg.trim()})
+      messages.push({role: `user`, content: prompt})
 
       let model = `dall-e-3`
       let size = `1024x1024`
-      let prompt = ox.arg.trim()
 
       let ans = await client.images.generate({
         n: 1,
