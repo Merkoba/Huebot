@@ -239,14 +239,6 @@ module.exports = (App) => {
         App.search_wiki(ox)
       },
     },
-    wolfram: {
-      description: `Ask Wolfram something`,
-      public: true,
-      no_whisper: true,
-      exec: (ox) => {
-        App.ask_wolfram(ox)
-      },
-    },
     shitpost: {
       description: `Random board post`,
       public: false,

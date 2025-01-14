@@ -36,9 +36,9 @@ List of rooms to connect at startup.
 
 >protected_admins
 
-These is the list of "superusers". 
+These is the list of "superusers".
 
-These are admins that can't be removed through commands. 
+These are admins that can't be removed through commands.
 
 Only they can add or remove more normal admins.
 
@@ -66,22 +66,6 @@ The character to trigger/identify commands.
 2 = Random Sentence
 3 = Random Weird Sentence
 4 = Random Post
-
->wolfram_id
-
-Id to use the Wolfram api
-
->wolfram_enabled
-
-Whether Wolfram features are enabled.
-
->openai_enabled
-
-Whether to start and use openai
-
->openai_key
-
-secret openai api key
 
 >check_rss
 

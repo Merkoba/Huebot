@@ -1265,29 +1265,6 @@ module.exports = (App) => {
     App.process_feedback(ox.ctx, ox.data, `Pong`)
   }
 
-  App.ask_wolfram = (ox) => {
-    if (!App.db.config.wolfram_enabled || !ox.arg) {
-      return
-    }
-
-    let query = `http://api.wolframalpha.com/v2/query?input=${encodeURIComponent(ox.arg)}&appid=${App.db.config.wolfram_id}&output=json&includepodid=Result&units=metric`
-    App.log(`Fetching Wolfram: ${query}`)
-
-    App.i.fetch(query)
-      .then(res => {
-        return res.json()
-      })
-      .then(res => {
-        if (res.queryresult && res.queryresult.pods) {
-          let result = res.queryresult.pods[0].subpods[0].plaintext
-          App.process_feedback(ox.ctx, ox.data, result)
-        }
-      })
-      .catch(err => {
-        App.log(err.message, `error`)
-      })
-  }
-
   App.check_rss = () => {
     if (!App.db.state.last_rss_urls) {
       App.db.state.last_rss_urls = {}
