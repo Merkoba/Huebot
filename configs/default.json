@@ -17,11 +17,12 @@
     "check_rss": false,
     "check_rss_delay": 30,
     "rss_urls": [],
-    "ai_enabled": false,
+    "ai_enabled": true,
     "auto_theme": false,
     "auto_theme_delay": 60,
     "fourget": "https://4get.bloat.cat",
     "scraper": "ddg",
     "model": "gemini-1.5-flash",
-    "rules": ""
+    "rules": "",
+    "words": 100
 }
