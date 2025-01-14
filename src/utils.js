@@ -26,7 +26,7 @@ module.exports = (App) => {
   App.shuffle_array = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]]; // eslint-disable-line no-param-reassign
+      [array[i], array[j]] = [array[j], array[i]]  
     }
   }
 
@@ -128,18 +128,16 @@ module.exports = (App) => {
         if (i == 0) {
           costs[j] = j
         }
-        else {
-          if (j > 0) {
-            let newValue = costs[j - 1]
+        else if (j > 0) {
+          let newValue = costs[j - 1]
 
-            if (s1.charAt(i - 1) != s2.charAt(j - 1)) {
-              newValue = Math.min(Math.min(newValue, lastValue),
-                costs[j]) + 1
-            }
-
-            costs[j - 1] = lastValue
-            lastValue = newValue
+          if (s1.charAt(i - 1) != s2.charAt(j - 1)) {
+            newValue = Math.min(Math.min(newValue, lastValue),
+              costs[j]) + 1
           }
+
+          costs[j - 1] = lastValue
+          lastValue = newValue
         }
       }
 
@@ -190,10 +188,8 @@ module.exports = (App) => {
       if (err) {
         App.log(err, `error`)
       }
-      else {
-        if (callback) {
-          return callback()
-        }
+      else if (callback) {
+        return callback()
       }
     })
   }
@@ -206,10 +202,8 @@ module.exports = (App) => {
       if (err) {
         App.log(err, `error`)
       }
-      else {
-        if (callback) {
-          return callback()
-        }
+      else if (callback) {
+        return callback()
       }
     })
   }
@@ -233,7 +227,7 @@ module.exports = (App) => {
       sort_mode: `none`,
       whisperify: false,
       mode: ``,
-      limit: true
+      limit: true,
     }
 
     App.fill_defaults(args, def_args)
@@ -275,10 +269,8 @@ module.exports = (App) => {
           }
         }
       }
-      else {
-        if (!on_added(p)) {
-          break
-        }
+      else if (!on_added(p)) {
+        break
       }
     }
 
@@ -316,9 +308,8 @@ module.exports = (App) => {
       if (s.length + ns.length > App.config.max_text_length) {
         return false
       }
-      else {
-        s += ns
-      }
+      
+      s += ns
 
       if (i >= max) {
         return false
@@ -351,62 +342,60 @@ module.exports = (App) => {
   }
 
   App.single_space = (s) => {
-    return s.replace(/\s+/g, ' ').trim()
+    return s.replace(/\s+/g, ` `).trim()
   }
 
   App.no_space = (s) => {
-    return s.replace(/\s+/g, '').trim()
+    return s.replace(/\s+/g, ``).trim()
   }
 
   App.single_linebreak = (s) => {
-    return s.replace(/[\n\r]+/g, '\n').replace(/\s+$/g, '')
+    return s.replace(/[\n\r]+/g, `\n`).replace(/\s+$/g, ``)
   }
 
-	App.remove_pre_empty_lines = (s) => {
-		let split = s.split(`\n`)
-		let counter = 0
+  App.remove_pre_empty_lines = (s) => {
+    let split = s.split(`\n`)
+    let counter = 0
 
-		for (let line of split) {
-			if (line.trim()) {
-				return split.slice(counter).join(`\n`)
-			}
-			else {
-				counter += 1
-			}
-		}
-	}
+    for (let line of split) {
+      if (line.trim()) {
+        return split.slice(counter).join(`\n`)
+      }
+			
+      counter += 1
+    }
+  }
 
-	App.remove_multiple_empty_lines = (s, level = 1) => {
-		let ns = []
-		let charge = 0
-		let split = s.split('\n')
+  App.remove_multiple_empty_lines = (s, level = 1) => {
+    let ns = []
+    let charge = 0
+    let split = s.split(`\n`)
 
-		for (let line of split) {
-			if (line.trim() === ``) {
-				if (charge < level) {
-					ns.push(line)
-				}
+    for (let line of split) {
+      if (line.trim() === ``) {
+        if (charge < level) {
+          ns.push(line)
+        }
 
-				charge += 1
-			}
-			else {
-				charge = 0
-				ns.push(line)
-			}
-		}
+        charge += 1
+      }
+      else {
+        charge = 0
+        ns.push(line)
+      }
+    }
 
-		let pf = ns.join('\n')
+    let pf = ns.join(`\n`)
 
-		return pf
-	}
+    return pf
+  }
 
   App.smart_capitalize = (s) => {
     if (s.length > 2) {
       return s[0].toUpperCase() + s.slice(1)
     }
-    else {
-      return s.toUpperCase()
-    }
+    
+    return s.toUpperCase()
   }
 
   App.clean_multiline = (message) => {
@@ -432,7 +421,7 @@ module.exports = (App) => {
   }
 
   App.round = (value, decimals) => {
-    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals)
+    return Number(Math.round(value + `e` + decimals) + `e-` + decimals)
   }
 
   App.rgb_to_hex = (rgb, hash = true) => {
@@ -477,18 +466,17 @@ module.exports = (App) => {
   }
 
   App.get_shower_thought = async () => {
-    return new Promise(async (resolve, reject) =>
-    {
-        App.log(`Fetching Reddit...`)
+    return new Promise(async (resolve, reject) => {
+      App.log(`Fetching Reddit...`)
 
-        App.i.fetch(`https://www.reddit.com/r/Showerthoughts/random.json`)
+      App.i.fetch(`https://www.reddit.com/r/Showerthoughts/random.json`)
         .then(res => {
           return res.json()
         })
         .then(res => {
           let title = res[0].data.children[0].data.title
           let url = res[0].data.children[0].data.url
-          resolve({title:title, url:url})
+          resolve({title, url})
         })
         .catch(err => {
           reject()
@@ -514,7 +502,7 @@ module.exports = (App) => {
   }
 
   App.do_replacements = (ctx, s) => {
-    function check_word (word, token, m1, m2, m3) {
+    function check_word(word, token, m1, m2, m3) {
       if (token === m1) {
         return word
       }
@@ -602,7 +590,7 @@ module.exports = (App) => {
       method: cq.method,
       callback: () => {
         App.run_commands_queue(ctx, id)
-      }
+      },
     }
 
     if (lc_cmd.startsWith(`.sleep`) || lc_cmd === `.sleep`) {
@@ -632,8 +620,8 @@ module.exports = (App) => {
     message = App.remove_multiple_empty_lines(message)
     message = message.trimEnd()
 
-    App.socket_emit(ctx, 'sendchat', {
-      message: message
+    App.socket_emit(ctx, `sendchat`, {
+      message,
     })
   }
 
@@ -644,8 +632,8 @@ module.exports = (App) => {
   }
 
   App.delete_message = (ctx, id) => {
-    App.socket_emit(ctx, 'delete_message', {
-      id: id
+    App.socket_emit(ctx, `delete_message`, {
+      id,
     })
   }
 
@@ -653,10 +641,10 @@ module.exports = (App) => {
     message = App.do_replacements(ctx, message)
     message = App.single_linebreak(App.clean_multiline(message.substring(0, App.config.max_text_length)))
 
-    App.socket_emit(ctx, 'whisper', {
+    App.socket_emit(ctx, `whisper`, {
       type: `user`,
       usernames: [uname],
-      message: message
+      message,
     })
   }
 
@@ -665,7 +653,7 @@ module.exports = (App) => {
       type: ``,
       src: ``,
       feedback: true,
-      comment: ``
+      comment: ``,
     }
 
     App.fill_defaults(args, def_args)
@@ -680,7 +668,7 @@ module.exports = (App) => {
 
     args.src = App.do_replacements(ctx, args.src)
     args.src = App.single_space(args.src)
-    args.comment = args.comment.substring(0, App.config.max_media_comment_length)
+    args.comment = args.comment.substring(0, App.config.max_media_comment_length).trim()
 
     if (args.src.length > App.config.max_media_source_length) {
       return false
@@ -691,9 +679,9 @@ module.exports = (App) => {
         return false
       }
 
-      App.socket_emit(ctx, 'change_image_source', {
+      App.socket_emit(ctx, `change_image_source`, {
         src: args.src,
-        comment: args.comment
+        comment: args.comment,
       })
     }
     else if (args.type === `tv`) {
@@ -701,9 +689,9 @@ module.exports = (App) => {
         return false
       }
 
-      App.socket_emit(ctx, 'change_tv_source', {
+      App.socket_emit(ctx, `change_tv_source`, {
         src: args.src,
-        comment: args.comment
+        comment: args.comment,
       })
     }
   }
@@ -715,14 +703,14 @@ module.exports = (App) => {
       App.change_media(ctx, {
         type: `image`,
         src: command.url,
-        comment: data.comment
+        comment: data.comment,
       })
     }
     else if (command.type === `tv`) {
       App.change_media(ctx, {
         type: `tv`,
         src: command.url,
-        comment: data.comment
+        comment: data.comment,
       })
     }
   }
@@ -742,8 +730,8 @@ module.exports = (App) => {
 
   App.socket_emit = (ctx, destination, data) => {
     let obj = {
-      destination: destination,
-      data: data
+      destination,
+      data,
     }
 
     ctx.emit_queue.push(obj)
@@ -880,7 +868,7 @@ module.exports = (App) => {
 
     let n = App.get_random_int(1, 100)
 
-    if (n <= (p)) {
+    if (n <= p) {
       setTimeout(() => {
         let modes = App.db.config.speak_modes
 
@@ -891,7 +879,7 @@ module.exports = (App) => {
         let mode = modes[App.get_random_int(0, modes.length - 1)]
 
         if (mode === 1) {
-          App.think({ctx:ctx, data:data, arg:arg, cmd:`think`})
+          App.think({ctx, data, arg, cmd:`think`})
         }
         else if (mode === 2) {
           App.send_message(ctx, App.get_random_sentence(ctx))
@@ -911,14 +899,14 @@ module.exports = (App) => {
       App.change_media(ctx, {
         type: `image`,
         src: url,
-        comment: comment
+        comment,
       })
     }
     else if (kind === `tv`) {
       App.change_media(ctx, {
         type: `tv`,
         src: url,
-        comment: comment
+        comment,
       })
     }
   }
@@ -927,36 +915,36 @@ module.exports = (App) => {
     App.log(`Fetching Youtube...`)
 
     App.i.fetch(`https://www.googleapis.com/youtube/v3/search?videoEmbeddable=true&maxResults=20&type=video&eventType=live&videoCategoryId=20&fields=items(id(videoId))&part=snippet&key=${App.db.config.youtube_client_id}`)
-    .then(res => {
-      return res.json()
-    })
-    .then(res => {
-      if (res.items !== undefined && res.items.length > 0) {
-        App.shuffle_array(res.items)
-        let item
+      .then(res => {
+        return res.json()
+      })
+      .then(res => {
+        if (res.items !== undefined && res.items.length > 0) {
+          App.shuffle_array(res.items)
+          let item
 
-        for (item of res.items) {
-          if (!ctx.recent_youtube_streams.includes(item.id.videoId)) {
-            break
+          for (item of res.items) {
+            if (!ctx.recent_youtube_streams.includes(item.id.videoId)) {
+              break
+            }
           }
+
+          let id = item.id.videoId
+          ctx.recent_youtube_streams.push(id)
+
+          if (ctx.recent_youtube_streams.length > App.config.recent_streams_max_length) {
+            ctx.recent_youtube_streams.shift()
+          }
+
+          App.change_media(ctx, {
+            type: `tv`,
+            src: `https://youtube.com/watch?v=${id}`,
+          })
         }
-
-        let id = item.id.videoId
-        ctx.recent_youtube_streams.push(id)
-
-        if (ctx.recent_youtube_streams.length > App.config.recent_streams_max_length) {
-          ctx.recent_youtube_streams.shift()
-        }
-
-        App.change_media(ctx, {
-          type: `tv`,
-          src: `https://youtube.com/watch?v=${id}`
-        })
-      }
-    })
-    .catch(err => {
-      App.log(err, `error`)
-    })
+      })
+      .catch(err => {
+        App.log(err, `error`)
+      })
   }
 
   App.find_closest = (s, list) => {
@@ -975,9 +963,8 @@ module.exports = (App) => {
     if (highest_num >= 0.7) {
       return highest_cmd
     }
-    else {
-      return ``
-    }
+    
+    return ``
   }
 
   App.get_media_name = (media) => {
@@ -994,7 +981,7 @@ module.exports = (App) => {
   }
 
   App.check_if_media = (s) => {
-    return (s === `image` || s === `tv`)
+    return s === `image` || s === `tv`
   }
 
   App.tv_default = (s, media) => {

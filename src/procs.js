@@ -1,7 +1,7 @@
 module.exports = (App) => {
   App.math = App.i.mathjs.create(App.i.mathjs.all, {
-    number: 'BigNumber',
-    precision: 64
+    number: `BigNumber`,
+    precision: 64,
   })
 
   App.change_image = (ox, comment = ``) => {
@@ -12,16 +12,16 @@ module.exports = (App) => {
     let url = `${instance}/api/v1/images?s=${query}>&scraper=${scraper}`
 
     App.i.fetch(url)
-    .then(res => {
-      return res.json()
-    })
-    .then(res => {
-      App.image_results = res.image
-      App.next_image(ox, comment)
-    })
-    .catch(err => {
-      App.log(err.message, `error`)
-    })
+      .then(res => {
+        return res.json()
+      })
+      .then(res => {
+        App.image_results = res.image
+        App.next_image(ox, comment)
+      })
+      .catch(err => {
+        App.log(err.message, `error`)
+      })
   }
 
   App.next_image = (ox, comment = ``) => {
@@ -40,14 +40,14 @@ module.exports = (App) => {
 
     App.change_media(ox.ctx, {
       type: `image`,
-      src: src,
-      comment: comment || title
+      src,
+      comment: comment || title,
     })
   }
 
   App.change_tv = (ox, comment = ``) => {
     App.change_media(ox.ctx, {
-      type: 'tv',
+      type: `tv`,
       src: ox.arg,
       comment,
     })
@@ -58,7 +58,7 @@ module.exports = (App) => {
 
     if (ans && ans[0] === `video`) {
       App.change_media(ox.ctx, {
-        type: 'tv',
+        type: `tv`,
         src: `https://inv.nadeko.net/embed/${ans[1]}`,
         comment,
       })
@@ -185,12 +185,12 @@ module.exports = (App) => {
   }
 
   App.add_custom_command = (ox) => {
-    let split = ox.arg.split(' ')
+    let split = ox.arg.split(` `)
     let command_type = split[0]
     let command_name = split[1]
     let command_url = split.slice(2).join(` `)
 
-    if (!ox.arg || split.length < 3 || (!App.config.media_types.includes(command_type))) {
+    if (!ox.arg || split.length < 3 || !App.config.media_types.includes(command_type)) {
       App.process_feedback(ox.ctx, ox.data, `Correct format is --> ${App.prefix}${ox.cmd} add ${App.config.media_types.join(`|`)} [name] [url]`)
       return false
     }
@@ -205,11 +205,11 @@ module.exports = (App) => {
     try {
       testobj[command_name] = {
         type: command_type,
-        url: command_url
+        url: command_url,
       }
       App.db.commands[command_name] = {
         type: command_type,
-        url: command_url
+        url: command_url,
       }
 
       App.save_file(`commands.json`, App.db.commands, (err) => {
@@ -241,7 +241,7 @@ module.exports = (App) => {
   }
 
   App.rename_custom_command = (ox) => {
-    let split = ox.arg.split(' ')
+    let split = ox.arg.split(` `)
     let old_name = split[0]
     let new_name = split[1]
 
@@ -283,9 +283,9 @@ module.exports = (App) => {
       data: cmds,
       filter: ox.arg,
       prepend: App.prefix,
-      sort_mode: sort_mode,
+      sort_mode,
       whisperify: `${App.prefix}`,
-      mode: `commands`
+      mode: `commands`,
     })
 
     if (!s) {
@@ -424,7 +424,7 @@ module.exports = (App) => {
       data: App.db.permissions.admins,
       filter: ox.arg,
       append: `,`,
-      sort_mode: sort_mode
+      sort_mode,
     })
 
     if (!s) {
@@ -503,25 +503,25 @@ module.exports = (App) => {
       App.process_feedback(ox.ctx, ox.data, `Uploading background image...`)
 
       App.i.imgur
-      .uploadUrl(bg_path)
-      .then((res) => {
-        if (ox.ctx.background === obj.background) {
-          ox.ctx.background = res.link
-        }
+        .uploadUrl(bg_path)
+        .then((res) => {
+          if (ox.ctx.background === obj.background) {
+            ox.ctx.background = res.link
+          }
 
-        obj.background = res.link
-        App.do_theme_save(ox, obj)
+          obj.background = res.link
+          App.do_theme_save(ox, obj)
 
-        App.socket_emit(ox.ctx, `change_background_source`, {
-          src: obj.background
+          App.socket_emit(ox.ctx, `change_background_source`, {
+            src: obj.background,
+          })
+
+          return
         })
-
-        return
-      })
-      .catch((err) => {
-        App.log(err.message, `error`)
-        return
-      })
+        .catch((err) => {
+          App.log(err.message, `error`)
+          return
+        })
     }
     else {
       App.do_theme_save(ox, obj)
@@ -555,7 +555,7 @@ module.exports = (App) => {
   }
 
   App.rename_theme = (ox) => {
-    let split = ox.arg.split(' ')
+    let split = ox.arg.split(` `)
     let old_name = split[0]
     let new_name = split[1]
 
@@ -618,19 +618,19 @@ module.exports = (App) => {
 
     if (obj.background_color && obj.background_color !== ctx.background_color) {
       App.socket_emit(ctx, `change_background_color`, {
-        color: obj.background_color
+        color: obj.background_color,
       })
     }
 
     if (obj.text_color && obj.text_color !== ctx.text_color) {
       App.socket_emit(ctx, `change_text_color`, {
-        color: obj.text_color
+        color: obj.text_color,
       })
     }
 
     if (obj.background && obj.background !== ctx.background) {
       App.socket_emit(ctx, `change_background_source`, {
-        src: obj.background
+        src: obj.background,
       })
     }
   }
@@ -646,8 +646,8 @@ module.exports = (App) => {
       data: App.db.themes,
       filter: ox.arg,
       append: `,`,
-      sort_mode: sort_mode,
-      whisperify: `${App.prefix}theme `
+      sort_mode,
+      whisperify: `${App.prefix}theme `,
     })
 
     if (!s) {
@@ -667,17 +667,17 @@ module.exports = (App) => {
     App.log(`Fetching Wikipedia: ${query}`)
 
     App.i.fetch(query)
-    .then(res => {
-      return res.json()
-    })
-    .then(res => {
-      if (res.extract) {
-        App.process_feedback(ox.ctx, ox.data, res.extract)
-      }
-    })
-    .catch(err => {
-      App.log(err.message, `error`)
-    })
+      .then(res => {
+        return res.json()
+      })
+      .then(res => {
+        if (res.extract) {
+          App.process_feedback(ox.ctx, ox.data, res.extract)
+        }
+      })
+      .catch(err => {
+        App.log(err.message, `error`)
+      })
   }
 
   App.get_random_4chan_post = (ox) => {
@@ -687,54 +687,54 @@ module.exports = (App) => {
     App.log(`Fetching 4chan...`)
 
     App.i.fetch(query)
-    .then(res => {
-      return res.json()
-    })
-    .then(json => {
-      let threads = json[`0`][`threads`]
-      let id = threads[App.get_random_int(0, threads.length - 1)][`no`]
-      let query = `https://a.4cdn.org/${board}/thread/${id}.json`
-
-      App.log(`Fetching 4chan (2)...`)
-
-      App.i.fetch(query)
       .then(res => {
         return res.json()
       })
       .then(json => {
-        let posts = json[`posts`]
-        let post = posts[App.get_random_int(0, posts.length - 1)]
-        let html = post[`com`]
+        let threads = json[`0`].threads
+        let id = threads[App.get_random_int(0, threads.length - 1)].no
+        let query = `https://a.4cdn.org/${board}/thread/${id}.json`
 
-        if (!html) {
-          return
-        }
+        App.log(`Fetching 4chan (2)...`)
 
-        let $ = App.i.cheerio.load(html)
+        App.i.fetch(query)
+          .then(res => {
+            return res.json()
+          })
+          .then(json => {
+            let posts = json.posts
+            let post = posts[App.get_random_int(0, posts.length - 1)]
+            let html = post.com
 
-        $(`.quotelink`).each((i, elem) => {
-          $(elem).remove()
-        })
+            if (!html) {
+              return
+            }
 
-        $(`br`).replaceWith(`\n`)
+            let $ = App.i.cheerio.load(html)
 
-        let text = $.text().substring(0, 1000).trim()
+            $(`.quotelink`).each((i, elem) => {
+              $(elem).remove()
+            })
 
-        if (!text) {
-          return
-        }
+            $(`br`).replaceWith(`\n`)
 
-        let url = `https://boards.4chan.org/${board}/thread/${id}`
-        let ans = text + `\n` + url
-        App.process_feedback(ox.ctx, ox.data, ans)
+            let text = $.text().substring(0, 1000).trim()
+
+            if (!text) {
+              return
+            }
+
+            let url = `https://boards.4chan.org/${board}/thread/${id}`
+            let ans = text + `\n` + url
+            App.process_feedback(ox.ctx, ox.data, ans)
+          })
+          .catch(err => {
+            App.log(err.message, `error`)
+          })
       })
       .catch(err => {
         App.log(err.message, `error`)
       })
-    })
-    .catch(err => {
-      App.log(err.message, `error`)
-    })
   }
 
   App.decide = (ox) => {
@@ -749,7 +749,7 @@ module.exports = (App) => {
       split = ox.arg.split(`,`).map(x => x.trim())
     }
     else {
-      split = ox.arg.split(' ').map(x => x.trim())
+      split = ox.arg.split(` `).map(x => x.trim())
     }
 
     if (split.length < 2) {
@@ -766,7 +766,7 @@ module.exports = (App) => {
 
     App.change_media(ox.ctx, {
       type: `tv`,
-      src: query
+      src: query,
     })
   }
 
@@ -968,7 +968,7 @@ module.exports = (App) => {
   App.show_activity = (ox) => {
     let s = App.list_items({
       data: ox.ctx.user_command_activity.slice(0).reverse(),
-      append: `,`
+      append: `,`,
     })
 
     if (!s) {
@@ -1128,7 +1128,7 @@ module.exports = (App) => {
   App.think = async (ox) => {
     let thought = await App.get_shower_thought()
 
-    if(!thought) {
+    if (!thought) {
       return false
     }
 
@@ -1178,7 +1178,7 @@ module.exports = (App) => {
 
     let m = {
       from: ox.data.username,
-      message: message
+      message,
     }
 
     App.db.reminders[username].push(m)
@@ -1227,7 +1227,7 @@ module.exports = (App) => {
       results.push(num)
     }
 
-    let ans = `Result: ${results.join(', ')}`
+    let ans = `Result: ${results.join(`, `)}`
     App.process_feedback(ox.ctx, ox.data, ans)
   }
 
@@ -1235,7 +1235,7 @@ module.exports = (App) => {
     s = App.list_items({
       data: ox.ctx.userlist.slice(0, 20),
       append: `,`,
-      sort_mode: `random`
+      sort_mode: `random`,
     })
 
     App.process_feedback(ox.ctx, ox.data, s)
@@ -1251,7 +1251,7 @@ module.exports = (App) => {
       append: ` `,
       sort_mode: `sort`,
       whisperify: `${App.prefix}whatis `,
-      limit: false
+      limit: false,
     })
 
     App.send_whisper(ox.ctx, ox.data.username, s)
@@ -1270,18 +1270,18 @@ module.exports = (App) => {
     App.log(`Fetching Wolfram: ${query}`)
 
     App.i.fetch(query)
-    .then(res => {
-      return res.json()
-    })
-    .then(res => {
-      if (res.queryresult && res.queryresult.pods) {
-        let result = res.queryresult.pods[0].subpods[0].plaintext
-        App.process_feedback(ox.ctx, ox.data, result)
-      }
-    })
-    .catch(err => {
-      App.log(err.message, `error`)
-    })
+      .then(res => {
+        return res.json()
+      })
+      .then(res => {
+        if (res.queryresult && res.queryresult.pods) {
+          let result = res.queryresult.pods[0].subpods[0].plaintext
+          App.process_feedback(ox.ctx, ox.data, result)
+        }
+      })
+      .catch(err => {
+        App.log(err.message, `error`)
+      })
   }
 
   App.check_rss = () => {
@@ -1300,48 +1300,48 @@ module.exports = (App) => {
 
       App.log(`Fetching RSS: ${url}`)
       App.i.rss_parser.parseURL(url)
-      .then(feed => {
-        let date_1 = feed.items[0].isoDate
+        .then(feed => {
+          let date_1 = feed.items[0].isoDate
 
-        if (date_1 && App.db.state.last_rss_urls[url] !== date_1) {
-          for (let item of feed.items.slice(0, 3)) {
-            let s = ``
+          if (date_1 && App.db.state.last_rss_urls[url] !== date_1) {
+            for (let item of feed.items.slice(0, 3)) {
+              let s = ``
 
-            if (modes.includes(`text`)) {
-              if (modes.includes(`bullet`)) {
-                s += `• `
+              if (modes.includes(`text`)) {
+                if (modes.includes(`bullet`)) {
+                  s += `• `
+                }
+
+                s += item.contentSnippet.substring(0, 1000).replace(/\n/g, ` `).trim()
               }
 
-              s += item.contentSnippet.substring(0, 1000).replace(/\n/g, ` `).trim()
+              if (modes.includes(`link`)) {
+                if (s) {
+                  s += ` `
+                }
+
+                s += item.link
+              }
+
+              let date = item.isoDate
+
+              if (s && date) {
+                if (App.db.state.last_rss_urls[url] !== date) {
+                  App.send_message_all_rooms(s)
+                }
+                else {
+                  break
+                }
+              }
             }
 
-            if (modes.includes(`link`)) {
-              if (s) {
-                s += ` `
-              }
-
-              s += item.link
-            }
-
-            let date = item.isoDate
-
-            if (s && date) {
-              if (App.db.state.last_rss_urls[url] !== date) {
-                App.send_message_all_rooms(s)
-              }
-              else {
-                break
-              }
-            }
+            App.db.state.last_rss_urls[url] = date_1
+            App.save_file(`state.json`, App.db.state)
           }
-
-          App.db.state.last_rss_urls[url] = date_1
-          App.save_file(`state.json`, App.db.state)
-        }
-      })
-      .catch(err => {
-        App.log(err, `error`)
-      })
+        })
+        .catch(err => {
+          App.log(err, `error`)
+        })
     }
   }
 

@@ -6,7 +6,7 @@ module.exports = (App) => {
       public: false,
       exec: (ox) => {
         App.change_image(ox)
-      }
+      },
     },
     nextimage: {
       aliases: [`pp`],
@@ -14,7 +14,7 @@ module.exports = (App) => {
       public: false,
       exec: (ox) => {
         App.next_image(ox)
-      }
+      },
     },
     tv: {
       aliases: [`yt`, `video`, `v`],
@@ -22,14 +22,14 @@ module.exports = (App) => {
       public: false,
       exec: (ox) => {
         App.change_tv(ox)
-      }
+      },
     },
     commands: {
       description: `Manage commands`,
       public: false,
       exec: (ox) => {
         App.manage_commands(ox)
-      }
+      },
     },
     add: {
       description: `Shortcut to add a tv command`,
@@ -39,16 +39,17 @@ module.exports = (App) => {
           App.process_feedback(ox.ctx, ox.data, `Correct format --> .add [name] [url]`)
           return
         }
+
         ox.arg = `add tv ${ox.arg}`
         App.manage_commands(ox)
-      }
+      },
     },
     q: {
       description: `Manage the queue`,
       public: true,
       exec: (ox) => {
         App.manage_queue(ox)
-      }
+      },
     },
     next: {
       description: `Shortcut for queue (next tv item)`,
@@ -56,138 +57,138 @@ module.exports = (App) => {
       exec: (ox) => {
         ox.arg = `next`
         App.manage_queue(ox)
-      }
+      },
     },
     adminadd: {
       description: `Add a bot admin`,
       public: false,
       exec: (ox) => {
         App.add_admin(ox)
-      }
+      },
     },
     adminremove: {
       description: `Remove a bot admin`,
       public: false,
       exec: (ox) => {
         App.remove_admin(ox)
-      }
+      },
     },
     admins: {
       description: `List admins`,
       public: false,
       exec: (ox) => {
         App.manage_admins(ox)
-      }
+      },
     },
     themes: {
       description: `Manage themes`,
       public: false,
       exec: (ox) => {
         App.manage_themes(ox)
-      }
+      },
     },
     stream: {
       description: `Put a random video stream`,
       public: false,
       exec: (ox) => {
         App.get_random_stream(ox)
-      }
+      },
     },
     activity: {
       description: `Show recent bot users`,
       public: false,
       exec: (ox) => {
         App.show_activity(ox)
-      }
+      },
     },
     clearadmins: {
       description: `Remove all bot admins`,
       public: false,
       exec: (ox) => {
         App.clear_admins(ox)
-      }
+      },
     },
     help: {
       description: `Show a summary of commands`,
       public: true,
       exec: (ox) => {
         App.show_help(ox)
-      }
+      },
     },
     ping: {
       description: `Returns a Pong`,
       public: false,
       exec: (ox) => {
         App.ping(ox)
-      }
+      },
     },
     whatis: {
       description: `Inspects a command`,
       public: true,
       exec: (ox) => {
         App.whatis_command(ox)
-      }
+      },
     },
     say: {
       description: `Make the bot say something`,
       public: false,
       exec: (ox) => {
         App.say(ox)
-      }
+      },
     },
     say2: {
       description: `Make the bot say something through a whisper`,
       public: false,
       exec: (ox) => {
         App.say(ox, true)
-      }
+      },
     },
     random: {
       description: `Random video. Optional keyword for semi-random search`,
       public: true,
       exec: (ox) => {
         App.random(ox)
-      }
+      },
     },
     leave: {
       description: `Leave the room`,
       public: false,
       exec: (ox) => {
         App.leave_room(ox)
-      }
+      },
     },
     join: {
       description: `Join a room`,
       public: false,
       exec: (ox) => {
         App.join_room(ox)
-      }
+      },
     },
     addroom: {
       description: `Add a room`,
       public: false,
       exec: (ox) => {
         App.add_room(ox)
-      }
+      },
     },
     removeroom: {
       description: `Remove a room`,
       public: false,
       exec: (ox) => {
         App.remove_room(ox)
-      }
+      },
     },
     sleep: {
       description: `Wait before executing the next command (ms)`,
       public: false,
-      exec: undefined
+      exec: undefined,
     },
     suggest: {
       description: `Suggest topics`,
       public: false,
       exec: (ox) => {
         App.suggest(ox)
-      }
+      },
     },
     think: {
       description: `Get a random showerthought`,
@@ -195,56 +196,56 @@ module.exports = (App) => {
       no_whisper: true,
       exec: (ox) => {
         App.think(ox)
-      }
+      },
     },
     public: {
       description: `Enable or disable public commands`,
       public: false,
       exec: (ox) => {
         App.change_public(ox)
-      }
+      },
     },
     remind: {
       description: `Remind a message to a user when they become active`,
       public: false,
       exec: (ox) => {
         App.remind(ox)
-      }
+      },
     },
     calc: {
       description: `Make a math calculation`,
       public: true,
       exec: (ox) => {
         App.do_calculation(ox)
-      }
+      },
     },
     roll: {
       description: `Simulate a dice`,
       public: true,
       exec: (ox) => {
         App.roll_dice(ox)
-      }
+      },
     },
     users: {
       description: `List connected users`,
       public: true,
       exec: (ox) => {
         App.show_users(ox)
-      }
+      },
     },
     decide: {
       description: `Decide on multiple options`,
       public: true,
       exec: (ox) => {
         App.decide(ox)
-      }
+      },
     },
     wiki: {
       description: `Define something using wikipedia`,
       public: true,
       exec: (ox) => {
         App.search_wiki(ox)
-      }
+      },
     },
     wolfram: {
       description: `Ask Wolfram something`,
@@ -252,7 +253,7 @@ module.exports = (App) => {
       no_whisper: true,
       exec: (ox) => {
         App.ask_wolfram(ox)
-      }
+      },
     },
     shitpost: {
       description: `Random board post`,
@@ -260,44 +261,44 @@ module.exports = (App) => {
       no_whisper: true,
       exec: (ox) => {
         App.get_random_4chan_post(ox)
-      }
+      },
     },
     debug: {
       description: `Used for dev debugging`,
       public: false,
-      exec: (ox) => {}
+      exec: (ox) => {},
     },
     inv: {
       description: `Change youtube tv to Invidious version`,
       public: true,
-      exec: (ox) => {App.inv_tv(ox)}
+      exec: (ox) => {App.inv_tv(ox)},
     },
     ai: {
       aliases: [`ia`],
       description: `Ask something to openai`,
       public: false,
       no_whisper: true,
-      exec: (ox) => {App.ask_ai(ox)}
+      exec: (ox) => {App.ask_ai(ox)},
     },
     fourget: {
       description: `Change 4get instance for image search`,
       public: false,
-      exec: (ox) => {App.set_fourget(ox)}
+      exec: (ox) => {App.set_fourget(ox)},
     },
     scraper: {
       description: `Change the scraper for image search`,
       public: false,
-      exec: (ox) => {App.set_scraper(ox)}
+      exec: (ox) => {App.set_scraper(ox)},
     },
     model: {
       description: `Change the model for ChatGPT`,
       public: false,
-      exec: (ox) => {App.set_model(ox)}
+      exec: (ox) => {App.set_model(ox)},
     },
     imagine: {
       description: `Generate an image with DALL-E`,
       public: false,
-      exec: (ox) => {App.generate_image(ox)}
+      exec: (ox) => {App.generate_image(ox)},
     },
   }
 
@@ -322,12 +323,12 @@ module.exports = (App) => {
   // data.callback
   App.process_command = (ctx, data) => {
     let allowed = false
-    let split = data.message.split(' ')
+    let split = data.message.split(` `)
     let cmd = split[0]
     let arg
 
     if (split.length > 1) {
-      cmd += ' '
+      cmd += ` `
       arg = App.single_space(split.slice(1).join(` `))
     }
     else {
@@ -356,9 +357,8 @@ module.exports = (App) => {
         if (data.callback) {
           return data.callback()
         }
-        else {
-          return false
-        }
+        
+        return false
       }
     }
     else {
@@ -423,9 +423,8 @@ module.exports = (App) => {
               if (data.callback) {
                 return data.callback()
               }
-              else {
-                return false
-              }
+              
+              return false
             }
           }
 
@@ -438,9 +437,8 @@ module.exports = (App) => {
           if (data.callback) {
             return data.callback()
           }
-          else {
-            return false
-          }
+          
+          return false
         }
       }
     }
@@ -450,13 +448,12 @@ module.exports = (App) => {
     if (data.callback) {
       return data.callback()
     }
-    else {
-      return false
-    }
+    
+    return false
   }
 
   App.execute_command = (ctx, data, cmd, arg) => {
-    function whisper_check (c) {
+    function whisper_check(c) {
       if ((data.method === `whisper`) && c.no_whisper) {
         return true
       }
@@ -477,12 +474,12 @@ module.exports = (App) => {
       }
     }
 
-    if(command) {
+    if (command) {
       if (whisper_check(command)) {
         return
       }
 
-      command.exec({ctx: ctx, data: data, arg: arg, cmd: cmd})
+      command.exec({ctx, data, arg, cmd})
     }
     else if (App.db.commands[cmd] !== undefined) {
       App.run_command(ctx, cmd, arg, data)
@@ -495,7 +492,7 @@ module.exports = (App) => {
           return
         }
 
-        App.commands[closest].exec({ctx: ctx, data: data, arg: arg, cmd: closest})
+        App.commands[closest].exec({ctx, data, arg, cmd: closest})
       }
     }
   }
