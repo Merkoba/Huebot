@@ -680,8 +680,9 @@ module.exports = (App) => {
 
     args.src = App.do_replacements(ctx, args.src)
     args.src = App.single_space(args.src)
+    args.comment = args.comment.substring(0, App.config.max_media_comment_length)
 
-    if (args.src.length > App.db.max_media_source_length) {
+    if (args.src.length > App.config.max_media_source_length) {
       return false
     }
 

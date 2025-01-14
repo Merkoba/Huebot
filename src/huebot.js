@@ -104,6 +104,7 @@ App.config.max_title_length = 250
 App.config.recent_streams_max_length = 5
 App.config.max_user_command_activity = 20
 App.config.max_media_source_length = 800
+App.config.max_media_comment_length = 80
 App.config.max_list_items = 20
 App.config.num_suggestions = 5
 

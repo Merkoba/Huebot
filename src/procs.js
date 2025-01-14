@@ -49,7 +49,7 @@ module.exports = (App) => {
     App.change_media(ox.ctx, {
       type: 'tv',
       src: ox.arg,
-      comment: comment
+      comment,
     })
   }
 
@@ -60,7 +60,7 @@ module.exports = (App) => {
       App.change_media(ox.ctx, {
         type: 'tv',
         src: `https://inv.nadeko.net/embed/${ans[1]}`,
-        comment: comment
+        comment,
       })
     }
   }
@@ -139,12 +139,10 @@ module.exports = (App) => {
         let src = ans.data[0].url
 
         if (src) {
-          let comment = prompt.substring(0, 40).trim()
-
           App.change_media(ox.ctx, {
             type: `image`,
+            comment: prompt,
             src,
-            comment,
           })
         }
       }
