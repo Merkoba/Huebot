@@ -319,21 +319,10 @@ App.start_auto_theme_interval = () => {
   }
 }
 
-// Start openai client
-App.start_openai = () => {
-  if (App.db.config.openai_enabled) {
-    App.openai_client = new App.i.openai({
-      apiKey: App.db.config.openai_key,
-    })
-
-    App.log(`openai started`)
-  }
-}
-
 App.start_emit_charge_loop()
 App.start_rss_interval()
 App.start_auto_theme_interval()
-App.start_openai()
+App.start_ai()
 
 // Web Server
 

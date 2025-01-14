@@ -66,7 +66,7 @@ module.exports = (App) => {
   }
 
   App.ask_ai = async (ox) => {
-    if (!App.db.config.openai_enabled || !ox.arg) {
+    if (!App.db.config.ai_enabled || !ox.arg) {
       return
     }
 
@@ -79,14 +79,28 @@ module.exports = (App) => {
     }
 
     try {
-      App.log(`Asking AI`)
+      let model = App.db.config.model
+      let client = App.get_ai_client()
 
+      if (!client) {
+        return
+      }
+
+      App.log(`Asking AI (${model})`)
       let messages = []
-      messages.push({role: `system`, content: `Respond in 100 words or less`})
+      let rules = App.db.config.rules
+      let sysprompt = `Respond in 100 words or less.`
+
+      if (rules) {
+        sysprompt += ` ${rules}`
+      }
+
+      sysprompt = sysprompt.substring(0, 500).trim()
+      messages.push({role: `system`, content: sysprompt})
       messages.push({role: `user`, content: ox.arg.trim()})
 
-      let ans = await App.openai_client.chat.completions.create({
-        model: App.db.config.model,
+      let ans = await client.chat.completions.create({
+        model,
         max_tokens: 300,
         messages,
       })
@@ -101,11 +115,12 @@ module.exports = (App) => {
     }
     catch (err) {
       App.log(`openai completion error`, `error`)
+      App.log(err.message, `error`)
     }
   }
 
   App.generate_image = async (ox) => {
-    if (!App.db.config.openai_enabled || !ox.arg) {
+    if (!App.db.config.ai_enabled || !ox.arg) {
       return
     }
 
@@ -118,8 +133,13 @@ module.exports = (App) => {
     }
 
     try {
-      App.log(`Generating Image`)
+      let client = App.openai_client
 
+      if (!client) {
+        return
+      }
+
+      App.log(`Generating Image`)
       let messages = []
       messages.push({role: `system`, content: `Respond in 100 words or less`})
       messages.push({role: `user`, content: ox.arg.trim()})
@@ -128,7 +148,7 @@ module.exports = (App) => {
       let size = `1024x1024`
       let prompt = ox.arg.trim()
 
-      let ans = await App.openai_client.images.generate({
+      let ans = await client.images.generate({
         n: 1,
         model,
         size,
@@ -1400,5 +1420,84 @@ module.exports = (App) => {
     App.save_config(() => {
       App.process_feedback(ox.ctx, ox.data, `Model set to "${ox.arg}".`)
     })
+  }
+
+  App.set_rules = (ox) => {
+    if (!App.is_protected_admin(ox.data.username)) {
+      return false
+    }
+
+    if (!ox.arg) {
+      App.process_feedback(ox.ctx, ox.data, `Rules: ${App.db.config.rules}`)
+      return false
+    }
+
+    App.db.config.rules = ox.arg
+
+    App.save_config(() => {
+      App.process_feedback(ox.ctx, ox.data, `Rules set to "${ox.arg}".`)
+    })
+  }
+
+  App.start_openai = () => {
+    let key = process.env.OPENAI_API_KEY
+
+    if (!key) {
+      return
+    }
+
+    App.openai_client = new App.i.openai({
+      apiKey: key,
+    })
+
+    App.openai_started = true
+    App.log(`OpenAI started`)
+  }
+
+  App.start_google = () => {
+    let key = process.env.GOOGLE_API_KEY
+
+    if (!key) {
+      return
+    }
+
+    App.google_client = new App.i.openai({
+      apiKey: process.env.GOOGLE_API_KEY,
+      baseURL: `https://generativelanguage.googleapis.com/v1beta/openai/`,
+    })
+
+    App.google_started = true
+    App.log(`Google started`)
+  }
+
+  App.start_ai = () => {
+    App.openai_started = false
+    App.google_started = false
+
+    if (App.db.config.ai_enabled) {
+      App.start_openai()
+      App.start_google()
+    }
+  }
+
+  App.get_ai_client = (channel) => {
+    let model = App.db.config.model
+
+    if (App.is_gpt(model)) {
+      if (!App.openai_started) {
+        App.log(`OpenAI API Key is missing.`)
+        return
+      }
+
+      return App.openai_client
+    }
+    else if (App.is_gemini(model)) {
+      if (!App.google_started) {
+        App.log(`Google API Key is missing.`)
+        return
+      }
+
+      return App.google_client
+    }
   }
 }

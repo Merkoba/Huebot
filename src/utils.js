@@ -1011,4 +1011,12 @@ module.exports = (App) => {
       console.info(`🟢 ${message}`)
     }
   }
+
+  App.is_gpt = (model) => {
+    return model.startsWith(`gpt-`)
+  }
+
+  App.is_gemini = (model) => {
+    return model.startsWith(`gemini-`)
+  }
 }

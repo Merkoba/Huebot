@@ -267,7 +267,7 @@ module.exports = (App) => {
     },
     ai: {
       aliases: [`ia`],
-      description: `Ask something to openai`,
+      description: `Ask something to OpenAI`,
       public: false,
       no_whisper: true,
       exec: (ox) => {App.ask_ai(ox)},
@@ -286,6 +286,11 @@ module.exports = (App) => {
       description: `Change the model for ChatGPT`,
       public: false,
       exec: (ox) => {App.set_model(ox)},
+    },
+    rules: {
+      description: `Change the rule for AI`,
+      public: false,
+      exec: (ox) => {App.set_rules(ox)},
     },
     imagine: {
       description: `Generate an image with DALL-E`,
