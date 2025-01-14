@@ -9,7 +9,7 @@ const BOTS = [
 ]
 
 const COMMON = {
-  script: 'huebot/src/huebot.js',
+  script: `huebot/src/huebot.js`,
   instances: 1,
   autorestart: true,
   watch: false,
