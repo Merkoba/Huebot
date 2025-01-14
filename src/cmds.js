@@ -280,9 +280,14 @@ module.exports = (App) => {
       exec: (ox) => {App.set_model(ox)},
     },
     rules: {
-      description: `Change the rule for AI`,
+      description: `Change the rules for the AI`,
       public: false,
       exec: (ox) => {App.set_rules(ox)},
+    },
+    words: {
+      description: `Change the word limit for the AI`,
+      public: false,
+      exec: (ox) => {App.set_words(ox)},
     },
     imagine: {
       description: `Generate an image with DALL-E`,

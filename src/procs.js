@@ -88,8 +88,9 @@ module.exports = (App) => {
 
       App.log(`Asking AI (${model})`)
       let messages = []
+      let words = App.db.config.words
       let rules = App.db.config.rules
-      let sysprompt = `Respond in 100 words or less.`
+      let sysprompt = `Respond in ${words} words or less.`
 
       if (rules) {
         sysprompt += ` ${rules}`
@@ -1413,6 +1414,24 @@ module.exports = (App) => {
 
     App.save_config(() => {
       App.process_feedback(ox.ctx, ox.data, `Rules set to "${ox.arg}".`)
+    })
+  }
+
+  App.set_words = (ox) => {
+    if (!App.is_protected_admin(ox.data.username)) {
+      return false
+    }
+
+    if (!ox.arg) {
+      App.process_feedback(ox.ctx, ox.data, `Words: ${App.db.config.words}`)
+      return false
+    }
+
+    let words = parseInt(ox.arg)
+    App.db.config.words = words
+
+    App.save_config(() => {
+      App.process_feedback(ox.ctx, ox.data, `Words set to "${words}".`)
     })
   }
 
