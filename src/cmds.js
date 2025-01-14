@@ -277,7 +277,7 @@ module.exports = (App) => {
       description: `Ask something to openai`,
       public: false,
       no_whisper: true,
-      exec: (ox) => {App.ask_openai(ox)}
+      exec: (ox) => {App.ask_ai(ox)}
     },
     fourget: {
       description: `Change 4get instance for image search`,
@@ -293,6 +293,11 @@ module.exports = (App) => {
       description: `Change the model for ChatGPT`,
       public: false,
       exec: (ox) => {App.set_model(ox)}
+    },
+    imagine: {
+      description: `Generate an image with DALL-E`,
+      public: false,
+      exec: (ox) => {App.generate_image(ox)}
     },
   }
 

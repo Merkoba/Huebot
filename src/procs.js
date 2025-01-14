@@ -65,8 +65,12 @@ module.exports = (App) => {
     }
   }
 
-  App.ask_openai = async (ox) => {
+  App.ask_ai = async (ox) => {
     if (!App.db.config.openai_enabled || !ox.arg) {
+      return
+    }
+
+    if (!ox.arg) {
       return
     }
 
@@ -97,6 +101,56 @@ module.exports = (App) => {
     }
     catch (err) {
       App.log(`openai completion error`, `error`)
+    }
+  }
+
+  App.generate_image = async (ox) => {
+    if (!App.db.config.openai_enabled || !ox.arg) {
+      return
+    }
+
+    if (!ox.arg) {
+      return
+    }
+
+    if (ox.arg.length > 300) {
+      return
+    }
+
+    try {
+      App.log(`Generating Image`)
+
+      let messages = []
+      messages.push({role: `system`, content: `Respond in 100 words or less`})
+      messages.push({role: `user`, content: ox.arg.trim()})
+
+      let model = `dall-e-3`
+      let size = `1024x1024`
+      let prompt = ox.arg.trim()
+
+      let ans = await App.openai_client.images.generate({
+        n: 1,
+        model,
+        size,
+        prompt,
+      })
+
+      if (ans && ans.data) {
+        let src = ans.data[0].url
+
+        if (src) {
+          let comment = prompt.substring(0, 40).trim()
+
+          App.change_media(ox.ctx, {
+            type: `image`,
+            src,
+            comment,
+          })
+        }
+      }
+    }
+    catch (err) {
+      App.log(`openai image error`, `error`)
     }
   }
 
