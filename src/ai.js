@@ -131,7 +131,7 @@ module.exports = (App) => {
       App.ai_working = false
     }
     catch (err) {
-      App.log(`openai completion error`, `error`)
+      App.log(`AI chat error`, `error`)
       App.log(err.message, `error`)
       App.ai_working = false
     }
@@ -193,7 +193,7 @@ module.exports = (App) => {
       App.ai_working = false
     }
     catch (err) {
-      App.log(`openai image error`, `error`)
+      App.log(`AI image error`, `error`)
       App.ai_working = false
     }
   }
