@@ -861,16 +861,16 @@ module.exports = (App) => {
         let mode = modes[App.get_random_int(0, modes.length - 1)]
 
         if (mode === 1) {
-          App.think({ctx, data, arg, cmd:`think`})
-        }
-        else if (mode === 2) {
           App.send_message(ctx, App.get_random_sentence(ctx))
         }
-        else if (mode === 3) {
+        else if (mode === 2) {
           App.send_message(ctx, App.get_random_weird_sentence())
         }
+        else if (mode === 3) {
+          App.get_random_4chan_post({ctx, data})
+        }
         else if (mode === 4) {
-          App.get_random_4chan_post(ctx)
+          App.send_message(ctx, `it's over`)
         }
       }, 1000)
     }
