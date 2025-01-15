@@ -866,7 +866,11 @@ module.exports = (App) => {
         }
 
         let mode = modes[App.get_random_int(0, modes.length - 1)]
-        App.speeches[mode](ctx, data)
+        let speech = App.speeches[mode]
+
+        if (speech) {
+          speech(ctx, data)
+        }
       }, 1000)
     }
   }
