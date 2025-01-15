@@ -841,6 +841,13 @@ module.exports = (App) => {
     App.save_file(`reminders.json`, App.db.reminders)
   }
 
+  App.speeches = {
+    1: (ctx, data) => App.send_message(ctx, App.get_random_sentence(ctx)),
+    2: (ctx, data) => App.send_message(ctx, App.get_random_weird_sentence()),
+    3: (ctx, data) => App.get_random_4chan_post({ctx, data}),
+    4: (ctx, data) => App.send_message(ctx, `it's over`),
+  }
+
   App.check_speech = (ctx, data, arg) => {
     let p = Math.min(100, App.db.config.speak_chance_percentage)
 
@@ -859,19 +866,7 @@ module.exports = (App) => {
         }
 
         let mode = modes[App.get_random_int(0, modes.length - 1)]
-
-        if (mode === 1) {
-          App.send_message(ctx, App.get_random_sentence(ctx))
-        }
-        else if (mode === 2) {
-          App.send_message(ctx, App.get_random_weird_sentence())
-        }
-        else if (mode === 3) {
-          App.get_random_4chan_post({ctx, data})
-        }
-        else if (mode === 4) {
-          App.send_message(ctx, `it's over`)
-        }
+        App.speeches[mode](ctx, data)
       }, 1000)
     }
   }
