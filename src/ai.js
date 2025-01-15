@@ -1,4 +1,15 @@
 module.exports = (App) => {
+  App.start_ai = () => {
+    App.ai_working = false
+    App.openai_started = false
+    App.google_started = false
+
+    if (App.db.config.ai_enabled) {
+      App.start_openai()
+      App.start_google()
+    }
+  }
+
   App.set_model = (ox) => {
     App.set_config(ox, `AI Model`, `model`, `str`)
   }
@@ -40,16 +51,6 @@ module.exports = (App) => {
 
     App.google_started = true
     App.log(`Google started`)
-  }
-
-  App.start_ai = () => {
-    App.openai_started = false
-    App.google_started = false
-
-    if (App.db.config.ai_enabled) {
-      App.start_openai()
-      App.start_google()
-    }
   }
 
   App.get_ai_client = (channel) => {
@@ -132,7 +133,7 @@ module.exports = (App) => {
     catch (err) {
       App.log(`openai completion error`, `error`)
       App.log(err.message, `error`)
-      App.ai_Working = false
+      App.ai_working = false
     }
   }
 

@@ -112,7 +112,6 @@ App.config.num_suggestions = 5
 App.config.media_types = [`image`, `tv`]
 App.prefix = App.db.config.command_prefix
 App.connected_rooms = {}
-App.ai_working = false
 
 App.start_connection = (room_id) => {
   let ctx = {}
