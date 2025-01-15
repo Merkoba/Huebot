@@ -698,6 +698,7 @@ module.exports = (App) => {
 
   App.set_username = (ctx, uname) => {
     ctx.username = uname
+    ctx.greet_pattern = new RegExp(`^\\s*(hi|hello)\\s+${uname}\\s*$|^\\s*${uname}\\s+(hi|hello)\\s*$`, `i`)
   }
 
   App.set_role = (ctx, rol) => {
@@ -1018,5 +1019,41 @@ module.exports = (App) => {
 
   App.is_gemini = (model) => {
     return model.startsWith(`gemini-`)
+  }
+
+  App.set_config = (ox, name, key, vtype) => {
+    if (!App.is_protected_admin(ox.data.username)) {
+      return false
+    }
+
+    let value = ox.arg.trim()
+
+    if (vtype === `int`) {
+      value = parseInt(ox.arg)
+
+      if (isNaN(value)) {
+        return false
+      }
+    }
+    else if (vtype === `url`) {
+      if (!App.is_url(value)) {
+        value = `https://${value}`
+      }
+    }
+
+    if ((value === undefined) || (value === ``)) {
+      App.process_feedback(ox.ctx, ox.data, `${name}: ${App.db.config[key]}`)
+      return false
+    }
+
+    App.db.config[key] = value
+
+    App.save_config(() => {
+      App.process_feedback(ox.ctx, ox.data, `${name} set to "${value}".`)
+    })
+  }
+
+  App.is_url = (value) => {
+    return value.startsWith(`https://`) || value.startsWith(`http://`)
   }
 }

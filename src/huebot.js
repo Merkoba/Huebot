@@ -22,6 +22,7 @@ App.config = {}
 require(`./cmds.js`)(App)
 require(`./procs.js`)(App)
 require(`./utils.js`)(App)
+require(`./ai.js`)(App)
 
 let args = process.argv.slice(2)
 const configs_location = `../configs/`
@@ -111,6 +112,7 @@ App.config.num_suggestions = 5
 App.config.media_types = [`image`, `tv`]
 App.prefix = App.db.config.command_prefix
 App.connected_rooms = {}
+App.ai_working = false
 
 App.start_connection = (room_id) => {
   let ctx = {}
@@ -182,7 +184,8 @@ App.start_connection = (room_id) => {
           return false
         }
 
-        if (data.message === `hi ${ctx.username}` || data.message === `hello ${ctx.username}`) {
+        // OH HAI WOODY
+        if (ctx.greet_pattern.test(data.message)) {
           App.send_message(ctx, `hello ${data.username}!`)
         }
 

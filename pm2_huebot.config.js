@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const OPENAI_KEY = `someKey`
 const GOOGLE_KEY = `someKey`
 
