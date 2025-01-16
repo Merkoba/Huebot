@@ -11,7 +11,7 @@ module.exports = (App) => {
       files_name = `default`
     }
 
-    App.log(`Files path: ${files_name}`)
+    App.log(`Files Path: ${files_name}`)
     const files_location = `../files/${files_name}`
     App.files_path = App.i.path.normalize(App.i.path.resolve(__dirname, files_location) + `/`)
 

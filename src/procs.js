@@ -413,28 +413,27 @@ module.exports = (App) => {
       }
 
       let bg_path = `${App.db.config.server_url}/static/room/${ox.ctx.room_id}/${obj.background}`
-      App.process_feedback(ox.ctx, ox.data, `Uploading background image...`)
 
-      App.i.imgur
-        .uploadUrl(bg_path)
-        .then((res) => {
+      if (App.is_prod() && App.imgur_enabled()) {
+        App.process_feedback(ox.ctx, ox.data, `Uploading background image...`)
+
+        App.upload_to_imgur(bg_path, (url) => {
           if (ox.ctx.background === obj.background) {
-            ox.ctx.background = res.link
+            ox.ctx.background = url
           }
 
-          obj.background = res.link
+          obj.background = url
           App.do_theme_save(ox, obj)
 
           App.socket_emit(ox.ctx, `change_background_source`, {
             src: obj.background,
           })
-
-          return
         })
-        .catch((err) => {
-          App.log(err.message, `error`)
-          return
-        })
+      }
+      else {
+        obj.background = bg_path
+        App.do_theme_save(ox, obj)
+      }
     }
     else {
       App.do_theme_save(ox, obj)
@@ -1289,7 +1288,7 @@ module.exports = (App) => {
       }
     }, delay)
 
-    App.log(`auto_theme interval: ${mins} mins`)
+    App.log(`Auto Theme: ${mins} mins`)
   }
 
   // Check RSS every x minutes
@@ -1311,7 +1310,7 @@ module.exports = (App) => {
         App.check_rss()
       }, delay)
 
-      App.log(`check_rss interval: ${mins} mins`)
+      App.log(`RSS: ${mins} mins`)
     }
   }
 }
