@@ -1,4 +1,33 @@
 module.exports = (App) => {
+  App.setup_config = () => {
+    let config_changed = false
+
+    for (let key in App.def_config) {
+      if (App.db.config[key] === undefined) {
+        App.db.config[key] = App.def_config[key]
+        config_changed = true
+      }
+    }
+
+    if (config_changed) {
+      App.i.fs.writeFileSync(`${App.configs_path}${App.config_name}.json`, JSON.stringify(App.db.config, `utf-8`, 4))
+    }
+  }
+
+  App.save_config = (callback = false) => {
+    let text = JSON.stringify(App.db.config, null, 4)
+    let path = App.i.path.join(App.configs_path, `${App.config_name}.json`)
+
+    App.i.fs.writeFile(path, text, `utf8`, (err) => {
+      if (err) {
+        App.log(err, `error`)
+      }
+      else if (callback) {
+        return callback()
+      }
+    })
+  }
+
   App.set_config = (ox, name, key, vtype) => {
     if (!App.is_protected_admin(ox.data.username)) {
       return false

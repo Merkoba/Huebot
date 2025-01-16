@@ -21,6 +21,7 @@ App.config = {}
 require(`./cmds.js`)(App)
 require(`./procs.js`)(App)
 require(`./utils.js`)(App)
+require(`./files.js`)(App)
 require(`./config.js`)(App)
 require(`./ai.js`)(App)
 
@@ -43,52 +44,10 @@ else {
 
 App.log(`Using config file: ${App.config_name}`)
 App.db.config = require(`${App.configs_path}${App.config_name}.json`)
-let def_config = require(`${App.configs_path}default.json`)
-let config_changed = false
+App.def_config = require(`${App.configs_path}default.json`)
 
-for (let key in def_config) {
-  if (App.db.config[key] === undefined) {
-    App.db.config[key] = def_config[key]
-    config_changed = true
-  }
-}
-
-if (config_changed) {
-  App.i.fs.writeFileSync(`${App.configs_path}${App.config_name}.json`, JSON.stringify(App.db.config, `utf-8`, 4))
-}
-
-const template_files_location = `../files/_template_`
-const template_files_path = App.i.path.normalize(App.i.path.resolve(__dirname, template_files_location) + `/`)
-
-let files_name
-
-if ((args.length >= 2) && (args[1] !== `default`)) {
-  files_name = args[1]
-}
-else {
-  files_name = `default`
-}
-
-App.log(`Files path: ${files_name}`)
-const files_location = `../files/${files_name}`
-App.files_path = App.i.path.normalize(App.i.path.resolve(__dirname, files_location) + `/`)
-
-// Check if files dir exists
-if (!App.i.fs.existsSync(App.files_path)) {
-  App.i.fs.mkdirSync(App.files_path)
-  App.log(`Created Dir: ${App.files_path}`)
-}
-
-// Check if a file needs to be copied from the template dir
-for (let file of App.i.fs.readdirSync(template_files_path)) {
-  let p = App.i.path.normalize(App.i.path.resolve(App.files_path, file))
-
-  if (!App.i.fs.existsSync(p)) {
-    let p0 = App.i.path.normalize(App.i.path.resolve(template_files_path, file))
-    App.i.fs.copyFileSync(p0, p)
-    App.log(`Copied: ${file}`)
-  }
-}
+App.setup_config()
+App.setup_files(args)
 
 App.db.commands = require(`${App.files_path}commands.json`)
 App.db.permissions = require(`${App.files_path}permissions.json`)
