@@ -5,22 +5,24 @@ module.exports = (App) => {
 
     let obj = {}
     obj.file = file
-    obj.percentage = 0
-    obj.next = App.get_file_next(file.size)
 
     obj.args = {}
     obj.args.action = `background_upload`
     obj.args.date = now
     obj.args.name = App.i.path.basename(path)
-    obj.args.size = file.length
+    obj.args.size = obj.file.size
     obj.args.type = ``
     obj.args.comment = ``
 
     App.file_uploads[now] = obj
+    let slice = App.get_upload_slice(obj, 0, App.config.upload_slice_size)
+    App.slice_upload_emit(ctx, obj, slice)
+  }
 
-    let emit_data = {...obj.args}
-    emit_data.data = file.slice(0, App.config.upload_slice_size)
-    App.socket_emit(ctx, `slice_upload`, emit_data)
+  App.slice_upload_emit = (ctx, obj, slice) => {
+    let args = {...obj.args}
+    args.data = slice
+    App.socket_emit(ctx, `slice_upload`, args)
   }
 
   // This is called whenever the server asks for the next slice of a file upload
@@ -33,25 +35,12 @@ module.exports = (App) => {
 
     let slice_size = App.config.upload_slice_size
     let place = data.current_slice * slice_size
-    let slice = obj.file.slice(place, place + Math.min(slice_size, obj.args.size - place))
-    obj.next = App.get_file_next(obj.args.size)
-    obj.percentage = Math.floor(((slice_size * data.current_slice) / obj.args.size) * 100)
-    let emit_data = {...obj.args}
-    emit_data.data = slice
-    App.socket_emit(ctx, `slice_upload`, emit_data)
+    let slice_end = place + Math.min(slice_size, obj.args.size - place)
+    let slice = App.get_upload_slice(obj, place, slice_end)
+    App.slice_upload_emit(ctx, obj, slice)
   }
 
-  // Gets the percentage based on the next file slice to be uploaded
-  // Last slice would be 100
-  App.get_file_next = (size) => {
-    let next = Math.floor(
-      ((App.config.upload_slice_size * 1) / size) * 100,
-    )
-
-    if (next > 100) {
-      next = 100
-    }
-
-    return next
+  App.get_upload_slice = (obj, start, end) => {
+    return obj.file.slice(start, end)
   }
 }

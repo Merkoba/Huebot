@@ -106,6 +106,8 @@ App.start_connection = (room_id) => {
     reconnectionAttempts: 1000,
   })
 
+  ctx.socket.binaryType = `arraybuffer`
+
   ctx.socket.on(`connect`, () => {
     App.socket_emit(ctx, `join_room`, {
       alternative: true,
