@@ -78,6 +78,7 @@ module.exports = (App) => {
 
   App.set_auto_theme_delay = (ox) => {
     App.set_config(ox, `Auto Theme Delay`, `auto_theme_delay`, `int`)
+    App.start_auto_theme_interval()
   }
 
   App.set_fourget = (ox) => {
