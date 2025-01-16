@@ -43,7 +43,7 @@ module.exports = (App) => {
         100,
     )
 
-    let emit_data = Object.assign({}, data)
+    let emit_data = {...data}
     emit_data.data = slice
     App.socket_emit(ctx, `slice_upload`, emit_data)
   }
