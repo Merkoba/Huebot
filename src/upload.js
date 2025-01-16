@@ -1,49 +1,42 @@
 module.exports = (App) => {
   App.upload_background = (ctx, path) => {
+    let now = Date.now()
     let file = App.i.fs.readFileSync(path)
 
-    let data = {}
-    data.action = `background_upload`
-    data.date = Date.now()
-    data.name = App.i.path.basename(path)
-    data.size = file.length
-    data.type = ``
-    data.comment = ``
-
-    let obj = {...data}
+    let obj = {}
     obj.file = file
-    obj.next = App.get_file_next(data.size)
     obj.percentage = 0
-    App.file_uploads[data.date] = obj
+    obj.next = App.get_file_next(file.size)
 
-    let emit_data = {...data}
+    obj.args = {}
+    obj.args.action = `background_upload`
+    obj.args.date = now
+    obj.args.name = App.i.path.basename(path)
+    obj.args.size = file.length
+    obj.args.type = ``
+    obj.args.comment = ``
+
+    App.file_uploads[now] = obj
+
+    let emit_data = {...obj.args}
     emit_data.data = file.slice(0, App.config.upload_slice_size)
     App.socket_emit(ctx, `slice_upload`, emit_data)
   }
 
   // This is called whenever the server asks for the next slice of a file upload
   App.next_upload_slice = (ctx, data) => {
-    let obj = App.obj_uploads[data.date]
+    let obj = App.file_uploads[data.date]
 
     if (!obj) {
       return
     }
 
-    let place = data.current_slice * App.config.upload_slice_size
-
-    let slice = obj.file.slice(
-      place,
-      place + Math.min(App.config.upload_slice_size, obj.size - place),
-    )
-
-    obj.next = App.get_file_next(obj.size)
-
-    obj.percentage = Math.floor(
-      ((App.config.upload_slice_size * data.current_slice) / obj.size) *
-        100,
-    )
-
-    let emit_data = {...data}
+    let slice_size = App.config.upload_slice_size
+    let place = data.current_slice * slice_size
+    let slice = obj.file.slice(place, place + Math.min(slice_size, obj.args.size - place))
+    obj.next = App.get_file_next(obj.args.size)
+    obj.percentage = Math.floor(((slice_size * data.current_slice) / obj.args.size) * 100)
+    let emit_data = {...obj.args}
     emit_data.data = slice
     App.socket_emit(ctx, `slice_upload`, emit_data)
   }
