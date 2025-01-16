@@ -376,6 +376,7 @@ module.exports = (App) => {
     }
     else if (args[0] === `random`) {
       App.apply_random_theme(ox.ctx)
+      App.start_auto_theme_interval()
     }
     else if (args[0] === `rename`) {
       ox.arg = args.slice(1).join(` `)
@@ -390,6 +391,7 @@ module.exports = (App) => {
     }
     else {
       App.apply_theme(ox)
+      App.start_auto_theme_interval()
     }
   }
 
