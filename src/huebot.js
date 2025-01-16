@@ -1,4 +1,3 @@
-// T:11
 const App = {}
 
 App.i = {}
@@ -82,6 +81,7 @@ if (!App.i.fs.existsSync(App.files_path)) {
 // Check if a file needs to be copied from the template dir
 for (let file of App.i.fs.readdirSync(template_files_path)) {
   let p = App.i.path.normalize(App.i.path.resolve(App.files_path, file))
+
   if (!App.i.fs.existsSync(p)) {
     let p0 = App.i.path.normalize(App.i.path.resolve(template_files_path, file))
     App.i.fs.copyFileSync(p0, p)
