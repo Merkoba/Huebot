@@ -23,6 +23,7 @@ require(`./procs.js`)(App)
 require(`./utils.js`)(App)
 require(`./files.js`)(App)
 require(`./config.js`)(App)
+require(`./upload.js`)(App)
 require(`./ai.js`)(App)
 
 let args = process.argv.slice(2)
@@ -70,8 +71,10 @@ App.config.max_list_items = 20
 App.config.num_suggestions = 5
 
 App.config.media_types = [`image`, `tv`]
+App.config.upload_slice_size = 500000
 App.prefix = App.db.config.command_prefix
 App.connected_rooms = {}
+App.file_uploads = {}
 
 App.start_connection = (room_id) => {
   let ctx = {}
@@ -216,6 +219,9 @@ App.start_connection = (room_id) => {
       }
       else if (type === `tv_source_changed`) {
         App.set_tv_source(ctx, data.source)
+      }
+      else if (type === `request_slice_upload`) {
+        App.next_upload_slice(data)
       }
     }
     catch (err) {

@@ -997,32 +997,29 @@ module.exports = (App) => {
     return value.startsWith(`https://`) || value.startsWith(`http://`)
   }
 
-  App.upload_to_imgur = async (url, callback) => {
-    let id = process.env.IMGUR_CLIENT_ID
+  App.download = async (args = {}) => {
+    let def_args = {
+      on_finish: () => {},
+      on_error: () => {},
+    }
+
+    App.fill_defaults(args, def_args)
+    App.log(`Downloading: ${args.url}`)
 
     try {
-      let ans = await App.i.axios.post(`https://api.imgur.com/3/image`, {
-        image: url,
-        type: `url`,
-      }, {
-        headers: {
-          Authorization: `Client-ID ${id}`,
-        },
+      let response = await App.i.axios({
+        url: args.url,
+        responseType: `stream`,
       })
 
-      if (ans.data.success) {
-        callback(ans.data.data.link)
-      }
-      else {
-        throw new Error(`Failed to upload image to Imgur`)
-      }
+      let full_path = App.i.path.join(App.files_path, args.path)
+      let writer = await App.i.fs.createWriteStream(full_path)
+      response.data.pipe(writer)
+      writer.on(`finish`, args.on_finish)
+      writer.on(`error`, args.on_error)
     }
     catch (err) {
-      App.log(err, `error`)
+      App.log(err)
     }
-  }
-
-  App.imgur_enabled = () => {
-    return process.env.IMGUR_CLIENT_ID !== undefined
   }
 }

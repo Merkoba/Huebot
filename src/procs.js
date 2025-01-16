@@ -404,42 +404,26 @@ module.exports = (App) => {
     let obj = {}
     obj.background_color = ox.ctx.background_color
     obj.text_color = ox.ctx.text_color
-    obj.background = ox.ctx.background
 
-    if (obj.background && ox.ctx.background_type === `hosted`) {
-      if (App.db.config.server_url.includes(`localhost`)) {
-        App.process_feedback(ox.ctx, ox.data, `Can't upload localhost image. Ignoring background image`)
-        obj.background = ``
-        App.do_theme_save(ox, obj)
-        return
-      }
+    if (obj.background) {
+      let bg_path = `${App.db.config.server_address}/static/room/${ox.ctx.room_id}/${obj.background}`
+      let bg_ext = obj.background.split(`.`).pop()
 
-      let bg_path = `${App.db.config.server_url}/static/room/${ox.ctx.room_id}/${obj.background}`
-
-      if (App.imgur_enabled()) {
-        App.process_feedback(ox.ctx, ox.data, `Uploading background image...`)
-
-        App.upload_to_imgur(bg_path, (url) => {
-          if (ox.ctx.background === obj.background) {
-            ox.ctx.background = url
+      if (bg_ext) {
+        App.download({
+          url: bg_path,
+          path: `backgrounds/${ox.arg}.${bg_ext}`,
+          on_finish: () => {
+            // Success
+          },
+          on_error: (err) => {
+            App.log(err)
           }
-
-          obj.background = url
-          App.do_theme_save(ox, obj)
-
-          App.socket_emit(ox.ctx, `change_background_source`, {
-            src: obj.background,
-          })
         })
       }
-      else {
-        obj.background = bg_path
-        App.do_theme_save(ox, obj)
-      }
     }
-    else {
-      App.do_theme_save(ox, obj)
-    }
+
+    App.do_theme_save(ox, obj)
   }
 
   App.do_theme_save = (ox, obj) => {
@@ -508,17 +492,18 @@ module.exports = (App) => {
       return false
     }
 
-    let obj = App.db.themes[ox.arg]
+    let key = ox.arg
+    let obj = App.db.themes[key]
 
     if (obj) {
-      App.apply_theme_obj(ox.ctx, obj)
+      App.apply_theme_obj(ox.ctx, key, obj)
     }
     else {
       App.process_feedback(ox.ctx, ox.data, `Theme "${ox.arg}" doesn't exist.`)
     }
   }
 
-  App.apply_theme_obj = (ctx, obj) => {
+  App.apply_theme_obj = (ctx, key, obj) => {
     obj.background_color = App.no_space(obj.background_color)
     obj.text_color = App.no_space(obj.text_color)
 
@@ -542,11 +527,22 @@ module.exports = (App) => {
       })
     }
 
-    if (obj.background && obj.background !== ctx.background) {
-      App.socket_emit(ctx, `change_background_source`, {
-        src: obj.background,
-      })
-    }
+    App.i.fs.readdir(App.backgrounds_path, (err, files) => {
+      if (err) {
+        App.log(err, `error`)
+        return
+      }
+
+      for (let file of files) {
+        let name = file.split(`.`)[0]
+
+        if (name === key) {
+          let bg_path = App.i.path.join(App.backgrounds_path, file)
+          App.upload_background(ctx, bg_path)
+          break
+        }
+      }
+    })
   }
 
   App.list_themes = (ox) => {
@@ -1235,7 +1231,7 @@ module.exports = (App) => {
     let next_key = keys[index]
     App.last_random_theme = next_key
     let obj = App.db.themes[next_key]
-    App.apply_theme_obj(ctx, obj)
+    App.apply_theme_obj(ctx, next_key, obj)
   }
 
   App.start_webserver = () => {
