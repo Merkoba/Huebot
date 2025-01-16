@@ -10,19 +10,19 @@ module.exports = (App) => {
     data.type = ``
     data.comment = ``
 
-    let obj = Object.assign({}, data)
+    let obj = {...data}
     obj.file = file
     obj.next = App.get_file_next(data.size)
     obj.percentage = 0
     App.file_uploads[data.date] = obj
 
-    let emit_data = Object.assign({}, data)
+    let emit_data = {...data}
     emit_data.data = file.slice(0, App.config.upload_slice_size)
     App.socket_emit(ctx, `slice_upload`, emit_data)
   }
 
   // This is called whenever the server asks for the next slice of a file upload
-  App.next_upload_slice = (data) => {
+  App.next_upload_slice = (ctx, data) => {
     let obj = App.obj_uploads[data.date]
 
     if (!obj) {
@@ -33,14 +33,10 @@ module.exports = (App) => {
 
     let slice = obj.file.slice(
       place,
-      place + Math.min(App.config.upload_slice_size, file.hue_data.size - place),
+      place + Math.min(App.config.upload_slice_size, obj.size - place),
     )
 
     obj.next = App.get_file_next(obj.size)
-
-    if (obj.next >= 100) {
-      file.hue_data.sending_last_slice = true
-    }
 
     obj.percentage = Math.floor(
       ((App.config.upload_slice_size * data.current_slice) / obj.size) *

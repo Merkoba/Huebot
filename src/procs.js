@@ -404,6 +404,7 @@ module.exports = (App) => {
     let obj = {}
     obj.background_color = ox.ctx.background_color
     obj.text_color = ox.ctx.text_color
+    obj.background = ox.ctx.background
 
     if (obj.background) {
       let bg_path = `${App.db.config.server_address}/static/room/${ox.ctx.room_id}/${obj.background}`
@@ -418,7 +419,7 @@ module.exports = (App) => {
           },
           on_error: (err) => {
             App.log(err)
-          }
+          },
         })
       }
     }

@@ -221,7 +221,7 @@ App.start_connection = (room_id) => {
         App.set_tv_source(ctx, data.source)
       }
       else if (type === `request_slice_upload`) {
-        App.next_upload_slice(data)
+        App.next_upload_slice(ctx, data)
       }
     }
     catch (err) {
