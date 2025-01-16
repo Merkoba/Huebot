@@ -324,5 +324,5 @@ App.start_auto_theme_interval = () => {
 App.start_emit_charge_loop()
 App.start_rss_interval()
 App.start_auto_theme_interval()
-App.start_ai()
 App.start_webserver()
+App.start_ai()
