@@ -325,26 +325,4 @@ App.start_emit_charge_loop()
 App.start_rss_interval()
 App.start_auto_theme_interval()
 App.start_ai()
-
-// Web Server
-
-const app = App.i.express()
-
-if (App.db.config.use_webserver) {
-  app.get(`/show_message`, (req, res) => {
-    if (req.query.message) {
-      let text = req.query.message.trim()
-      if (text) {
-        App.send_message_all_rooms(text)
-      }
-    }
-
-    res.send(`ok`)
-  })
-
-  let port = App.db.config.webserver_port
-
-  app.listen(port, () => {
-    App.log(`Web server started on port ${port}`)
-  })
-}
+App.start_webserver()

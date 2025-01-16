@@ -1244,4 +1244,29 @@ module.exports = (App) => {
   App.set_scraper = (ox) => {
     App.set_config(ox, `4get Scraper`, `scraper`, `str`)
   }
+
+  App.start_webserver = () => {
+    if (!App.db.config.use_webserver) {
+      return
+    }
+
+    App.webserver = App.i.express()
+
+    App.webserver.get(`/show_message`, (req, res) => {
+      if (req.query.message) {
+        let text = req.query.message.trim()
+        if (text) {
+          App.send_message_all_rooms(text)
+        }
+      }
+
+      res.send(`ok`)
+    })
+
+    let port = App.db.config.webserver_port
+
+    App.webserver.listen(port, () => {
+      App.log(`Web server started on port ${port}`)
+    })
+  }
 }
