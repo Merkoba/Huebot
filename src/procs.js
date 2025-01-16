@@ -416,7 +416,7 @@ module.exports = (App) => {
 
       let bg_path = `${App.db.config.server_url}/static/room/${ox.ctx.room_id}/${obj.background}`
 
-      if (App.is_prod() && App.imgur_enabled()) {
+      if (App.imgur_enabled()) {
         App.process_feedback(ox.ctx, ox.data, `Uploading background image...`)
 
         App.upload_to_imgur(bg_path, (url) => {

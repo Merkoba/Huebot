@@ -1025,8 +1025,4 @@ module.exports = (App) => {
   App.imgur_enabled = () => {
     return process.env.IMGUR_CLIENT_ID !== undefined
   }
-
-  App.is_prod = () => {
-    return process.env.NODE_ENV === `production`
-  }
 }
