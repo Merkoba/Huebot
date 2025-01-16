@@ -21,6 +21,7 @@ App.config = {}
 require(`./cmds.js`)(App)
 require(`./procs.js`)(App)
 require(`./utils.js`)(App)
+require(`./config.js`)(App)
 require(`./ai.js`)(App)
 
 let args = process.argv.slice(2)
@@ -270,55 +271,6 @@ App.start_connection = (room_id) => {
 
 for (let room_id of App.db.config.room_ids) {
   App.start_connection(room_id)
-}
-
-// Check RSS every x minutes
-App.start_rss_interval = () => {
-  if (App.db.config.check_rss && App.db.config.check_rss_delay) {
-    let mins = App.db.config.check_rss_delay
-    let delay = mins * 1000 * 60
-
-    if (isNaN(delay)) {
-      App.log(`RSS delay is not a number`)
-      return
-    }
-
-    setInterval(() => {
-      if (Object.keys(App.connected_rooms).length === 0) {
-        return
-      }
-
-      App.check_rss()
-    }, delay)
-
-    App.log(`check_rss interval: ${mins} mins`)
-  }
-}
-
-// Change theme every x minutes
-App.start_auto_theme_interval = () => {
-  if (App.db.config.auto_theme && App.db.config.auto_theme_delay) {
-    let mins = App.db.config.auto_theme_delay
-    let delay = mins * 1000 * 60
-
-    if (isNaN(delay)) {
-      App.log(`Auto theme delay is not a number`)
-      return
-    }
-
-    setInterval(() => {
-      if (Object.keys(App.connected_rooms).length === 0) {
-        return
-      }
-
-      for (let key in App.connected_rooms) {
-        let ctx = App.connected_rooms[key].context
-        App.apply_random_theme(ctx)
-      }
-    }, delay)
-
-    App.log(`auto_theme interval: ${mins} mins`)
-  }
 }
 
 App.start_emit_charge_loop()

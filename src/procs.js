@@ -1237,14 +1237,6 @@ module.exports = (App) => {
     App.apply_theme_obj(ctx, obj)
   }
 
-  App.set_fourget = (ox) => {
-    App.set_config(ox, `4get Instance`, `fourget`, `url`)
-  }
-
-  App.set_scraper = (ox) => {
-    App.set_config(ox, `4get Scraper`, `scraper`, `str`)
-  }
-
   App.start_webserver = () => {
     if (!App.db.config.use_webserver) {
       return
@@ -1268,5 +1260,58 @@ module.exports = (App) => {
     App.webserver.listen(port, () => {
       App.log(`Web server started on port ${port}`)
     })
+  }
+
+  // Change theme every x minutes
+  App.start_auto_theme_interval = () => {
+    if (!App.db.config.auto_theme || !App.db.config.auto_theme_delay) {
+      return
+    }
+
+    let mins = App.db.config.auto_theme_delay
+    let delay = mins * 1000 * 60
+
+    if (isNaN(delay)) {
+      App.log(`Auto theme delay is not a number`)
+      return
+    }
+
+    clearInterval(App.auto_theme_interval)
+
+    App.auto_theme_interval = setInterval(() => {
+      if (Object.keys(App.connected_rooms).length === 0) {
+        return
+      }
+
+      for (let key in App.connected_rooms) {
+        let ctx = App.connected_rooms[key].context
+        App.apply_random_theme(ctx)
+      }
+    }, delay)
+
+    App.log(`auto_theme interval: ${mins} mins`)
+  }
+
+  // Check RSS every x minutes
+  App.start_rss_interval = () => {
+    if (App.db.config.check_rss && App.db.config.check_rss_delay) {
+      let mins = App.db.config.check_rss_delay
+      let delay = mins * 1000 * 60
+
+      if (isNaN(delay)) {
+        App.log(`RSS delay is not a number`)
+        return
+      }
+
+      setInterval(() => {
+        if (Object.keys(App.connected_rooms).length === 0) {
+          return
+        }
+
+        App.check_rss()
+      }, delay)
+
+      App.log(`check_rss interval: ${mins} mins`)
+    }
   }
 }

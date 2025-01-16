@@ -10,18 +10,6 @@ module.exports = (App) => {
     }
   }
 
-  App.set_model = (ox) => {
-    App.set_config(ox, `AI Model`, `model`, `str`)
-  }
-
-  App.set_rules = (ox) => {
-    App.set_config(ox, `AI Rules`, `rules`, `str`)
-  }
-
-  App.set_words = (ox) => {
-    App.set_config(ox, `AI Words`, `words`, `int`)
-  }
-
   App.start_openai = () => {
     let key = process.env.OPENAI_API_KEY
 

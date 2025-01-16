@@ -294,6 +294,16 @@ module.exports = (App) => {
       public: false,
       exec: (ox) => {App.generate_image(ox)},
     },
+    autotheme: {
+      description: `Enable or disable the auto theme`,
+      public: false,
+      exec: (ox) => {App.set_auto_theme(ox)},
+    },
+    autothemedelay: {
+      description: `Set the auto theme delay in minutes`,
+      public: false,
+      exec: (ox) => {App.set_auto_theme_delay(ox)},
+    },
   }
 
   App.command_list = []
