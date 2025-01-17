@@ -249,7 +249,8 @@ module.exports = (App) => {
   }
 
   App.ping = (ox) => {
-    App.process_feedback(ox.ctx, ox.data, `Pong`)
+    let msg = `¡Ay, bendito! .ping? Pong! ¿Me buscaste? Pensé que estabas ocupado… admirando mi flow. Si no respondo rápido, es que estoy grabando un hit con Daddy Yankee. ¡Prepárate, que esto apenas comienza! 😎`
+    App.process_feedback(ox.ctx, ox.data, msg)
   }
 
   App.check_rss = () => {

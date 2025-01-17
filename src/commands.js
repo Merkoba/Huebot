@@ -557,8 +557,11 @@ module.exports = (App) => {
       },
     }
 
-    if (lc_cmd.startsWith(`.sleep`) || lc_cmd === `.sleep`) {
-      let n = parseInt(lc_cmd.replace(`.sleep `, ``))
+    let p = App.prefix
+    let sleep = `${p}sleep`
+
+    if (lc_cmd.startsWith(sleep) || lc_cmd === sleep) {
+      let n = parseInt(lc_cmd.replace(`${sleep} `, ``))
 
       if (isNaN(n)) {
         n = 1000
