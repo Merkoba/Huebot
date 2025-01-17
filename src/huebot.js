@@ -18,12 +18,19 @@ App.i.rss_parser = new App.i.parser()
 App.db = {}
 App.config = {}
 
-require(`./cmds.js`)(App)
+require(`./commands.js`)(App)
+require(`./custom_commands.js`)(App)
 require(`./procs.js`)(App)
 require(`./utils.js`)(App)
 require(`./files.js`)(App)
 require(`./config.js`)(App)
 require(`./upload.js`)(App)
+require(`./themes.js`)(App)
+require(`./images.js`)(App)
+require(`./queue.js`)(App)
+require(`./admins.js`)(App)
+require(`./rooms.js`)(App)
+require(`./tv.js`)(App)
 require(`./ai.js`)(App)
 
 let args = process.argv.slice(2)

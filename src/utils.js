@@ -1,4 +1,9 @@
 module.exports = (App) => {
+  App.math = App.i.mathjs.create(App.i.mathjs.all, {
+    number: `BigNumber`,
+    precision: 64,
+  })
+
   App.is_protected_admin = (uname) => {
     let low_uname = uname.toLowerCase()
 

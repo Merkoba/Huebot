@@ -500,4 +500,33 @@ module.exports = (App) => {
       }
     }
   }
+
+  App.show_activity = (ox) => {
+    let s = App.list_items({
+      data: ox.ctx.user_command_activity.slice(0).reverse(),
+      append: `,`,
+    })
+
+    if (!s) {
+      s = `No activity yet.`
+    }
+
+    App.process_feedback(ox.ctx, ox.data, `Recent command activity by: ${s}`)
+  }
+
+  App.show_help = (ox) => {
+    let items = App.command_list
+    let s = ``
+
+    s += App.list_items({
+      data: items,
+      prepend: App.prefix,
+      append: ` `,
+      sort_mode: `sort`,
+      whisperify: `${App.prefix}whatis `,
+      limit: false,
+    })
+
+    App.send_whisper(ox.ctx, ox.data.username, s)
+  }
 }
