@@ -19,7 +19,6 @@ App.db = {}
 App.config = {}
 
 require(`./commands.js`)(App)
-require(`./custom_commands.js`)(App)
 require(`./procs.js`)(App)
 require(`./utils.js`)(App)
 require(`./files.js`)(App)
@@ -30,6 +29,7 @@ require(`./images.js`)(App)
 require(`./queue.js`)(App)
 require(`./admins.js`)(App)
 require(`./rooms.js`)(App)
+require(`./cmds.js`)(App)
 require(`./tv.js`)(App)
 require(`./ai.js`)(App)
 
