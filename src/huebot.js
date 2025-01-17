@@ -18,9 +18,8 @@ App.i.rss_parser = new App.i.parser()
 App.db = {}
 App.config = {}
 
-// Load all JS files
+// Load all JS source files
 let scr_path = App.i.path.join(__dirname, `.`)
-
 let src_files
 
 try {
