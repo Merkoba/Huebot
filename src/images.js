@@ -39,6 +39,7 @@ module.exports = (App) => {
       comment: comment || title,
     })
   }
+
   App.change_image = (ox, comment = ``) => {
     App.image_p = 0
     let query = App.do_replacements(ox.ctx, ox.arg)
@@ -78,4 +79,5 @@ module.exports = (App) => {
       src,
       comment: comment || title,
     })
-  }}
+  }
+}
