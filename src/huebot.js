@@ -18,20 +18,32 @@ App.i.rss_parser = new App.i.parser()
 App.db = {}
 App.config = {}
 
-require(`./commands.js`)(App)
-require(`./procs.js`)(App)
-require(`./utils.js`)(App)
-require(`./files.js`)(App)
-require(`./config.js`)(App)
-require(`./upload.js`)(App)
-require(`./themes.js`)(App)
-require(`./images.js`)(App)
-require(`./queue.js`)(App)
-require(`./admins.js`)(App)
-require(`./rooms.js`)(App)
-require(`./cmds.js`)(App)
-require(`./tv.js`)(App)
-require(`./ai.js`)(App)
+// Load all JS files
+let scr_path = App.i.path.join(__dirname, `.`)
+
+let src_files
+
+try {
+  src_files = App.i.fs.readdirSync(scr_path)
+}
+catch (err) {
+  console.log(`Failed to read the source`)
+  process.exit(1)
+}
+
+let js_files = src_files.filter((f => f.endsWith(`.js`)))
+let this_file = App.i.path.basename(__filename)
+
+for (let file of js_files) {
+  if (file === this_file) {
+    continue
+  }
+
+  let full_path = App.i.path.join(scr_path, file)
+  require(full_path)(App)
+}
+
+// ---------
 
 let args = process.argv.slice(2)
 const configs_location = `../configs/`
