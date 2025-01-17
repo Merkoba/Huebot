@@ -2,6 +2,7 @@ module.exports = (App) => {
   App.upload_background = (ctx, path) => {
     let now = Date.now()
     let file = App.i.fs.readFileSync(path)
+    let stats = App.i.fs.statSync(path)
 
     let obj = {}
     obj.file = file
@@ -10,7 +11,7 @@ module.exports = (App) => {
     obj.args.action = `background_upload`
     obj.args.date = now
     obj.args.name = App.i.path.basename(path)
-    obj.args.size = obj.file.size
+    obj.args.size = stats.size
     obj.args.type = ``
     obj.args.comment = ``
 
