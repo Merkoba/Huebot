@@ -188,11 +188,9 @@ module.exports = (App) => {
       })
     }
 
-    App.i.fs.readdir(App.backgrounds_path, (err, files) => {
-      if (err) {
-        App.log(err, `error`)
-        return
-      }
+    try {
+      let files = App.i.fs.readdirSync(App.backgrounds_path)
+      let found = false
 
       for (let file of files) {
         let name = file.split(`.`)[0]
@@ -200,10 +198,18 @@ module.exports = (App) => {
         if (name === key) {
           let bg_path = App.i.path.join(App.backgrounds_path, file)
           App.upload_background(ctx, bg_path)
+          found = true
           break
         }
       }
-    })
+
+      if (!found) {
+        App.clear_background(ctx)
+      }
+    }
+    catch (err) {
+      // No backgrounds
+    }
   }
 
   App.list_themes = (ox) => {
@@ -292,5 +298,9 @@ module.exports = (App) => {
     ctx.background_color = data.background_color
     ctx.text_color_mode = data.text_color_mode
     ctx.text_color = data.text_color
+  }
+
+  App.clear_background = (ctx) => {
+    App.socket_emit(ctx, `change_background_source`, {src: ``})
   }
 }
