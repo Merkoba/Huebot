@@ -529,4 +529,55 @@ module.exports = (App) => {
 
     App.send_whisper(ox.ctx, ox.data.username, s)
   }
+
+  App.run_commands_queue = (ctx, id) => {
+    let cq = ctx.commands_queue[id]
+
+    if (!cq) {
+      delete ctx.commands_queue[id]
+      return false
+    }
+
+    let cmds = cq.commands
+
+    if (cmds.length === 0) {
+      delete ctx.commands_queue[id]
+      return false
+    }
+
+    let cmd = cmds.shift()
+    let lc_cmd = cmd.toLowerCase()
+
+    let obj = {
+      message: cmd,
+      username: cq.username,
+      method: cq.method,
+      callback: () => {
+        App.run_commands_queue(ctx, id)
+      },
+    }
+
+    if (lc_cmd.startsWith(`.sleep`) || lc_cmd === `.sleep`) {
+      let n = parseInt(lc_cmd.replace(`.sleep `, ``))
+
+      if (isNaN(n)) {
+        n = 1000
+      }
+
+      setTimeout(() => {
+        App.run_commands_queue(ctx, id)
+      }, n)
+    }
+    else {
+      App.process_command(ctx, obj)
+    }
+  }
+
+  App.is_command = (message) => {
+    if ((message.length > 1) && (message[0] === App.prefix) && (message[1] !== App.prefix)) {
+      return true
+    }
+
+    return false
+  }
 }

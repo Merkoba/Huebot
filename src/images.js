@@ -80,4 +80,8 @@ module.exports = (App) => {
       comment: comment || title,
     })
   }
+
+  App.set_image_source = (ctx, src) => {
+    ctx.current_image_source = src
+  }
 }

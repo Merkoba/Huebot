@@ -192,4 +192,23 @@ module.exports = (App) => {
       App.process_feedback(ox.ctx, ox.data, `Commands list successfully cleared.`)
     })
   }
+
+  App.run_command = (ctx, cmd, arg, data) => {
+    let command = App.db.commands[cmd]
+
+    if (command.type === `image`) {
+      App.change_media(ctx, {
+        type: `image`,
+        src: command.url,
+        comment: data.comment,
+      })
+    }
+    else if (command.type === `tv`) {
+      App.change_media(ctx, {
+        type: `tv`,
+        src: command.url,
+        comment: data.comment,
+      })
+    }
+  }
 }

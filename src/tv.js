@@ -61,4 +61,16 @@ module.exports = (App) => {
 
     App.process_feedback(ox.ctx, ox.data, suggestions)
   }
+
+  App.set_tv_source = (ctx, src) => {
+    ctx.current_tv_source = src
+  }
+
+  App.tv_default = (s, media) => {
+    if (!App.check_if_media(media)) {
+      s = `tv ${s}`
+    }
+
+    return s
+  }
 }

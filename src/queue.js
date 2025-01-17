@@ -152,4 +152,28 @@ module.exports = (App) => {
       App.process_feedback(ox.ctx, ox.data, ans)
     })
   }
+
+  App.get_q_item = (id, op = `normal`) => {
+    let media = id.split(`_`)[0]
+
+    if (!App.check_if_media(media)) {
+      return false
+    }
+
+    let i = 0
+
+    for (let item of App.db.queue[media]) {
+      if (item.id === id) {
+        if (op === `delete`) {
+          App.db.queue[media].splice(i, 1)
+        }
+
+        return item
+      }
+
+      i += 1
+    }
+
+    return false
+  }
 }

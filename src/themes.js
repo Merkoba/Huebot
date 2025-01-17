@@ -287,4 +287,10 @@ module.exports = (App) => {
 
     App.log(`Auto Theme: ${mins} mins`)
   }
+
+  App.set_theme = (ctx, data) => {
+    ctx.background_color = data.background_color
+    ctx.text_color_mode = data.text_color_mode
+    ctx.text_color = data.text_color
+  }
 }
