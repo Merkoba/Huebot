@@ -27,7 +27,7 @@ try {
   src_files = App.i.fs.readdirSync(scr_path)
 }
 catch (err) {
-  console.log(`Failed to read the source`)
+  console.log(`Failed to read the source.`)
   process.exit(1)
 }
 
