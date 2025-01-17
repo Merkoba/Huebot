@@ -159,7 +159,6 @@ module.exports = (App) => {
     })
   }
 
-
   App.socket_emit = (ctx, destination, data) => {
     let obj = {
       destination,

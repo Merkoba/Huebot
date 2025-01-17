@@ -86,6 +86,7 @@ export default [
         AColorPicker: "readonly",
         require: "readonly",
         process: "readonly",
+        __filename: "readonly",
       }
     }
   }

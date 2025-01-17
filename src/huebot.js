@@ -27,11 +27,10 @@ try {
   src_files = App.i.fs.readdirSync(scr_path)
 }
 catch (err) {
-  console.log(`Failed to read the source.`)
   process.exit(1)
 }
 
-let js_files = src_files.filter((f => f.endsWith(`.js`)))
+let js_files = src_files.filter(f => f.endsWith(`.js`))
 let this_file = App.i.path.basename(__filename)
 
 for (let file of js_files) {
