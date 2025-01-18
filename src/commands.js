@@ -25,6 +25,7 @@ module.exports = (App) => {
       },
     },
     commands: {
+      aliases: [`cmd`, `cmds`],
       description: `Manage commands`,
       public: false,
       exec: (ox) => {
