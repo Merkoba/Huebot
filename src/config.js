@@ -58,9 +58,20 @@ module.exports = (App) => {
         return
       }
     }
+    else if (vtype === `str`) {
+      if (value === `""`) {
+        value = ``
+      }
+    }
 
     if ((value === undefined) || (value === ``)) {
-      App.process_feedback(ox.ctx, ox.data, `${name}: ${App.db.config[key]}`)
+      let svalue = App.db.config[key]
+
+      if (value === ``) {
+        svalue = `[Empty]`
+      }
+
+      App.process_feedback(ox.ctx, ox.data, `${name}: ${svalue}`)
       return false
     }
 
