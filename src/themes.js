@@ -97,6 +97,10 @@ module.exports = (App) => {
 
   App.remove_theme = (ox) => {
     if (!ox.arg) {
+      ox.arg = App.last_theme
+    }
+
+    if (!ox.arg) {
       App.process_feedback(ox.ctx, ox.data, `Correct format is --> ${App.prefix}${ox.cmd} remove [name]`)
       return false
     }
@@ -165,6 +169,7 @@ module.exports = (App) => {
   }
 
   App.apply_theme_obj = (ctx, key, obj) => {
+    App.last_theme = key
     obj.background_color = App.no_space(obj.background_color)
     obj.text_color = App.no_space(obj.text_color)
 
@@ -253,13 +258,12 @@ module.exports = (App) => {
       return
     }
 
-    if (App.last_random_theme) {
-      keys = keys.filter(x => x !== App.last_random_theme)
+    if (App.last_theme) {
+      keys = keys.filter(x => x !== App.last_theme)
     }
 
     let index = App.get_random_int(0, keys.length - 1)
     let next_key = keys[index]
-    App.last_random_theme = next_key
     let obj = App.db.themes[next_key]
     App.apply_theme_obj(ctx, next_key, obj)
   }
