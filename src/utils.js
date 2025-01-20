@@ -512,7 +512,7 @@ module.exports = (App) => {
     1: (ctx, data) => App.send_message(ctx, App.get_random_sentence(ctx)),
     2: (ctx, data) => App.send_message(ctx, App.get_random_weird_sentence()),
     3: (ctx, data) => App.get_random_4chan_post({ctx, data}),
-    4: (ctx, data) => App.send_message(ctx, `its over`),
+    4: (ctx, data) => App.send_message(ctx, `it's over`),
   }
 
   App.check_speech = (ctx, data, arg) => {
