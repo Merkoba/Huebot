@@ -706,4 +706,8 @@ module.exports = (App) => {
       App.log(err)
     }
   }
+
+  App.escape_regex = (text) => {
+    return text.replace(/[^A-Za-z0-9]/g, `\\$&`)
+  }
 }

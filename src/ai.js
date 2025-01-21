@@ -120,7 +120,9 @@ module.exports = (App) => {
 
       if (clear) {
         App.ai_history = []
-        prompt = prompt.replace(App.db.config.clear, ``).trim()
+        let char = App.escape_regex(App.db.config.clear)
+        let regex = new RegExp(`^${char}\\s*`)
+        prompt = prompt.replace(regex, ``)
       }
       else {
         for (let item of App.ai_history) {
