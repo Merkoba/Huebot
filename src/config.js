@@ -40,7 +40,14 @@ module.exports = (App) => {
       return false
     }
 
-    let value = args.ox.arg.trim()
+    let value = args.value.trim()
+
+    if ((value === undefined) || (value === ``)) {
+      let value = App.db.config[args.key]
+      let svalue = App.config_svalue(args, value)
+      App.process_feedback(args.ox.ctx, args.ox.data, `${args.name}: ${svalue}`)
+      return false
+    }
 
     if (args.type === `int`) {
       value = parseInt(args.ox.arg)
@@ -81,61 +88,94 @@ module.exports = (App) => {
       }
     }
 
-    if ((value === undefined) || (value === ``)) {
-      let svalue = App.db.config[args.key]
-
-      if (value === ``) {
-        svalue = `[Empty]`
-      }
-
-      App.process_feedback(args.ox.ctx, args.ox.data, `${args.name}: ${svalue}`)
-      return false
-    }
-
     App.db.config[args.key] = value
 
     App.save_config(() => {
-      App.process_feedback(args.ox.ctx, args.ox.data, `${args.name} set to "${value}".`)
+      let svalue = App.config_svalue(args, value)
+      App.process_feedback(args.ox.ctx, args.ox.data, `${args.name} set to ${svalue}.`)
     })
 
     return true
   }
 
-  App.set_auto_theme = (ox) => {
-    if (App.set_config({ox, name: `Auto Theme`, key: `auto_theme`, type: `bool`})) {
+  App.config_svalue = (args, value) => {
+    let svalue = value
+
+    if (args.type === `str`) {
+      if (svalue === ``) {
+        svalue = `[Empty]`
+      }
+      else {
+        svalue = `"${svalue}"`
+      }
+    }
+
+    return svalue
+  }
+
+  App.config_value = (ox, value) => {
+    if (value === undefined) {
+      return ox.arg
+    }
+    else {
+      return JSON.stringify(value)
+    }
+  }
+
+  App.set_auto_theme = (ox, value) => {
+    value = App.config_value(ox, value)
+
+    if (App.set_config({ox, value, name: `Auto Theme`, key: `auto_theme`, type: `bool`})) {
       App.start_auto_theme_interval()
     }
   }
 
-  App.set_auto_theme_delay = (ox) => {
-    if (App.set_config({ox, name: `Auto Theme Delay`, key: `auto_theme_delay`, type: `int`, min: 1, max: 43200})) {
+  App.set_auto_theme_delay = (ox, value) => {
+    value = App.config_value(ox, value)
+
+    if (App.set_config({ox, value, name: `Auto Theme Delay`, key: `auto_theme_delay`, type: `int`, min: 1, max: 43200})) {
       App.start_auto_theme_interval()
     }
   }
 
-  App.set_fourget = (ox) => {
-    App.set_config({ox, name: `4get Instance`, key: `fourget`, type: `url`})
+  App.set_fourget = (ox, value) => {
+    value = App.config_value(ox, value)
+    App.set_config({ox, value, name: `4get Instance`, key: `fourget`, type: `url`})
   }
 
-  App.set_scraper = (ox) => {
-    App.set_config({ox, name: `4get Scraper`, key: `scraper`, type: `str`})
+  App.set_scraper = (ox, value) => {
+    value = App.config_value(ox, value)
+    App.set_config({ox, value, name: `4get Scraper`, key: `scraper`, type: `str`})
   }
 
-  App.set_model = (ox) => {
-    App.set_config({ox, name: `AI Model`, key: `model`, type: `str`})
+  App.set_model = (ox, value) => {
+    value = App.config_value(ox, value)
+    App.set_config({ox, value, name: `AI Model`, key: `model`, type: `str`})
   }
 
-  App.set_rules = (ox) => {
-    App.set_config({ox, name: `AI Rules`, key: `rules`, type: `str`})
+  App.set_rules = (ox, value) => {
+    value = App.config_value(ox, value)
+    App.set_config({ox, value, name: `AI Rules`, key: `rules`, type: `str`})
   }
 
-  App.set_words = (ox) => {
-    App.set_config({ox, name: `AI Words`, key: `words`, type: `int`, min: 1, max: 2000})
+  App.set_words = (ox, value) => {
+    value = App.config_value(ox, value)
+    App.set_config({ox, value, name: `AI Words`, key: `words`, type: `int`, min: 1, max: 2000})
   }
 
-  App.set_history = (ox) => {
-    if (App.set_config({ox, name: `AI History`, key: `history`, type: `int`, min: 0, max: 10})) {
+  App.set_history = (ox, value) => {
+    value = App.config_value(ox, value)
+
+    if (App.set_config({ox, value, name: `AI History`, key: `history`, type: `int`, min: 0, max: 10})) {
       App.reset_ai_history()
+    }
+  }
+
+  App.set_ai_enabled = (ox, value) => {
+    value = App.config_value(ox, value)
+
+    if (App.set_config({ox, value, name: `AI Enabled`, key: `ai_enabled`, type: `bool`})) {
+      App.start_ai()
     }
   }
 }

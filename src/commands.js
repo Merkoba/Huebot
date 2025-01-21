@@ -310,6 +310,11 @@ module.exports = (App) => {
       public: false,
       exec: (ox) => {App.set_auto_theme_delay(ox)},
     },
+    aieanbled: {
+      description: `Enable the AI`,
+      public: false,
+      exec: (ox) => {App.set_ai_enabled(ox)},
+    },
   }
 
   App.command_list = []
