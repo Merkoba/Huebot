@@ -173,6 +173,10 @@ module.exports = (App) => {
     obj.background_color = App.no_space(obj.background_color)
     obj.text_color = App.no_space(obj.text_color)
 
+    if (!obj.background_color || !obj.text_color) {
+      return
+    }
+
     if (obj.background_color.startsWith(`rgb`)) {
       obj.background_color = App.rgb_to_hex(obj.background_color)
     }
@@ -181,13 +185,21 @@ module.exports = (App) => {
       obj.text_color = App.rgb_to_hex(obj.text_color)
     }
 
-    if (obj.background_color && obj.background_color !== ctx.background_color) {
+    if (!obj.background_color || !obj.text_color) {
+      return
+    }
+
+    App.socket_emit(ctx, `send_notification`, {
+      message: `Theme: ${key}`,
+    })
+
+    if (obj.background_color !== ctx.background_color) {
       App.socket_emit(ctx, `change_background_color`, {
         color: obj.background_color,
       })
     }
 
-    if (obj.text_color && obj.text_color !== ctx.text_color) {
+    if (obj.text_color !== ctx.text_color) {
       App.socket_emit(ctx, `change_text_color`, {
         color: obj.text_color,
       })
