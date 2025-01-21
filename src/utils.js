@@ -162,12 +162,10 @@ module.exports = (App) => {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
-  App.fill_defaults = (args, def_args) => {
-    for (let key in def_args) {
-      let d = def_args[key]
-
-      if (args[key] === undefined) {
-        args[key] = d
+  App.def_args = (def, args) => {
+    for (let key in def) {
+      if ((args[key] === undefined) && (def[key] !== undefined)) {
+        args[key] = def[key]
       }
     }
   }
@@ -184,7 +182,7 @@ module.exports = (App) => {
       limit: true,
     }
 
-    App.fill_defaults(args, def_args)
+    App.def_args(args, def_args)
     args.filter = args.filter.toLowerCase()
     let do_filter = args.filter ? true : false
     let props
@@ -689,7 +687,7 @@ module.exports = (App) => {
       on_error: () => {},
     }
 
-    App.fill_defaults(args, def_args)
+    App.def_args(args, def_args)
     App.log(`Downloading: ${args.url}`)
 
     try {

@@ -46,7 +46,7 @@ module.exports = (App) => {
       comment: ``,
     }
 
-    App.fill_defaults(args, def_args)
+    App.def_args(args, def_args)
 
     if (!App.config.media_types.includes(args.type)) {
       return false

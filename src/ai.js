@@ -89,6 +89,7 @@ module.exports = (App) => {
 
       App.log(`Asking AI (${model})`)
       let messages = []
+      let prompt = ox.arg.trim()
       let words = App.db.config.words
       let rules = App.db.config.rules
       let sysprompt = `Respond in ${words} words or less.`
@@ -99,12 +100,18 @@ module.exports = (App) => {
 
       sysprompt = sysprompt.substring(0, 500).trim()
       messages.push({role: `system`, content: sysprompt})
-      messages.push({role: `user`, content: ox.arg.trim()})
+
+      for (let item of App.ai_history) {
+        messages.push({role: `user`, content: item.user})
+        messages.push({role: `assistant`, content: item.ai})
+      }
+
+      messages.push({role: `user`, content: prompt})
       App.ai_working = true
 
       let ans = await client.chat.completions.create({
         model,
-        max_completion_tokens: 300,
+        max_completion_tokens: App.db.config.max_tokens,
         messages,
       })
 
@@ -113,6 +120,19 @@ module.exports = (App) => {
 
         if (text) {
           App.process_feedback(ox.ctx, ox.data, text)
+        }
+
+        let item = {
+          user: prompt,
+          ai: text,
+        }
+
+        if (App.db.config.history <= 0) {
+          App.ai_history = []
+        }
+        else {
+          App.ai_history.push(item)
+          App.ai_history = App.ai_history.slice(-App.db.config.history)
         }
       }
 
@@ -183,6 +203,15 @@ module.exports = (App) => {
     catch (err) {
       App.log(`AI image error`, `error`)
       App.ai_working = false
+    }
+  }
+
+  App.reset_ai_history = () => {
+    if (App.db.config.history <= 0) {
+      App.ai_history = []
+    }
+    else {
+      App.ai_history = App.ai_history.slice(-App.db.config.history)
     }
   }
 }

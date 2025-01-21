@@ -28,87 +28,114 @@ module.exports = (App) => {
     })
   }
 
-  App.set_config = (ox, name, key, vtype) => {
-    if (!App.is_protected_admin(ox.data.username)) {
+  App.set_config = (args = {}) => {
+    let def_args = {
+      min: 1,
+      max: 100,
+    }
+
+    App.def_args(args, def_args)
+
+    if (!App.is_protected_admin(args.ox.data.username)) {
       return false
     }
 
-    let value = ox.arg.trim()
+    let value = args.ox.arg.trim()
 
-    if (vtype === `int`) {
-      value = parseInt(ox.arg)
+    if (args.type === `int`) {
+      value = parseInt(args.ox.arg)
 
       if (isNaN(value)) {
+        let message = `${args.name} must be a number.`
+        App.process_feedback(args.ox.ctx, args.ox.data, message)
+        return false
+      }
+
+      if ((value < args.min) || (value > args.max)) {
+        let message = `${args.name} must be between ${args.min} and ${args.max}.`
+        App.process_feedback(args.ox.ctx, args.ox.data, message)
         return false
       }
     }
-    else if (vtype === `url`) {
+    else if (args.type === `url`) {
       if (!App.is_url(value)) {
         value = `https://${value}`
       }
     }
-    else if (vtype === `bool`) {
-      if (value === `true`) {
+    else if (args.type === `bool`) {
+      if ((value === `true`) || (value === `yes`) || (value === `1`) || (value === `on`)) {
         value = true
       }
-      else if (value === `false`) {
+      else if ((value === `false`) || (value === `no`) || (value === `0`) || (value === `off`)) {
         value = false
       }
       else {
-        return
+        let message = `${args.name} must be a boolean.`
+        App.process_feedback(args.ox.ctx, args.ox.data, message)
+        return false
       }
     }
-    else if (vtype === `str`) {
+    else if (args.type === `str`) {
       if (value === `""`) {
         value = ``
       }
     }
 
     if ((value === undefined) || (value === ``)) {
-      let svalue = App.db.config[key]
+      let svalue = App.db.config[args.key]
 
       if (value === ``) {
         svalue = `[Empty]`
       }
 
-      App.process_feedback(ox.ctx, ox.data, `${name}: ${svalue}`)
+      App.process_feedback(args.ox.ctx, args.ox.data, `${args.name}: ${svalue}`)
       return false
     }
 
-    App.db.config[key] = value
+    App.db.config[args.key] = value
 
     App.save_config(() => {
-      App.process_feedback(ox.ctx, ox.data, `${name} set to "${value}".`)
+      App.process_feedback(args.ox.ctx, args.ox.data, `${args.name} set to "${value}".`)
     })
+
+    return true
   }
 
   App.set_auto_theme = (ox) => {
-    App.set_config(ox, `Auto Theme`, `auto_theme`, `bool`)
-    App.start_auto_theme_interval()
+    if (App.set_config({ox, name: `Auto Theme`, key: `auto_theme`, type: `bool`})) {
+      App.start_auto_theme_interval()
+    }
   }
 
   App.set_auto_theme_delay = (ox) => {
-    App.set_config(ox, `Auto Theme Delay`, `auto_theme_delay`, `int`)
-    App.start_auto_theme_interval()
+    if (App.set_config({ox, name: `Auto Theme Delay`, key: `auto_theme_delay`, type: `int`, min: 1, max: 43200})) {
+      App.start_auto_theme_interval()
+    }
   }
 
   App.set_fourget = (ox) => {
-    App.set_config(ox, `4get Instance`, `fourget`, `url`)
+    App.set_config({ox, name: `4get Instance`, key: `fourget`, type: `url`})
   }
 
   App.set_scraper = (ox) => {
-    App.set_config(ox, `4get Scraper`, `scraper`, `str`)
+    App.set_config({ox, name: `4get Scraper`, key: `scraper`, type: `str`})
   }
 
   App.set_model = (ox) => {
-    App.set_config(ox, `AI Model`, `model`, `str`)
+    App.set_config({ox, name: `AI Model`, key: `model`, type: `str`})
   }
 
   App.set_rules = (ox) => {
-    App.set_config(ox, `AI Rules`, `rules`, `str`)
+    App.set_config({ox, name: `AI Rules`, key: `rules`, type: `str`})
   }
 
   App.set_words = (ox) => {
-    App.set_config(ox, `AI Words`, `words`, `int`)
+    App.set_config({ox, name: `AI Words`, key: `words`, type: `int`, min: 1, max: 2000})
+  }
+
+  App.set_history = (ox) => {
+    if (App.set_config({ox, name: `AI History`, key: `history`, type: `int`, min: 0, max: 10})) {
+      App.reset_ai_history()
+    }
   }
 }
