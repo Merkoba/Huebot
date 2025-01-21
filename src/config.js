@@ -1,10 +1,11 @@
 module.exports = (App) => {
   App.setup_config = () => {
     let config_changed = false
+    let defconfig = {...App.def_config}
 
-    for (let key in App.def_config) {
+    for (let key in defconfig) {
       if (App.db.config[key] === undefined) {
-        App.db.config[key] = App.def_config[key]
+        App.db.config[key] = defconfig[key]
         config_changed = true
       }
     }
@@ -29,6 +30,10 @@ module.exports = (App) => {
   }
 
   App.set_config = (args = {}) => {
+    if (!App.is_protected_admin(args.ox.data.username)) {
+      return false
+    }
+
     let def_args = {
       min: 1,
       max: 100,
@@ -36,8 +41,13 @@ module.exports = (App) => {
 
     App.def_args(args, def_args)
 
-    if (!App.is_protected_admin(args.ox.data.username)) {
-      return false
+    function save(value) {
+      App.db.config[args.key] = value
+
+      App.save_config(() => {
+        let svalue = App.config_svalue(args, value)
+        App.process_feedback(args.ox.ctx, args.ox.data, `${args.name} set to ${svalue}.`)
+      })
     }
 
     let value = args.value.trim()
@@ -47,6 +57,11 @@ module.exports = (App) => {
       let svalue = App.config_svalue(args, value)
       App.process_feedback(args.ox.ctx, args.ox.data, `${args.name}: ${svalue}`)
       return false
+    }
+
+    if (value === `reset`) {
+      save(App.get_def_config(args.key))
+      return true
     }
 
     if (args.type === `int`) {
@@ -88,13 +103,7 @@ module.exports = (App) => {
       }
     }
 
-    App.db.config[args.key] = value
-
-    App.save_config(() => {
-      let svalue = App.config_svalue(args, value)
-      App.process_feedback(args.ox.ctx, args.ox.data, `${args.name} set to ${svalue}.`)
-    })
-
+    save(value)
     return true
   }
 
@@ -121,60 +130,79 @@ module.exports = (App) => {
     return JSON.stringify(value)
   }
 
-  App.set_auto_theme = (ox, value) => {
-    value = App.config_value(ox, value)
+  App.set_config_cmd = (args, action) => {
+    args.value = App.config_value(args.ox, args.value)
 
-    if (App.set_config({ox, value, name: `Auto Theme`, key: `auto_theme`, type: `bool`})) {
-      App.start_auto_theme_interval()
+    if (App.set_config(args)) {
+      if (action) {
+        action()
+      }
     }
+  }
+
+  App.set_auto_theme = (ox, value) => {
+    let obj = {ox, value, name: `Auto Theme`, key: `auto_theme`, type: `bool`}
+
+    App.set_config_cmd(obj, () => {
+      App.start_auto_theme_interval()
+    })
   }
 
   App.set_auto_theme_delay = (ox, value) => {
-    value = App.config_value(ox, value)
+    let obj = {ox, value, name: `Auto Theme Delay`, key: `auto_theme_delay`,
+      type: `int`, min: 1, max: 43200}
 
-    if (App.set_config({ox, value, name: `Auto Theme Delay`, key: `auto_theme_delay`, type: `int`, min: 1, max: 43200})) {
+    App.set_config_cmd(obj, () => {
       App.start_auto_theme_interval()
-    }
+    })
   }
 
-  App.set_fourget = (ox, value) => {
-    value = App.config_value(ox, value)
-    App.set_config({ox, value, name: `4get Instance`, key: `fourget`, type: `url`})
+  App.set_fourget = (ox) => {
+    let obj = {ox, value, name: `4get Instance`, key: `fourget`, type: `url`}
+    App.set_config_cmd(obj)
   }
 
   App.set_scraper = (ox, value) => {
-    value = App.config_value(ox, value)
-    App.set_config({ox, value, name: `4get Scraper`, key: `scraper`, type: `str`})
+    let obj = {ox, value, name: `4get Scraper`, key: `scraper`, type: `str`}
+    App.set_config_cmd(obj)
   }
 
   App.set_model = (ox, value) => {
-    value = App.config_value(ox, value)
-    App.set_config({ox, value, name: `AI Model`, key: `model`, type: `str`})
+    let obj = {ox, value, name: `AI Model`, key: `model`, type: `str`}
+    App.set_config_cmd(obj)
   }
 
   App.set_rules = (ox, value) => {
-    value = App.config_value(ox, value)
-    App.set_config({ox, value, name: `AI Rules`, key: `rules`, type: `str`})
+    let obj = {ox, value, name: `AI Rules`, key: `rules`, type: `str`}
+    App.set_config_cmd(obj)
   }
 
   App.set_words = (ox, value) => {
-    value = App.config_value(ox, value)
-    App.set_config({ox, value, name: `AI Words`, key: `words`, type: `int`, min: 1, max: 2000})
+    let obj = {ox, value, name: `AI Words`, key: `words`, type: `int`,
+       min: 1, max: 2000}
+
+    App.set_config_cmd(obj)
   }
 
-  App.set_history = (ox, value) => {
-    value = App.config_value(ox, value)
+  App.set_context = (ox, value) => {
+    let obj = {ox, value, name: `AI Context`, key: `context`, type: `int`,
+       min: 0, max: 10}
 
-    if (App.set_config({ox, value, name: `AI History`, key: `history`, type: `int`, min: 0, max: 10})) {
-      App.reset_ai_history()
+    App.set_config_cmd(obj), () => {
+      App.reset_ai_context()
     }
   }
 
   App.set_ai_enabled = (ox, value) => {
-    value = App.config_value(ox, value)
+    let obj = {ox, value, name: `AI Enabled`, key: `ai_enabled`, type: `bool`}
 
-    if (App.set_config({ox, value, name: `AI Enabled`, key: `ai_enabled`, type: `bool`})) {
+    App.set_config_cmd(obj, () => {
       App.start_ai()
-    }
+    })
+  }
+
+  App.get_def_config = (key) => {
+    let defconfig = {...App.def_config}
+    return defconfig[key]
   }
 }

@@ -94,7 +94,7 @@ App.prefix = App.db.config.command_prefix
 App.connected_rooms = {}
 App.file_uploads = {}
 App.last_theme = ``
-App.ai_history = []
+App.ai_context = []
 
 for (let room_id of App.db.config.room_ids) {
   App.start_connection(room_id)

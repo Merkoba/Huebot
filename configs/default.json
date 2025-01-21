@@ -24,7 +24,7 @@
     "model": "gemini-1.5-flash",
     "rules": "",
     "words": 100,
-    "history": 3,
+    "context": 3,
     "clear": "^",
     "explain": "?",
     "continue": ">",

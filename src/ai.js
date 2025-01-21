@@ -112,20 +112,20 @@ module.exports = (App) => {
         prompt = `Please emphasize the last point.`
       }
 
-      // If the prompt starts with the 'clear' symbol no history will be used
+      // If the prompt starts with the 'clear' symbol no context will be used
       // This symbol is usually "^" and is used at the start of the prompt
       // This is useful when you want to ask a fresh question
-      // The history is emptied. Filled again later normally
+      // The context is emptied. Filled again later normally
       let clear = prompt.startsWith(App.db.config.clear)
 
       if (clear) {
-        App.ai_history = []
+        App.ai_context = []
         let char = App.escape_regex(App.db.config.clear)
         let regex = new RegExp(`^${char}\\s*`)
         prompt = prompt.replace(regex, ``)
       }
       else {
-        for (let item of App.ai_history) {
+        for (let item of App.ai_context) {
           messages.push({role: `user`, content: item.user})
           messages.push({role: `assistant`, content: item.ai})
         }
@@ -152,12 +152,12 @@ module.exports = (App) => {
           ai: text,
         }
 
-        if (App.db.config.history <= 0) {
-          App.ai_history = []
+        if (App.db.config.context <= 0) {
+          App.ai_context = []
         }
         else {
-          App.ai_history.push(item)
-          App.ai_history = App.ai_history.slice(-App.db.config.history)
+          App.ai_context.push(item)
+          App.ai_context = App.ai_context.slice(-App.db.config.context)
         }
       }
 
@@ -231,12 +231,12 @@ module.exports = (App) => {
     }
   }
 
-  App.reset_ai_history = () => {
-    if (App.db.config.history <= 0) {
-      App.ai_history = []
+  App.reset_ai_context = () => {
+    if (App.db.config.context <= 0) {
+      App.ai_context = []
     }
     else {
-      App.ai_history = App.ai_history.slice(-App.db.config.history)
+      App.ai_context = App.ai_context.slice(-App.db.config.context)
     }
   }
 }

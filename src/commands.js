@@ -290,10 +290,10 @@ module.exports = (App) => {
       public: false,
       exec: (ox) => {App.set_words(ox)},
     },
-    history: {
-      description: `Change the history size for the AI`,
+    context: {
+      description: `Change the context size for the AI`,
       public: false,
-      exec: (ox) => {App.set_history(ox)},
+      exec: (ox) => {App.set_context(ox)},
     },
     imagine: {
       description: `Generate an image with DALL-E`,
