@@ -319,4 +319,15 @@ module.exports = (App) => {
   App.clear_background = (ctx) => {
     App.socket_emit(ctx, `change_background_source`, {src: ``})
   }
+
+  App.image_to_background = (ox) => {
+    let image = ox.ctx.current_image_source
+
+    if (!image) {
+      return
+    }
+
+    let path = `${App.db.config.server_address}/static/room/${ox.ctx.room_id}/image/${image}`
+    App.socket_emit(ox.ctx, `change_background_source`, {src: path})
+  }
 }

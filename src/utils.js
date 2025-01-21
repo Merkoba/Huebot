@@ -462,27 +462,6 @@ module.exports = (App) => {
     return s
   }
 
-  App.set_media_sources = (ctx, data) => {
-    let tv_done = false
-    let image_done = false
-
-    for (let m of data.log_messages.slice(0).reverse()) {
-      if (!tv_done && m.type === `tv`) {
-        App.set_tv_source(ctx, m.data.source)
-        tv_done = true
-      }
-
-      if (!image_done && m.type === `image`) {
-        App.set_image_source(ctx, m.data.source)
-        image_done = true
-      }
-
-      if (tv_done && image_done) {
-        break
-      }
-    }
-  }
-
   App.set_username = (ctx, uname) => {
     ctx.username = uname
     ctx.greet_pattern = new RegExp(`^\\s*(hi|hello)\\s+${uname}\\s*$|^\\s*${uname}\\s+(hi|hello)\\s*$`, `i`)
