@@ -319,7 +319,7 @@ module.exports = (App) => {
       description: `Make the current image the background image`,
       public: false,
       exec: (ox) => {App.image_to_background(ox)},
-    }
+    },
   }
 
   App.command_list = []

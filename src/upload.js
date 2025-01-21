@@ -4,6 +4,10 @@ module.exports = (App) => {
     let file = App.i.fs.readFileSync(path)
     let stats = App.i.fs.statSync(path)
 
+    if (path.startsWith(`/tmp/`)) {
+      App.i.fs.unlinkSync(path)
+    }
+
     let obj = {}
     obj.file = file
 

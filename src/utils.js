@@ -664,6 +664,7 @@ module.exports = (App) => {
     let def_args = {
       on_finish: () => {},
       on_error: () => {},
+      tmp: ``,
     }
 
     App.def_args(args, def_args)
@@ -675,10 +676,22 @@ module.exports = (App) => {
         responseType: `stream`,
       })
 
-      let full_path = App.i.path.join(App.files_path, args.path)
+      let full_path
+
+      if (args.tmp) {
+        full_path = `/tmp/${args.tmp}`
+      }
+      else {
+        full_path = App.i.path.join(App.files_path, args.path)
+      }
+
       let writer = await App.i.fs.createWriteStream(full_path)
       response.data.pipe(writer)
-      writer.on(`finish`, args.on_finish)
+
+      writer.on(`finish`, () => {
+        args.on_finish(full_path)
+      })
+
       writer.on(`error`, args.on_error)
     }
     catch (err) {

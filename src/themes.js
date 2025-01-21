@@ -328,6 +328,16 @@ module.exports = (App) => {
     }
 
     let path = `${App.db.config.server_address}/static/room/${ox.ctx.room_id}/image/${image}`
-    App.socket_emit(ox.ctx, `change_background_source`, {src: path})
+
+    App.download({
+      url: path,
+      tmp: image,
+      on_finish: (path) => {
+        App.upload_background(ox.ctx, path)
+      },
+      on_error: (err) => {
+        App.log(err)
+      },
+    })
   }
 }
