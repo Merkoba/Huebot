@@ -120,6 +120,7 @@ module.exports = (App) => {
 
       if (clear) {
         App.ai_history = []
+        prompt = prompt.replace(App.db.config.clear, ``).trim()
       }
       else {
         for (let item of App.ai_history) {
