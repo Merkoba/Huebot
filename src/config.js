@@ -157,7 +157,7 @@ module.exports = (App) => {
     })
   }
 
-  App.set_fourget = (ox) => {
+  App.set_fourget = (ox, value) => {
     let obj = {ox, value, name: `4get Instance`, key: `fourget`, type: `url`}
     App.set_config_cmd(obj)
   }
@@ -179,14 +179,14 @@ module.exports = (App) => {
 
   App.set_words = (ox, value) => {
     let obj = {ox, value, name: `AI Words`, key: `words`, type: `int`,
-       min: 1, max: 2000}
+      min: 1, max: 2000}
 
     App.set_config_cmd(obj)
   }
 
   App.set_context = (ox, value) => {
     let obj = {ox, value, name: `AI Context`, key: `context`, type: `int`,
-       min: 0, max: 10}
+      min: 0, max: 10}
 
     App.set_config_cmd(obj, () => {
       App.reset_ai_context()
