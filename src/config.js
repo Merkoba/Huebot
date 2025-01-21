@@ -188,9 +188,9 @@ module.exports = (App) => {
     let obj = {ox, value, name: `AI Context`, key: `context`, type: `int`,
        min: 0, max: 10}
 
-    App.set_config_cmd(obj), () => {
+    App.set_config_cmd(obj, () => {
       App.reset_ai_context()
-    }
+    })
   }
 
   App.set_ai_enabled = (ox, value) => {
