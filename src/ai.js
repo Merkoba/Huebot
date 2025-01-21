@@ -88,6 +88,7 @@ module.exports = (App) => {
       }
 
       App.log(`Asking AI (${model})`)
+
       let messages = []
       let prompt = ox.arg.trim()
       let words = App.db.config.words
@@ -101,9 +102,30 @@ module.exports = (App) => {
       sysprompt = sysprompt.substring(0, 500).trim()
       messages.push({role: `system`, content: sysprompt})
 
-      for (let item of App.ai_history) {
-        messages.push({role: `user`, content: item.user})
-        messages.push({role: `assistant`, content: item.ai})
+      if (prompt === App.db.config.continue) {
+        prompt = `Please continue.`
+      }
+      else if (prompt === App.db.config.explain) {
+        prompt = `Please explain.`
+      }
+      else if (prompt === App.db.config.emphasize) {
+        prompt = `Please emphasize the last point.`
+      }
+
+      // If the prompt starts with the 'clear' symbol no history will be used
+      // This symbol is usually "^" and is used at the start of the prompt
+      // This is useful when you want to ask a fresh question
+      // The history is emptied. Filled again later normally
+      let clear = prompt.startsWith(App.db.config.clear)
+
+      if (clear) {
+        App.ai_history = []
+      }
+      else {
+        for (let item of App.ai_history) {
+          messages.push({role: `user`, content: item.user})
+          messages.push({role: `assistant`, content: item.ai})
+        }
       }
 
       messages.push({role: `user`, content: prompt})

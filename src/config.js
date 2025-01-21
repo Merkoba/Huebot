@@ -117,9 +117,8 @@ module.exports = (App) => {
     if (value === undefined) {
       return ox.arg
     }
-    else {
-      return JSON.stringify(value)
-    }
+
+    return JSON.stringify(value)
   }
 
   App.set_auto_theme = (ox, value) => {
