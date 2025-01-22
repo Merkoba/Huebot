@@ -155,7 +155,7 @@ module.exports = (App) => {
   }
 
   App.is_admin_or_op = (rol) => {
-    return rol === `admin` || rol === `op`
+    return (rol === `admin`) || (rol === `op`)
   }
 
   App.get_random_int = (min, max) => {
@@ -229,7 +229,7 @@ module.exports = (App) => {
     function on_added(p) {
       i += 1
 
-      if (i > 1 && i < max) {
+      if ((i > 1) && (i < max)) {
         s += args.append
       }
 
@@ -472,7 +472,7 @@ module.exports = (App) => {
   }
 
   App.check_reminders = (ctx, uname) => {
-    if (App.db.reminders[uname] === undefined || App.db.reminders[uname].length === 0) {
+    if ((App.db.reminders[uname] === undefined) || (App.db.reminders[uname].length === 0)) {
       return false
     }
 
@@ -544,7 +544,7 @@ module.exports = (App) => {
         return res.json()
       })
       .then(res => {
-        if (res.items !== undefined && res.items.length > 0) {
+        if ((res.items !== undefined) && (res.items.length > 0)) {
           App.shuffle_array(res.items)
           let item
 
@@ -606,7 +606,7 @@ module.exports = (App) => {
   }
 
   App.check_if_media = (s) => {
-    return s === `image` || s === `tv`
+    return (s === `image`) || (s === `tv`)
   }
 
   // Get id of youtube video from url

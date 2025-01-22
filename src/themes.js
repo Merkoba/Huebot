@@ -122,7 +122,7 @@ module.exports = (App) => {
     let old_name = split[0]
     let new_name = split[1]
 
-    if (!ox.arg || split.length !== 2) {
+    if (!ox.arg || (split.length !== 2)) {
       App.process_feedback(ox.ctx, ox.data, `Correct format is --> ${App.prefix}${ox.cmd} rename [old_name] [new_name]`)
       return false
     }

@@ -104,7 +104,7 @@ module.exports = (App) => {
   }
 
   App.change_public = (ox) => {
-    if (!ox.arg || (ox.arg !== `on` && ox.arg !== `off`)) {
+    if (!ox.arg || ((ox.arg !== `on`) && (ox.arg !== `off`))) {
       App.process_feedback(ox.ctx, ox.data, `Correct format is --> ${App.prefix}${ox.cmd} on|off`)
       return false
     }
@@ -225,7 +225,7 @@ module.exports = (App) => {
     let max = split[1]
     let results = []
 
-    if (times > 10 || max > 1000) {
+    if ((times > 10) || (max > 1000)) {
       return false
     }
 
@@ -272,7 +272,7 @@ module.exports = (App) => {
         .then(feed => {
           let date_1 = feed.items[0].isoDate
 
-          if (date_1 && App.db.state.last_rss_urls[url] !== date_1) {
+          if (date_1 && (App.db.state.last_rss_urls[url] !== date_1)) {
             for (let item of feed.items.slice(0, 3)) {
               let s = ``
 

@@ -7,7 +7,7 @@ module.exports = (App) => {
       return false
     }
 
-    if (args[0] !== `remove` && args[0] !== `play`) {
+    if ((args[0] !== `remove`) && (args[0] !== `play`)) {
       ox.arg = App.tv_default(ox.arg, args[0])
       args = ox.arg.split(` `)
     }

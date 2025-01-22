@@ -37,7 +37,7 @@ module.exports = (App) => {
     let command_name = split[1]
     let command_url = split.slice(2).join(` `)
 
-    if (!ox.arg || split.length < 3 || !App.config.media_types.includes(command_type)) {
+    if (!ox.arg || (split.length < 3) || !App.config.media_types.includes(command_type)) {
       App.process_feedback(ox.ctx, ox.data, `Correct format is --> ${App.prefix}${ox.cmd} add ${App.config.media_types.join(`|`)} [name] [url]`)
       return false
     }
@@ -92,7 +92,7 @@ module.exports = (App) => {
     let old_name = split[0]
     let new_name = split[1]
 
-    if (!ox.arg || split.length !== 2) {
+    if (!ox.arg || (split.length !== 2)) {
       App.process_feedback(ox.ctx, ox.data, `Correct format is --> ${App.prefix}${ox.cmd} rename [old_name] [new_name]`)
       return false
     }
@@ -161,7 +161,7 @@ module.exports = (App) => {
   }
 
   App.whatis_command = (ox) => {
-    if (!ox.arg || ox.arg.split(` `).length > 1) {
+    if (!ox.arg || (ox.arg.split(` `).length > 1)) {
       App.process_feedback(ox.ctx, ox.data, `Correct format is --> ${App.prefix}${ox.cmd} [command_name]`)
       return false
     }

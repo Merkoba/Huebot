@@ -10,7 +10,7 @@ module.exports = (App) => {
   App.inv_tv = (ox, comment = ``) => {
     let ans = App.get_youtube_id(ox.ctx.current_tv_source)
 
-    if (ans && ans[0] === `video`) {
+    if (ans && (ans[0] === `video`)) {
       App.change_media(ox.ctx, {
         type: `tv`,
         src: `https://inv.nadeko.net/embed/${ans[1]}`,
@@ -41,7 +41,7 @@ module.exports = (App) => {
     let type = `tv`
 
     if (ox.arg) {
-      if (ox.arg === `tv` || ox.arg === `image`) {
+      if ((ox.arg === `tv`) || (ox.arg === `image`)) {
         type = ox.arg
       }
     }

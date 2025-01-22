@@ -366,7 +366,7 @@ module.exports = (App) => {
           let cmd2 = App.db.commands[cmd]
 
           if (cmd2) {
-            if (cmd2.type === `image` || cmd2.type === `tv`) {
+            if ((cmd2.type === `image`) || (cmd2.type === `tv`)) {
               allowed = true
             }
           }
@@ -576,7 +576,7 @@ module.exports = (App) => {
     let p = App.prefix
     let sleep = `${p}sleep`
 
-    if (lc_cmd.startsWith(sleep) || lc_cmd === sleep) {
+    if (lc_cmd.startsWith(sleep) || (lc_cmd === sleep)) {
       let n = parseInt(lc_cmd.replace(`${sleep} `, ``))
 
       if (isNaN(n)) {
