@@ -1,22 +1,20 @@
 module.exports = (App) => {
-  App.change_image = (ox, comment = ``) => {
+  App.change_image = async (ox, comment = ``) => {
     App.image_p = 0
     let query = App.do_replacements(ox.ctx, ox.arg)
     let instance = App.db.config.fourget
     let scraper = App.db.config.scraper
     let url = `${instance}/api/v1/images?s=${query}>&scraper=${scraper}`
 
-    App.i.fetch(url)
-      .then(res => {
-        return res.json()
-      })
-      .then(res => {
-        App.image_results = res.image
-        App.next_image(ox, comment)
-      })
-      .catch(err => {
-        App.log(err.message, `error`)
-      })
+    try {
+      let res = await App.i.fetch(url)
+      let json = await res.json()
+      App.image_results = json.image
+      App.next_image(ox, comment)
+    }
+    catch (err) {
+      App.log(err.message, `error`)
+    }
   }
 
   App.next_image = (ox, comment = ``) => {
@@ -40,24 +38,22 @@ module.exports = (App) => {
     })
   }
 
-  App.change_image = (ox, comment = ``) => {
+  App.change_image = async (ox, comment = ``) => {
     App.image_p = 0
     let query = App.do_replacements(ox.ctx, ox.arg)
     let instance = App.db.config.fourget
     let scraper = App.db.config.scraper
     let url = `${instance}/api/v1/images?s=${query}>&scraper=${scraper}`
 
-    App.i.fetch(url)
-      .then(res => {
-        return res.json()
-      })
-      .then(res => {
-        App.image_results = res.image
-        App.next_image(ox, comment)
-      })
-      .catch(err => {
-        App.log(err.message, `error`)
-      })
+    try {
+      let res = await App.i.fetch(url)
+      let json = await res.json()
+      App.image_results = json.image
+      App.next_image(ox, comment)
+    }
+    catch (err) {
+      App.log(err.message, `error`)
+    }
   }
 
   App.next_image = (ox, comment = ``) => {
