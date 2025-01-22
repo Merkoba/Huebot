@@ -1,5 +1,5 @@
 module.exports = (App) => {
-  App.search_wiki = (ox) => {
+  App.search_wiki = async (ox) => {
     if (!ox.arg) {
       App.process_feedback(ox.ctx, ox.data, `No search term provided.`)
       return false
@@ -8,75 +8,65 @@ module.exports = (App) => {
     let query = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(ox.arg)}`
     App.log(`Fetching Wikipedia: ${query}`)
 
-    App.i.fetch(query)
-      .then(res => {
-        return res.json()
-      })
-      .then(res => {
-        if (res.extract) {
-          App.process_feedback(ox.ctx, ox.data, res.extract)
-        }
-      })
-      .catch(err => {
-        App.log(err.message, `error`)
-      })
+    try {
+      let ans = await App.i.fetch(query)
+      let json = await ans.json()
+
+      if (json.extract) {
+        App.process_feedback(ox.ctx, ox.data, json.extract)
+      }
+    }
+    catch (err) {
+      App.log(err.message, `error`)
+    }
   }
 
-  App.get_random_4chan_post = (ox) => {
+  App.get_random_4chan_post = async (ox) => {
     let boards = [`g`, `an`, `ck`, `lit`, `x`, `tv`, `v`, `fit`, `k`, `o`, `sci`, `his`]
     let board = boards[App.get_random_int(0, boards.length - 1)]
     let query = `https://a.4cdn.org/${board}/threads.json`
     App.log(`Fetching 4chan...`)
 
-    App.i.fetch(query)
-      .then(res => {
-        return res.json()
+    try {
+      let ans = await App.i.fetch(query)
+      let json = await ans.json()
+      let threads = json[`0`].threads
+      let id = threads[App.get_random_int(0, threads.length - 1)].no
+      let query2 = `https://a.4cdn.org/${board}/thread/${id}.json`
+
+      App.log(`Fetching 4chan (2)...`)
+
+      let ans2 = await App.i.fetch(query2)
+      let json2 = await ans2.json()
+      let posts = json2.posts
+      let post = posts[App.get_random_int(0, posts.length - 1)]
+      let html = post.com
+
+      if (!html) {
+        return
+      }
+
+      let $ = App.i.cheerio.load(html)
+
+      $(`.quotelink`).each((i, elem) => {
+        $(elem).remove()
       })
-      .then(json => {
-        let threads = json[`0`].threads
-        let id = threads[App.get_random_int(0, threads.length - 1)].no
-        let query = `https://a.4cdn.org/${board}/thread/${id}.json`
 
-        App.log(`Fetching 4chan (2)...`)
+      $(`br`).replaceWith(`\n`)
 
-        App.i.fetch(query)
-          .then(res => {
-            return res.json()
-          })
-          .then(json => {
-            let posts = json.posts
-            let post = posts[App.get_random_int(0, posts.length - 1)]
-            let html = post.com
+      let text = $.text().substring(0, 1000).trim()
 
-            if (!html) {
-              return
-            }
+      if (!text) {
+        return
+      }
 
-            let $ = App.i.cheerio.load(html)
-
-            $(`.quotelink`).each((i, elem) => {
-              $(elem).remove()
-            })
-
-            $(`br`).replaceWith(`\n`)
-
-            let text = $.text().substring(0, 1000).trim()
-
-            if (!text) {
-              return
-            }
-
-            let url = `https://boards.4chan.org/${board}/thread/${id}`
-            let ans = text + `\n` + url
-            App.process_feedback(ox.ctx, ox.data, ans)
-          })
-          .catch(err => {
-            App.log(err.message, `error`)
-          })
-      })
-      .catch(err => {
-        App.log(err.message, `error`)
-      })
+      let url = `https://boards.4chan.org/${board}/thread/${id}`
+      let result = `${text}\n${url}`
+      App.process_feedback(ox.ctx, ox.data, result)
+    }
+    catch (err) {
+      App.log(err.message, `error`)
+    }
   }
 
   App.decide = (ox) => {
@@ -253,67 +243,6 @@ module.exports = (App) => {
     App.process_feedback(ox.ctx, ox.data, msg)
   }
 
-  App.check_rss = () => {
-    if (!App.db.state.last_rss_urls) {
-      App.db.state.last_rss_urls = {}
-    }
-
-    for (let item of App.db.config.rss_urls) {
-      let split = item.split(` `)
-      let url = split[0]
-      let modes = split[1].split(`,`)
-
-      if (!App.db.state.last_rss_urls[url]) {
-        App.db.state.last_rss_urls[url] = `none`
-      }
-
-      App.log(`Fetching RSS: ${url}`)
-      App.i.rss_parser.parseURL(url)
-        .then(feed => {
-          let date_1 = feed.items[0].isoDate
-
-          if (date_1 && (App.db.state.last_rss_urls[url] !== date_1)) {
-            for (let item of feed.items.slice(0, 3)) {
-              let s = ``
-
-              if (modes.includes(`text`)) {
-                if (modes.includes(`bullet`)) {
-                  s += `• `
-                }
-
-                s += item.contentSnippet.substring(0, 1000).replace(/\n/g, ` `).trim()
-              }
-
-              if (modes.includes(`link`)) {
-                if (s) {
-                  s += ` `
-                }
-
-                s += item.link
-              }
-
-              let date = item.isoDate
-
-              if (s && date) {
-                if (App.db.state.last_rss_urls[url] !== date) {
-                  App.send_message_all_rooms(s)
-                }
-                else {
-                  break
-                }
-              }
-            }
-
-            App.db.state.last_rss_urls[url] = date_1
-            App.save_file(`state.json`, App.db.state)
-          }
-        })
-        .catch(err => {
-          App.log(err, `error`)
-        })
-    }
-  }
-
   App.start_webserver = () => {
     if (!App.db.config.use_webserver) {
       return
@@ -337,28 +266,5 @@ module.exports = (App) => {
     App.webserver.listen(port, () => {
       App.log(`Web server started on port ${port}`)
     })
-  }
-
-  // Check RSS every x minutes
-  App.start_rss_interval = () => {
-    if (App.db.config.check_rss && App.db.config.check_rss_delay) {
-      let mins = App.db.config.check_rss_delay
-      let delay = mins * 1000 * 60
-
-      if (isNaN(delay)) {
-        App.log(`RSS delay is not a number`)
-        return
-      }
-
-      setInterval(() => {
-        if (Object.keys(App.connected_rooms).length === 0) {
-          return
-        }
-
-        App.check_rss()
-      }, delay)
-
-      App.log(`RSS: ${mins} mins`)
-    }
   }
 }

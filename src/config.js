@@ -107,6 +107,11 @@ module.exports = (App) => {
     return true
   }
 
+  App.get_def_config = (key) => {
+    let defconfig = {...App.def_config}
+    return defconfig[key]
+  }
+
   App.config_svalue = (args, value) => {
     let svalue = value
 
@@ -201,8 +206,20 @@ module.exports = (App) => {
     })
   }
 
-  App.get_def_config = (key) => {
-    let defconfig = {...App.def_config}
-    return defconfig[key]
+  App.set_check_rss = (ox, value) => {
+    let obj = {ox, value, name: `RSS Enabled`, key: `rss_enabled`, type: `bool`}
+
+    App.set_config_cmd(obj, () => {
+      App.start_rss_interval()
+    })
+  }
+
+  App.set_check_rss_delay = (ox, value) => {
+    let obj = {ox, value, name: `RSS Delay`, key: `rss_delay`, type: `int`,
+      min: 1, max: 1000}
+
+    App.set_config_cmd(obj, () => {
+      App.start_rss_interval()
+    })
   }
 }

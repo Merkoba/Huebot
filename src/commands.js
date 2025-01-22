@@ -320,6 +320,16 @@ module.exports = (App) => {
       public: false,
       exec: (ox) => {App.image_to_background(ox)},
     },
+    rss: {
+      description: `Enable or disable RSS`,
+      public: false,
+      exec: (ox) => {App.set_check_rss(ox)},
+    },
+    rssdelay: {
+      description: `Change the RSS delay`,
+      public: false,
+      exec: (ox) => {App.set_check_rss_delay(ox)},
+    },
   }
 
   App.command_list = []

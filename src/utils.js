@@ -536,42 +536,6 @@ module.exports = (App) => {
     }
   }
 
-  App.get_youtube_stream = (ctx) => {
-    App.log(`Fetching Youtube...`)
-
-    App.i.fetch(`https://www.googleapis.com/youtube/v3/search?videoEmbeddable=true&maxResults=20&type=video&eventType=live&videoCategoryId=20&fields=items(id(videoId))&part=snippet&key=${App.db.config.youtube_client_id}`)
-      .then(res => {
-        return res.json()
-      })
-      .then(res => {
-        if ((res.items !== undefined) && (res.items.length > 0)) {
-          App.shuffle_array(res.items)
-          let item
-
-          for (item of res.items) {
-            if (!ctx.recent_youtube_streams.includes(item.id.videoId)) {
-              break
-            }
-          }
-
-          let id = item.id.videoId
-          ctx.recent_youtube_streams.push(id)
-
-          if (ctx.recent_youtube_streams.length > App.config.recent_streams_max_length) {
-            ctx.recent_youtube_streams.shift()
-          }
-
-          App.change_media(ctx, {
-            type: `tv`,
-            src: `https://youtube.com/watch?v=${id}`,
-          })
-        }
-      })
-      .catch(err => {
-        App.log(err, `error`)
-      })
-  }
-
   App.find_closest = (s, list) => {
     let highest_num = 0
     let highest_cmd = ``
@@ -607,34 +571,6 @@ module.exports = (App) => {
 
   App.check_if_media = (s) => {
     return (s === `image`) || (s === `tv`)
-  }
-
-  // Get id of youtube video from url
-  App.get_youtube_id = (url) => {
-    let v_id = false
-    let list_id = false
-    let split = url.split(/(vi\/|v%3D|v=|\/v\/|youtu\.be\/|\/embed\/)/)
-    let id = undefined !== split[2] ? split[2].split(/[^0-9a-z_-]/i)[0] : split[0]
-    v_id = id.length === 11 ? id : false
-    let list_match = url.match(/(?:\?|&)(list=[0-9A-Za-z_-]+)/)
-    let index_match = url.match(/(?:\?|&)(index=[0-9]+)/)
-
-    if (list_match) {
-      list_id = list_match[1].replace(`list=`, ``)
-    }
-
-    if (list_id && !v_id) {
-      let index = 0
-
-      if (index_match) {
-        index = parseInt(index_match[1].replace(`index=`, ``)) - 1
-      }
-
-      return [`list`, [list_id, index]]
-    }
-    else if (v_id) {
-      return [`video`, v_id]
-    }
   }
 
   // Centralized log function
