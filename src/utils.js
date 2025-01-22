@@ -40,7 +40,15 @@ module.exports = (App) => {
   }
 
   App.get_random_word = (mode = `normal`) => {
-    let word = App.i.sentencer.make(`{{ noun }}`)
+    let n = App.get_random_int(1, 2)
+    let word
+
+    if (n === 1) {
+      word = App.i.sentencer.make(`{{ noun }}`)
+    }
+    else {
+      word = App.i.sentencer.make(`{{ adjective }}`)
+    }
 
     if (mode === `normal`) {
       return word
@@ -50,6 +58,9 @@ module.exports = (App) => {
     }
     else if (mode === `upper_case`) {
       return word.toUpperCase()
+    }
+    else if (mode === `lower_case`) {
+      return word.toLowerCase()
     }
   }
 
@@ -637,5 +648,31 @@ module.exports = (App) => {
 
   App.escape_regex = (text) => {
     return text.replace(/[^A-Za-z0-9]/g, `\\$&`)
+  }
+
+  App.fill_word = (keys) => {
+    let regex = /^[a-z]+$/
+
+    for (let i = 0; i < 100 ; i++) {
+      let try_again = false
+      let word = App.get_random_word(`lower_case`)
+
+      if (!regex.test(word)) {
+        continue
+      }
+
+      for (let key in keys) {
+        if (key === word) {
+          try_again = true
+          break
+        }
+      }
+
+      if (!try_again) {
+        return word
+      }
+    }
+
+    return `none`
   }
 }

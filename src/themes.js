@@ -37,28 +37,7 @@ module.exports = (App) => {
 
   App.add_theme = (ox) => {
     if (!ox.arg) {
-      let regex = /^[a-z]+$/
-
-      for (let i = 0; i < 100 ; i++) {
-        let try_again = false
-        let word = App.get_random_word().toLowerCase()
-
-        if (!regex.test(word)) {
-          continue
-        }
-
-        for (let key in App.db.themes) {
-          if (key === word) {
-            try_again = true
-            break
-          }
-        }
-
-        if (!try_again) {
-          ox.arg = word
-          break
-        }
-      }
+      ox.arg = App.fill_word(App.db.themes)
     }
 
     let obj = {}
