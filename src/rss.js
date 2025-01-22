@@ -12,7 +12,6 @@ module.exports = (App) => {
         return
       }
 
-      console.log(delay)
       App.rss_interval = setInterval(() => {
         if (Object.keys(App.connected_rooms).length === 0) {
           return

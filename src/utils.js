@@ -182,7 +182,7 @@ module.exports = (App) => {
       limit: true,
     }
 
-    App.def_args(args, def_args)
+    App.def_args(def_args, args)
     args.filter = args.filter.toLowerCase()
     let do_filter = args.filter ? true : false
     let props
@@ -603,7 +603,7 @@ module.exports = (App) => {
       tmp: ``,
     }
 
-    App.def_args(args, def_args)
+    App.def_args(def_args, args)
     App.log(`Downloading: ${args.url}`)
 
     try {

@@ -39,7 +39,7 @@ module.exports = (App) => {
       max: 100,
     }
 
-    App.def_args(args, def_args)
+    App.def_args(def_args, args)
 
     function save(value) {
       App.db.config[args.key] = value
