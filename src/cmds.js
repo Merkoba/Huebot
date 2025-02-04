@@ -60,7 +60,7 @@ module.exports = (App) => {
       }
 
       App.save_file(`commands.json`, App.db.commands, (err) => {
-        App.like_message(ox)
+        App.process_feedback(ox.ctx, ox.data, `Command "${command_name}" successfully set.`)
       })
     }
     catch (err) {
@@ -83,7 +83,7 @@ module.exports = (App) => {
     delete App.db.commands[ox.arg]
 
     App.save_file(`commands.json`, App.db.commands, () => {
-      App.like_message(ox)
+      App.process_feedback(ox.ctx, ox.data, `Command "${ox.arg}" successfully removed.`)
     })
   }
 
@@ -108,7 +108,7 @@ module.exports = (App) => {
       delete App.db.commands[old_name]
 
       App.save_file(`commands.json`, App.db.commands, () => {
-        App.like_message(ox)
+        App.process_feedback(ox.ctx, ox.data, `Command "${old_name}" successfully renamed to "${new_name}".`)
       })
     }
     catch (err) {
@@ -189,7 +189,7 @@ module.exports = (App) => {
     App.db.commands = {}
 
     App.save_file(`commands.json`, App.db.commands, () => {
-      App.like_message(ox)
+      App.process_feedback(ox.ctx, ox.data, `Commands list successfully cleared.`)
     })
   }
 

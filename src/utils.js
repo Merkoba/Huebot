@@ -428,6 +428,9 @@ module.exports = (App) => {
     if (data.method === `whisper`) {
       App.send_whisper(ctx, data.username, s)
     }
+    else if (data.message_id) {
+      App.like_message(ctx, data.message_id)
+    }
     else {
       App.send_message(ctx, s)
     }

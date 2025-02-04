@@ -41,7 +41,7 @@ module.exports = (App) => {
       App.db.permissions.admins.push(ox.arg)
 
       App.save_file(`permissions.json`, App.db.permissions, (err) => {
-        App.like_message(ox)
+        App.process_feedback(ox.ctx, ox.data, `Username "${ox.arg}" was successfully added as an admin.`)
       })
     }
   }
@@ -70,7 +70,7 @@ module.exports = (App) => {
       }
 
       App.save_file(`permissions.json`, App.db.permissions, (err) => {
-        App.like_message(ox)
+        App.process_feedback(ox.ctx, ox.data, `Username "${ox.arg}" was successfully removed as an admin.`)
       })
     }
     else {
@@ -107,7 +107,7 @@ module.exports = (App) => {
     App.db.permissions.admins = [ox.data.username]
 
     App.save_file(`permissions.json`, App.db.permissions, () => {
-      App.like_message(ox)
+      App.process_feedback(ox.ctx, ox.data, `Admins list successfully cleared.`)
     })
   }
 }

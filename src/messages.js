@@ -38,16 +38,12 @@ module.exports = (App) => {
     })
   }
 
-  App.like_message = (ox) => {
-    let id = ox.data.message_id
-    let type = `like`
-    App.do_like_message(ox.ctx, id, type)
+  App.like_message = (ctx, id) => {
+    App.do_like_message(ctx, id, `like`)
   }
 
-  App.unlike_message = (ox) => {
-    let id = ox.data.message_id
-    let type = `unlike`
-    App.do_like_message(ox.ctx, id, type)
+  App.unlike_message = (ctx, id) => {
+    App.do_like_message(ctx, id, `unlike`)
   }
 
   App.do_like_message = (ctx, id, type) => {
