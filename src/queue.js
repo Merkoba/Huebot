@@ -106,7 +106,7 @@ module.exports = (App) => {
       App.db.queue[args[0]] = []
 
       App.save_file(`queue.json`, App.db.queue, () => {
-        App.process_feedback(ox.ctx, ox.data, `${App.get_media_name(args[0])} queue successfully cleared.`)
+        App.like_message(ox)
       })
     }
     else {

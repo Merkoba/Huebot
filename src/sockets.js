@@ -78,6 +78,7 @@ module.exports = (App) => {
 
           if (App.is_command(data.message)) {
             let obj = {
+              message_id: data.id,
               username: data.username,
               message: data.message,
               method: `public`,
