@@ -70,7 +70,7 @@ module.exports = (App) => {
     App.db.themes[ox.arg] = obj
 
     App.save_file(`themes.json`, App.db.themes, () => {
-      App.process_feedback(ox.ctx, ox.data, `Theme "${ox.arg}" successfully added.`)
+      App.process_feedback(ox.ctx, ox.data, `Theme "${ox.arg}" successfully added.`, true)
     })
   }
 
@@ -92,7 +92,7 @@ module.exports = (App) => {
     delete App.db.themes[ox.arg]
 
     App.save_file(`themes.json`, App.db.themes, () => {
-      App.process_feedback(ox.ctx, ox.data, `Theme "${ox.arg}" successfully removed.`)
+      App.process_feedback(ox.ctx, ox.data, `Theme "${ox.arg}" successfully removed.`, true)
     })
   }
 
@@ -117,7 +117,7 @@ module.exports = (App) => {
       delete App.db.themes[old_name]
 
       App.save_file(`themes.json`, App.db.themes, (err) => {
-        App.process_feedback(ox.ctx, ox.data, `Theme "${old_name}" successfully renamed to "${new_name}".`)
+        App.process_feedback(ox.ctx, ox.data, `Theme "${old_name}" successfully renamed to "${new_name}".`, true)
       })
     }
     catch (err) {
@@ -238,7 +238,7 @@ module.exports = (App) => {
     App.db.themes = {}
 
     App.save_file(`themes.json`, App.db.themes, () => {
-      App.process_feedback(ox.ctx, ox.data, `Themes list successfully cleared.`)
+      App.process_feedback(ox.ctx, ox.data, `Themes list successfully cleared.`, true)
     })
   }
 

@@ -420,7 +420,7 @@ module.exports = (App) => {
     return array
   }
 
-  App.process_feedback = (ctx, data, s) => {
+  App.process_feedback = (ctx, data, s, like = false) => {
     if (!s) {
       return false
     }
@@ -428,7 +428,7 @@ module.exports = (App) => {
     if (data.method === `whisper`) {
       App.send_whisper(ctx, data.username, s)
     }
-    else if (data.message_id) {
+    else if (data.message_id && like) {
       App.like_message(ctx, data.message_id)
     }
     else {
