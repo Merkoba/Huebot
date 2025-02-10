@@ -29,7 +29,7 @@ module.exports = (App) => {
       board = boards[App.get_random_int(0, boards.length - 1)]
     }
     else {
-      board = ox.arg
+      board = ox.arg.replace(`/`, ``)
     }
 
     let query = `https://a.4cdn.org/${board}/threads.json`
