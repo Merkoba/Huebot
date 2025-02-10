@@ -22,8 +22,16 @@ module.exports = (App) => {
   }
 
   App.get_random_4chan_post = async (ox) => {
-    let boards = [`g`, `an`, `ck`, `lit`, `x`, `tv`, `v`, `fit`, `k`, `o`, `sci`, `his`]
-    let board = boards[App.get_random_int(0, boards.length - 1)]
+    let boards = [`g`, `an`, `ck`, `lit`, `x`, `tv`, `v`, `fit`, `k`, `o`, `sci`, `his`, `n`]
+    let board
+
+    if (!ox.arg) {
+      board = boards[App.get_random_int(0, boards.length - 1)]
+    }
+    else {
+      board = ox.arg
+    }
+
     let query = `https://a.4cdn.org/${board}/threads.json`
     App.log(`Fetching 4chan...`)
 
