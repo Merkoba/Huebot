@@ -288,9 +288,17 @@ module.exports = (App) => {
       let res = await App.i.fetch(query)
       let json = await res.json()
       let src = `https://harambe.merkoba.com/post/${json.name}`
+      let type
+
+      if (what === `image`) {
+        type = `image`
+      }
+      else {
+        type = `tv`
+      }
 
       App.change_media(ox.ctx, {
-        type: `tv`,
+        type,
         src,
       })
     }
