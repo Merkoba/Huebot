@@ -279,4 +279,40 @@ module.exports = (App) => {
       App.log(`Web server started on port ${port}`)
     })
   }
+
+  App.harambe_func = async (ox, what) => {
+    let query = `https://harambe.merkoba.com/random_${what}?json=true`
+    App.log(`Fetching Harambe...`)
+
+    try {
+      let res = await App.i.fetch(query)
+      let json = await res.json()
+      let src = `https://harambe.merkoba.com/post/${json.name}`
+
+      App.change_media(ox.ctx, {
+        type: `tv`,
+        src,
+      })
+    }
+    catch (err) {
+      App.log(err.message, `error`)
+      return
+    }
+  }
+
+  App.harambe_media = (ox) => {
+    App.harambe_func(ox, `media`)
+  }
+
+  App.harambe_video = (ox) => {
+    App.harambe_func(ox, `video`)
+  }
+
+  App.harambe_audio = (ox) => {
+    App.harambe_func(ox, `audio`)
+  }
+
+  App.harambe_image = (ox) => {
+    App.harambe_func(ox, `image`)
+  }
 }

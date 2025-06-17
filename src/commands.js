@@ -330,6 +330,30 @@ module.exports = (App) => {
       public: false,
       exec: (ox) => {App.set_check_rss_delay(ox)},
     },
+    harambe: {
+      aliases: [`h`],
+      description: `Harambe: Random Media`,
+      public: false,
+      exec: (ox) => {App.harambe_media(ox)},
+    },
+    harambevideo: {
+      aliases: [`hv`],
+      description: `Harambe: Random Video`,
+      public: false,
+      exec: (ox) => {App.harambe_video(ox)},
+    },
+    harambeaudio: {
+      aliases: [`ha`],
+      description: `Harambe: Random Audio`,
+      public: false,
+      exec: (ox) => {App.harambe_audio(ox)},
+    },
+    harambeimage: {
+      aliases: [`hi`],
+      description: `Harambe: Random Image`,
+      public: false,
+      exec: (ox) => {App.harambe_image(ox)},
+    },
   }
 
   App.command_list = []
