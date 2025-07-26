@@ -281,7 +281,7 @@ module.exports = (App) => {
   }
 
   App.harambe_func = async (ox, what) => {
-    let query = `https://harambe.merkoba.com/random_${what}?json=true`
+    let query = `https://harambe.merkoba.com/random/${what}?json=true`
     App.log(`Fetching Harambe...`)
 
     try {
